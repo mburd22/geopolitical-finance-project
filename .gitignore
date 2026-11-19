@@ -1,0 +1,11 @@
+# Files git should never track or upload.
+
+# Secrets: API keys live here
+.env
+
+# The Python virtual environment (rebuild it from requirements.txt)
+.venv/
+__pycache__/
+
+# Generated output (rebuild by running the scripts)
+charts/

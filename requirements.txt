@@ -1,0 +1,10 @@
+# Libraries this project needs. Reinstall them all on any computer with:
+#   .\.venv\Scripts\python.exe -m pip install -r requirements.txt
+pandas==3.1.0
+yfinance==1.7.0
+matplotlib==3.11.2
+fastapi==0.162.0
+uvicorn==0.54.0
+httpx==0.28.1
+anthropic==2.4.0
+python-dotenv==1.2.4
