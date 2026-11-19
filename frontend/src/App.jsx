@@ -5,11 +5,13 @@ import { getOptions } from './api'
 import AnalogEngine from './components/AnalogEngine'
 import CategoryView from './components/CategoryView'
 import EventExplorer from './components/EventExplorer'
+import TrackRecord from './components/TrackRecord'
 
 const TABS = [
   { id: 'analogs', name: 'Analog engine' },
   { id: 'events', name: 'Event explorer' },
   { id: 'categories', name: 'By event type' },
+  { id: 'track', name: 'Track record' },
 ]
 
 export default function App() {
@@ -59,6 +61,7 @@ export default function App() {
       {options && tab === 'analogs' && <AnalogEngine options={options} ticker={ticker} />}
       {options && tab === 'events' && <EventExplorer options={options} ticker={ticker} />}
       {options && tab === 'categories' && <CategoryView ticker={ticker} />}
+      {options && tab === 'track' && <TrackRecord ticker={ticker} />}
 
       <footer className="muted small">
         Historical base rates from a small set of events, for learning and research. Not investment advice.

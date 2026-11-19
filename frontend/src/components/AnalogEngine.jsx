@@ -61,6 +61,18 @@ function Select({ name, value, choices, onChange }) {
   )
 }
 
+// How often the engine has been right for this stock in backtests, next to the
+// "always beats the market" baseline, so the call can be judged honestly.
+function TrackBadge({ record }) {
+  const edge = record.hit_rate - record.always_up_hit_rate
+  return (
+    <span className={`badge ${edge >= 3 ? 'badge-high' : ''}`}
+      title={`Backtest: right ${record.hit_rate}% of the time (${record.past_only_hit_rate}% using only earlier events). Assuming "always beats the market" was right ${record.always_up_hit_rate}%.`}>
+      Backtest: {record.hit_rate.toFixed(0)}% right · baseline {record.always_up_hit_rate.toFixed(0)}%
+    </span>
+  )
+}
+
 function StatTile({ title, value, note }) {
   return (
     <div className="tile">
@@ -144,9 +156,7 @@ export default function AnalogEngine({ options, ticker }) {
           <div className="card thesis">
             <div className="thesis-head">
               <h2>Thesis for {ticker}</h2>
-              <span className={`badge badge-${result.confidence.level}`}>
-                {label(result.confidence.level)} confidence
-              </span>
+              <TrackBadge record={result.track_record} />
             </div>
             <p className="thesis-text">{result.thesis}</p>
             <div className="thesis-actions">

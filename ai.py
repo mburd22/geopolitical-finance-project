@@ -64,16 +64,19 @@ THESIS_SYSTEM = """You are an analyst writing for a student learning how geopoli
 move defense stocks. You are given a hypothetical new event and statistics from similar
 past events (its "analogs"). Write a short thesis of 3 short paragraphs:
 1. The call: does the stock likely beat, lag or track the market over the next month, and how sure can we be?
+   Judge certainty from the engine's backtested hit rate versus the "always beats the market" baseline:
+   if the engine barely beats that baseline, say plainly that its call is not much better than a default guess.
 2. The evidence: which analogs matter most and why, citing the numbers given.
 3. The caveats: what could make this time different, including any confounds flagged on the analogs.
 Use only the numbers provided. Plain English, no jargon without a short explanation,
 no headings or bullet points. End with: "Historical base rate, not investment advice." """
 
 
-def write_thesis(new_event, analogs, stats, confidence, ticker):
+def write_thesis(new_event, analogs, stats, track_record, ticker):
     """Ask Claude to write a thesis from the analog results. Returns plain text."""
     lines = [f"New event: {new_event}", f"Stock: {ticker} (returns are vs the S&P 500, in %)",
-             f"Confidence from our rules: {confidence}", f"Summary stats: {stats}", "Analogs:"]
+             f"The engine's backtested track record for this stock: {track_record}",
+             f"Summary stats: {stats}", "Analogs:"]
     for a in analogs:
         flags = "; ".join(a["confounds"]) or "none"
         lines.append(

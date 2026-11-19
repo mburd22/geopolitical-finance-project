@@ -28,6 +28,8 @@ export const getEventDetail = (date, ticker) => request(`/api/events/${date}?tic
 
 export const getCategories = (ticker) => request(`/api/categories?ticker=${ticker}`)
 
+export const getBacktest = (ticker) => request(`/api/backtest?ticker=${ticker}`)
+
 // A helper for POST requests, which send JSON data to the server.
 const post = (path, data) =>
   request(path, {

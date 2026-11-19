@@ -21,17 +21,19 @@ CATEGORY_FAMILIES = [
     {"defense_spending"},
 ]
 
-# How many points each kind of similarity is worth. These add up to 10.
-# Changing these numbers changes what the matcher cares about most. Try it!
+# How many points each kind of similarity is worth (scores are scaled to 0-100).
+# Chosen by backtest.py --tune (Nov 2026). The original guesses (category 4, region 2,
+# us_involved 1.5, severity 1.5, surprise 1) called ITA's direction right only 54% of
+# the time. In the backtest, US involvement and surprise didn't help, and severity mattered most.
+# These weights raised ITA to 67% (leave-one-out) and also helped NOC, which they weren't tuned on.
+# Re-run the tuning whenever the event database grows.
 WEIGHTS = {
     "category": 4.0,
-    "region": 2.0,
-    "us_involved": 1.5,
-    "severity": 1.5,
-    "surprise": 1.0,
+    "region": 1.0,
+    "us_involved": 0.0,
+    "severity": 3.0,
+    "surprise": 0.0,
 }
-MAX_SCORE = sum(WEIGHTS.values())
-
 STRONG_MATCH = 70  # similarity % at which we call an analog a strong match
 MIN_SIMILARITY = 50  # below this, a past event isn't really comparable, so we leave it out
 
@@ -41,38 +43,38 @@ def same_family(a, b):
     return any(a in family and b in family for family in CATEGORY_FAMILIES)
 
 
-def similarity(new_event, past_event):
+def similarity(new_event, past_event, weights=WEIGHTS):
     """Score how alike two events are, from 0 (nothing in common) to 100 (identical tags)."""
     score = 0.0
 
     if new_event["category"] == past_event["category"]:
-        score += WEIGHTS["category"]
+        score += weights["category"]
     elif same_family(new_event["category"], past_event["category"]):
-        score += WEIGHTS["category"] / 2  # half credit for a cousin
+        score += weights["category"] / 2  # half credit for a cousin
 
     if new_event["region"] == past_event["region"]:
-        score += WEIGHTS["region"]
+        score += weights["region"]
 
     if new_event["us_involved"] == past_event["us_involved"]:
-        score += WEIGHTS["us_involved"]
+        score += weights["us_involved"]
 
     # Severity is a scale (1-3), so close counts: a difference of 1 earns half the points.
     gap = abs(int(new_event["severity"]) - int(past_event["severity"]))
-    score += WEIGHTS["severity"] * (1 - gap / 2)
+    score += weights["severity"] * (1 - gap / 2)
 
     if new_event["surprise"] == past_event["surprise"]:
-        score += WEIGHTS["surprise"]
+        score += weights["surprise"]
 
-    return round(score / MAX_SCORE * 100)
+    return round(score / sum(weights.values()) * 100)
 
 
-def find_analogs(new_event, events, top_n=8):
+def find_analogs(new_event, events, top_n=8, weights=WEIGHTS):
     """Return up to top_n most similar past events, best first, with a 'similarity' column."""
     # An event of an unrelated type is never a true analog, however well the other tags match:
     # a NATO spending deal is the opposite of a ceasefire, even if both are in Europe.
     related = [same_family(new_event["category"], category) for category in events["category"]]
     scored = events[related].copy()
-    scored["similarity"] = [similarity(new_event, past) for _, past in scored.iterrows()]
+    scored["similarity"] = [similarity(new_event, past, weights) for _, past in scored.iterrows()]
     scored = scored[scored["similarity"] >= MIN_SIMILARITY]
     # Ties are broken by date, most recent first, since recent markets are more relevant.
     return scored.sort_values(["similarity", "date"], ascending=False).head(top_n)
@@ -104,23 +106,24 @@ def summarize(analogs, reactions, ticker="ITA"):
     return matched, stats
 
 
-def confidence(matched, stats):
-    """A rough, honest label for how much to trust the result."""
-    strong = int((matched["similarity"] >= STRONG_MATCH).sum())
-    beat_share = stats["20d"]["beat_market"] / len(matched)
-    consistent = beat_share >= 0.75 or beat_share <= 0.25  # most analogs agree on direction
-    if strong >= 6 and consistent:
-        return "high", strong
-    if strong >= 4 and consistent:
-        return "medium", strong
-    return "low", strong
+def track_record_sentence(record, ticker):
+    """One sentence on how often the engine has been right for this stock, from backtest.track_record()."""
+    loo, past = record["leave_one_out"], record["past_only"]
+    return (f"Track record: in backtests the engine called {ticker}'s direction right "
+            f"{loo['hit_rate']:.0f}% of the time ({past['hit_rate']:.0f}% using only earlier events), "
+            f"vs {loo['always_up_hit_rate']:.0f}% for simply assuming defense beats the market.")
 
 
-def write_thesis(new_event, matched, stats, ticker="ITA"):
-    """Turn the numbers into a short written thesis."""
+def write_thesis(new_event, matched, stats, ticker="ITA", track_record=None):
+    """Turn the numbers into a short written thesis.
+
+    track_record: optional backtest results (see backtest.track_record). An earlier version
+    showed a high/medium/low confidence label here, but the backtest showed it didn't predict
+    accuracy ("high" calls were right less often than "low" ones), so the real hit rate is shown instead.
+    """
     n = len(matched)
     s20, s1 = stats["20d"], stats["1d"]
-    level, strong = confidence(matched, stats)
+    strong = int((matched["similarity"] >= STRONG_MATCH).sum())
     closest = ", ".join(f"{row.event} ({row.date.year})" for row in matched.head(3).itertuples())
 
     if s20["beat_market"] / n >= 0.6:
@@ -154,12 +157,13 @@ def write_thesis(new_event, matched, stats, ticker="ITA"):
             else:
                 warning += " Too few clean analogs to compare separately."
 
+    record = f"{track_record_sentence(track_record, ticker)} " if track_record else ""
     return (
         f"Thesis: {ticker} is likely to {direction} the market over the next month.\n"
         f"In {n} similar past events (closest: {closest}), {ticker} beat the market over 20 trading days "
         f"in {s20['beat_market']} of {n} cases, by a median of {s20['median']:+.1f}% "
         f"(range {s20['low']:+.1f}% to {s20['high']:+.1f}%). {speed}\n"
-        f"Confidence: {level} ({strong} of {n} analogs are strong matches of {STRONG_MATCH}%+ similarity). "
+        f"{record}{strong} of {n} analogs are close matches ({STRONG_MATCH}%+ similarity). "
         f"This is a historical base rate, not a forecast or investment advice."
         f"{warning}"
     )
@@ -212,4 +216,6 @@ if __name__ == "__main__":
     table["date"] = table["date"].dt.date
     print(table.to_string(index=False))
     print()
-    print(write_thesis(new_event, matched, stats, ticker=args.ticker))
+    from backtest import track_record
+    record = track_record(events, reactions, args.ticker)
+    print(write_thesis(new_event, matched, stats, ticker=args.ticker, track_record=record))

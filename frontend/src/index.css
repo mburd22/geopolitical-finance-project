@@ -116,6 +116,8 @@ button[type="submit"]:disabled { opacity: 0.6; cursor: wait; }
 .tile-title { font-size: 13px; color: var(--text-2); font-weight: 600; }
 .tile-value { font-size: 28px; font-weight: 700; margin: 2px 0; }
 .tile-note { font-size: 12px; color: var(--muted); }
+.tile-value.accent { color: var(--accent); }
+tbody tr.static { cursor: default; }
 
 /* Tables */
 .table-wrap { overflow-x: auto; }

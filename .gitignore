@@ -9,3 +9,4 @@ __pycache__/
 
 # Generated output (rebuild by running the scripts)
 charts/
+data/backtest_*.csv

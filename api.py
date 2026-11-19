@@ -20,7 +20,10 @@ import ai
 from calculate_reactions import DEFENSE_TICKERS, MARKET_TICKER, load_events, load_prices
 from check_events import ALLOWED
 from confounds import find_confounds, load_earnings
-from find_analogs import confidence, find_analogs, load_reactions, summarize, write_thesis
+from functools import lru_cache
+
+import backtest
+from find_analogs import STRONG_MATCH, find_analogs, load_reactions, summarize, write_thesis
 from make_charts import abnormal_path
 
 app = FastAPI(title="Defense Stock Event Tracker API")
@@ -43,6 +46,19 @@ EARNINGS = load_earnings("data/earnings.csv")
 
 def confounds_for(event, ticker):
     return find_confounds(PRICES, EVENTS, EARNINGS, event, ticker=ticker)
+
+
+# lru_cache remembers each ticker's answer, so the backtest only runs once per ticker
+# (about a second each) instead of on every request.
+@lru_cache(maxsize=None)
+def track_record(ticker):
+    return backtest.track_record(EVENTS, REACTIONS, ticker)
+
+
+def track_summary(ticker):
+    """The headline backtest numbers, without the per-event rows."""
+    record = track_record(ticker)
+    return {mode: record[mode] for mode in backtest.MODES}
 
 # The type of the ticker option: only these exact values are accepted.
 Ticker = Literal[tuple(DEFENSE_TICKERS)]
@@ -157,11 +173,11 @@ def run_analogs(new_event: NewEvent):
     event = new_event.model_dump()  # turn the Pydantic model into a plain dictionary
     found = find_analogs(event, EVENTS, top_n=new_event.top)
     if found.empty:
-        return {"analogs": [], "stats": None, "thesis": None, "confidence": None}
+        return {"analogs": [], "stats": None, "thesis": None, "track_record": None}
 
     matched, stats = summarize(found, REACTIONS, ticker=new_event.ticker)
     matched["confounds"] = [confounds_for(row, new_event.ticker) for _, row in matched.iterrows()]
-    level, strong = confidence(matched, stats)
+    record = track_summary(new_event.ticker)
     return {
         "analogs": [
             {
@@ -178,8 +194,14 @@ def run_analogs(new_event: NewEvent):
             window: {key: to_number(value) for key, value in values.items()}
             for window, values in stats.items()
         },
-        "thesis": write_thesis(event, matched, stats, ticker=new_event.ticker),
-        "confidence": {"level": level, "strong_matches": strong, "total": len(matched)},
+        "thesis": write_thesis(event, matched, stats, ticker=new_event.ticker, track_record=record),
+        "track_record": {
+            "hit_rate": record["leave_one_out"]["hit_rate"],
+            "past_only_hit_rate": record["past_only"]["hit_rate"],
+            "always_up_hit_rate": record["leave_one_out"]["always_up_hit_rate"],
+            "strong_matches": int((matched["similarity"] >= STRONG_MATCH).sum()),
+            "total": len(matched),
+        },
     }
 
 
@@ -187,6 +209,31 @@ def run_analogs(new_event: NewEvent):
 def analogs(new_event: NewEvent):
     """The analog matcher: similar past events, summary stats and a template thesis."""
     return run_analogs(new_event)
+
+
+@app.get("/api/backtest")
+def backtest_results(ticker: Ticker = "ITA"):
+    """How often the analog engine has been right, against simple baselines, plus every prediction."""
+    record = track_record(ticker)
+    # Every event has a leave-one-out prediction; early events have no past-only one
+    # (too little history), so start from leave-one-out and add past-only where it exists.
+    past = record["past_only_rows"][["date", "event", "direction"]].rename(columns={"direction": "direction_past"})
+    rows = record["leave_one_out_rows"].merge(past, on=["date", "event"], how="left")
+    rows = rows.sort_values("date", ascending=False)
+    predictions = [
+        {
+            "date": str(row["date"]),
+            "event": row["event"],
+            "category": row["category"],
+            "actual_20d": to_number(row["actual_20d"]),
+            "predicted_median": to_number(row["predicted_median"]),
+            "direction": row["direction"],
+            "hit": None if row["direction"] == "flat" else bool((row["actual_20d"] > 0) == (row["direction"] == "up")),
+            "past_direction": None if pd.isna(row.get("direction_past")) else row["direction_past"],
+        }
+        for _, row in rows.iterrows()
+    ]
+    return {"summary": track_summary(ticker), "weights": backtest.WEIGHTS, "predictions": predictions}
 
 
 # ---------- Optional Claude features (need ANTHROPIC_API_KEY in .env) ----------
@@ -199,7 +246,7 @@ def claude_thesis(new_event: NewEvent):
         raise HTTPException(status_code=422, detail="No analogs to write a thesis about")
     tags = {k: v for k, v in new_event.model_dump().items() if k not in ("ticker", "top")}
     try:
-        text = ai.write_thesis(tags, result["analogs"], result["stats"], result["confidence"], new_event.ticker)
+        text = ai.write_thesis(tags, result["analogs"], result["stats"], result["track_record"], new_event.ticker)
     except ai.ClaudeUnavailable as error:
         # 503 means "service unavailable": the feature exists but can't run right now.
         raise HTTPException(status_code=503, detail=str(error))
