@@ -4,6 +4,8 @@ How do defense stocks react to geopolitical events, and can past reactions tell 
 
 This project measures how US defense stocks (Lockheed Martin, RTX, Northrop Grumman, General Dynamics and the ITA defense ETF) moved against the S&P 500 around 71 geopolitical events from 2015 to 2025. An **analog engine** takes a new event, finds the most similar past events, and writes a thesis from how the stocks reacted then. A **backtest** checks whether the engine is actually any good.
 
+It also runs on its own. A **live pipeline** reads 14 news sources every hour and detects new geopolitical events. For each one it makes a prediction for every stock, locks the prediction in, and scores it once 20 trading days have passed, building a live track record nobody can quietly revise.
+
 It comes with a React dashboard backed by a Python API.
 
 ![Average reaction of the ITA defense ETF by event type](docs/category_paths.png)
@@ -47,6 +49,20 @@ This is a research and learning project. **Nothing here is investment advice.**
 6. **Backtest:** leave-one-out and past-only predictions, scored against simple baselines.
 7. **Optional Claude features:** turn a news headline into tags, and write a fuller thesis from the numbers. These need an Anthropic API key.
 
+### The live pipeline
+
+```
+news feeds ─► store new articles ─► group by story ─► classify ─► new event? ─► predict (locked) ─► score after 20 days
+(news.py)        (data/news.db)      (detect.py)    (classify.py      merge with        (predict.py)
+                                                     or Claude)    recent coverage
+```
+
+- **Sources:** BBC World, Al Jazeera, Guardian World, NPR World, Defense News, 8 targeted Google News searches, and GDELT.
+- **What counts as an event:** a story covered by at least 3 articles from 3 different outlets. Coverage of the same story over the next 5 days is merged into it rather than counted again.
+- **Classification:** with an `ANTHROPIC_API_KEY`, Claude tags each story and decides whether it's genuinely new and market-relevant. Without one, keyword rules do it. They're free, but noisier: expect some false positives, which you can dismiss in the dashboard.
+- **Timing:** each event's reaction day comes from the earliest article's time in New York, so news that breaks after the 4pm close counts from the next trading day.
+- **Running it:** the API server runs the pipeline every hour in the background (`AUTO_PIPELINE`, `PIPELINE_EVERY_MINUTES` in `.env`). To run it without the dashboard: `python pipeline.py` (once) or `python pipeline.py --loop 60`. Market data refreshes at most every 12 hours. `python refresh.py` refreshes it on demand.
+
 ## Running it
 
 Requires Python 3.13+ and Node.js 20+.
@@ -56,12 +72,11 @@ Requires Python 3.13+ and Node.js 20+.
 python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt
 
-# Build the data (prices, earnings, reactions)
-.\.venv\Scripts\python.exe download_prices.py
-.\.venv\Scripts\python.exe download_earnings.py
-.\.venv\Scripts\python.exe calculate_reactions.py
+# Build all the data (prices, earnings, reactions, charts) in one go
+.\.venv\Scripts\python.exe refresh.py
 
-# Start the API (http://localhost:8000/docs lists every endpoint)
+# Start the API, which also starts the hourly news pipeline
+# (http://localhost:8000/docs lists every endpoint)
 .\.venv\Scripts\python.exe -m uvicorn api:app --reload
 ```
 
@@ -82,7 +97,12 @@ Then open http://localhost:5173.
 | File | What it does |
 |---|---|
 | `data/events.csv` | The event database, edited by hand. Run `check_events.py` after editing. |
+| `refresh.py` | One command to re-download and recalculate all market data |
 | `download_prices.py`, `download_earnings.py` | Fetch market data |
+| `pipeline.py` | The live loop: news → events → predictions → scores |
+| `news.py` | Fetch RSS feeds and GDELT into `data/news.db` |
+| `detect.py`, `classify.py` | Group headlines into stories and tag them as events |
+| `predict.py` | Locked-in live predictions and later scoring |
 | `calculate_reactions.py` | The event study: abnormal returns per event and stock |
 | `confounds.py` | Earnings, overlapping-event and market-turmoil checks |
 | `find_analogs.py` | The analog engine and template thesis (also a command-line tool) |
@@ -96,5 +116,7 @@ Then open http://localhost:5173.
 
 - **Small sample:** 71 events, some categories with only 4. No African events yet.
 - **Tags are judgment calls,** especially severity and surprise.
+- **Live detection without Claude is noisy.** The keyword rules catch the big stories, but also let through things like company weapons tests or human-interest pieces that mention a war.
+- **The live pipeline only runs while the API server is running** on your computer.
 - **Only US defense stocks** for now. European defense stocks reacted very differently after 2022.
 - **Market-adjusted returns only:** stock return minus SPY. A fuller model would adjust for each stock's sensitivity to the market (beta).

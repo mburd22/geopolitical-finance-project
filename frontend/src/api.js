@@ -30,6 +30,14 @@ export const getCategories = (ticker) => request(`/api/categories?ticker=${ticke
 
 export const getBacktest = (ticker) => request(`/api/backtest?ticker=${ticker}`)
 
+// Live: events the pipeline found in the news by itself.
+export const getLiveStatus = () => request('/api/live/status')
+export const getLiveEvents = (ticker, includeDismissed) =>
+  request(`/api/live/events?ticker=${ticker}&include_dismissed=${includeDismissed}`)
+export const getLiveScorecard = (ticker) => request(`/api/live/scorecard?ticker=${ticker}`)
+export const runPipeline = () => post('/api/live/run', {})
+export const setEventStatus = (id, action) => post(`/api/live/events/${id}/${action}`, {})
+
 // A helper for POST requests, which send JSON data to the server.
 const post = (path, data) =>
   request(path, {

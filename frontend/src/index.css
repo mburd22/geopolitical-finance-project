@@ -178,4 +178,37 @@ tbody tr.selected { background: var(--accent-wash); box-shadow: inset 3px 0 0 va
 .confound-box ul { margin: 6px 0 0; padding-left: 20px; color: var(--text-2); }
 .check { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; color: var(--text-2); }
 
+/* Live tab */
+.live-status-main { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.live-status-main > div { flex: 1 1 240px; }
+.dot { width: 10px; height: 10px; border-radius: 50%; flex: none; background: var(--muted); }
+.dot.busy { background: var(--accent); animation: pulse 1.2s ease-in-out infinite; }
+@keyframes pulse { 50% { opacity: 0.3; } }
+@media (prefers-reduced-motion: reduce) { .dot.busy { animation: none; } }
+.classifier-note { margin: 10px 0 0; }
+.live-event h3 { font-size: 16px; margin-bottom: 6px; }
+.live-event.dismissed { opacity: 0.55; }
+.live-event-head { display: flex; justify-content: space-between; gap: 12px; align-items: flex-start; }
+.chips.static { margin: 0 0 6px; }
+.chips.static .chip { cursor: default; padding: 2px 10px; font-size: 12px; }
+.live-line { margin: 6px 0; font-size: 14px; }
+.live-key {
+  display: inline-block; min-width: 82px; font-size: 12px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.03em; color: var(--muted);
+}
+.result-tag { margin-left: 8px; }
+.progress-track { height: 4px; background: var(--grid); border-radius: 2px; margin: 6px 0 0 82px; max-width: 320px; }
+.progress-track > div { height: 100%; background: var(--accent); border-radius: 2px; }
+.link-button {
+  background: none; border: none; padding: 0; font: inherit; font-size: 13px; font-weight: 600;
+  color: var(--accent); cursor: pointer; white-space: nowrap;
+}
+.link-button:hover { text-decoration: underline; }
+.live-details { border-top: 1px solid var(--grid); margin-top: 10px; padding-top: 6px; }
+.live-details h4 { font-size: 13px; margin: 10px 0 4px; color: var(--text-2); }
+.headlines { margin: 0; padding-left: 18px; font-size: 14px; }
+.headlines li { margin: 3px 0; }
+.headlines a { color: var(--text); }
+code { font-size: 0.92em; background: var(--grid); padding: 1px 5px; border-radius: 4px; }
+
 footer { margin-top: 24px; text-align: center; }

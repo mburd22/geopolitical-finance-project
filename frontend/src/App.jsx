@@ -5,9 +5,11 @@ import { getOptions } from './api'
 import AnalogEngine from './components/AnalogEngine'
 import CategoryView from './components/CategoryView'
 import EventExplorer from './components/EventExplorer'
+import LiveFeed from './components/LiveFeed'
 import TrackRecord from './components/TrackRecord'
 
 const TABS = [
+  { id: 'live', name: 'Live' },
   { id: 'analogs', name: 'Analog engine' },
   { id: 'events', name: 'Event explorer' },
   { id: 'categories', name: 'By event type' },
@@ -17,7 +19,7 @@ const TABS = [
 export default function App() {
   const [options, setOptions] = useState(null)
   const [error, setError] = useState(null)
-  const [tab, setTab] = useState('analogs')
+  const [tab, setTab] = useState('live')
   const [ticker, setTicker] = useState('ITA')
 
   // Fetch the dropdown options once, when the page first loads (the empty [] means "only once").
@@ -58,6 +60,7 @@ export default function App() {
       {!options && !error && <p className="muted">Connecting to the back end…</p>}
 
       {/* && means "only show the right side if the left side is true" */}
+      {options && tab === 'live' && <LiveFeed ticker={ticker} />}
       {options && tab === 'analogs' && <AnalogEngine options={options} ticker={ticker} />}
       {options && tab === 'events' && <EventExplorer options={options} ticker={ticker} />}
       {options && tab === 'categories' && <CategoryView ticker={ticker} />}
