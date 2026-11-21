@@ -10,3 +10,6 @@ __pycache__/
 # Generated output (rebuild by running the scripts)
 charts/
 data/backtest_*.csv
+
+# Live news database (articles, detected events, predictions). Grows every run.
+data/news.db

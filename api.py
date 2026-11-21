@@ -9,6 +9,13 @@
 # that tells FastAPI which address it answers. FastAPI turns whatever the function
 # returns into JSON: the text format browsers and JavaScript understand.
 
+import json
+import os
+import threading
+import time
+from contextlib import asynccontextmanager
+from datetime import datetime, timedelta, timezone
+from functools import lru_cache
 from typing import Literal
 
 import pandas as pd
@@ -17,16 +24,56 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
 import ai
+import backtest
+import detect
+import news
+import pipeline
+import predict
 from calculate_reactions import DEFENSE_TICKERS, MARKET_TICKER, load_events, load_prices
 from check_events import ALLOWED
 from confounds import find_confounds, load_earnings
-from functools import lru_cache
-
-import backtest
 from find_analogs import STRONG_MATCH, find_analogs, load_reactions, summarize, write_thesis
 from make_charts import abnormal_path
 
-app = FastAPI(title="Defense Stock Event Tracker API")
+# The news pipeline runs in the background while the server is up.
+# Set AUTO_PIPELINE=0 in .env to turn that off, or PIPELINE_EVERY_MINUTES to change how often.
+AUTO_PIPELINE = os.environ.get("AUTO_PIPELINE", "1") != "0"
+EVERY_MINUTES = int(os.environ.get("PIPELINE_EVERY_MINUTES", "60"))
+LIVE = {"running": False, "next_run_at": None, "last_error": None}
+
+
+def run_pipeline_now():
+    """Run one pipeline pass, then reload data so the dashboard sees fresh prices and events."""
+    LIVE["running"] = True
+    try:
+        summary = pipeline.run_once(log=lambda message: print(f"[pipeline] {message}"))
+        if summary.get("market_refreshed"):
+            load_data()
+        LIVE["last_error"] = None
+    except Exception as error:
+        LIVE["last_error"] = f"{type(error).__name__}: {error}"
+        print(f"[pipeline] failed: {LIVE['last_error']}")
+    finally:
+        LIVE["running"] = False
+
+
+def scheduler():
+    time.sleep(10)  # let the server finish starting first
+    while True:
+        run_pipeline_now()
+        LIVE["next_run_at"] = (datetime.now(timezone.utc) + timedelta(minutes=EVERY_MINUTES)).isoformat(timespec="seconds")
+        time.sleep(EVERY_MINUTES * 60)
+
+
+@asynccontextmanager
+async def lifespan(app):
+    if AUTO_PIPELINE:
+        # daemon=True: the thread stops automatically when the server stops.
+        threading.Thread(target=scheduler, daemon=True).start()
+    yield
+
+
+app = FastAPI(title="Defense Stock Event Tracker API", lifespan=lifespan)
 
 # CORS: browsers block a page from one address (the React app on port 5173)
 # reading data from another (this server on port 8000) unless the server allows it.
@@ -38,10 +85,18 @@ app.add_middleware(
 )
 
 # Load the data once when the server starts, not on every request, so answers are fast.
-PRICES = load_prices("data/prices.csv")
-EVENTS = load_events("data/events.csv")
-REACTIONS = load_reactions("data/event_reactions.csv")
-EARNINGS = load_earnings("data/earnings.csv")
+# load_data() runs again after the pipeline refreshes market data.
+def load_data():
+    global PRICES, EVENTS, REACTIONS, EARNINGS
+    PRICES = load_prices("data/prices.csv")
+    EVENTS = load_events("data/events.csv")
+    REACTIONS = load_reactions("data/event_reactions.csv")
+    EARNINGS = load_earnings("data/earnings.csv")
+    if "track_record" in globals():
+        track_record.cache_clear()
+
+
+load_data()
 
 
 def confounds_for(event, ticker):
@@ -264,3 +319,95 @@ def parse_headline(body: Headline):
         return ai.parse_headline(body.headline)
     except ai.ClaudeUnavailable as error:
         raise HTTPException(status_code=503, detail=str(error))
+
+
+# ---------- Live: events found automatically in the news ----------
+
+def live_db():
+    db = news.connect()
+    detect.ensure_tables(db)
+    predict.ensure_tables(db)
+    return db
+
+
+@app.get("/api/live/status")
+def live_status():
+    db = live_db()
+    last = db.execute("SELECT summary FROM runs ORDER BY id DESC LIMIT 1").fetchone()
+    counts = db.execute("SELECT (SELECT count(*) FROM articles), (SELECT count(*) FROM detected_events "
+                        "WHERE status = 'active'), (SELECT count(*) FROM detected_events WHERE status = 'dismissed')").fetchone()
+    market = pipeline.last_market_refresh(db)
+    db.close()
+    return {
+        "running": LIVE["running"], "auto": AUTO_PIPELINE, "every_minutes": EVERY_MINUTES,
+        "next_run_at": LIVE["next_run_at"], "last_error": LIVE["last_error"],
+        "last_run": json.loads(last[0]) if last else None,
+        "classifier": "claude" if ai.claude_configured() else "rules",
+        "articles": counts[0], "events": counts[1], "dismissed": counts[2],
+        "market_refreshed_at": market.isoformat(timespec="seconds") if market else None,
+        "price_data_ends": str(PRICES.index[-1].date()),
+    }
+
+
+@app.post("/api/live/run")
+def live_run():
+    """Start a pipeline pass now, in the background. Poll /api/live/status to see when it finishes."""
+    if LIVE["running"]:
+        return {"started": False, "reason": "already running"}
+    threading.Thread(target=run_pipeline_now, daemon=True).start()
+    return {"started": True}
+
+
+@app.get("/api/live/events")
+def live_events(ticker: Ticker = "ITA", include_dismissed: bool = False, limit: int = 50):
+    db = live_db()
+    statuses = ("active", "dismissed") if include_dismissed else ("active",)
+    rows = db.execute(
+        f"SELECT * FROM detected_events WHERE status IN ({','.join('?' * len(statuses))}) "
+        "ORDER BY event_time DESC LIMIT ?", (*statuses, min(limit, 200))).fetchall()
+    results = []
+    for row in rows:
+        headlines = [dict(h) for h in db.execute(
+            "SELECT title, source, url, published_at FROM articles WHERE event_id = ? "
+            "ORDER BY published_at LIMIT 6", (row["id"],))]
+        p = db.execute("SELECT * FROM predictions WHERE event_id = ? AND ticker = ?", (row["id"], ticker)).fetchone()
+        prediction = None
+        if p:
+            prediction = {
+                "direction": p["direction"], "predicted_median": p["predicted_median"], "beat_share": p["beat_share"],
+                "n_analogs": p["n_analogs"], "strong_matches": p["strong_matches"], "made_at": p["made_at"],
+                "analogs": json.loads(p["analogs_json"] or "[]"), "thesis": p["thesis"],
+                "actual_20d": p["actual_20d"], "hit": None if p["hit"] is None else bool(p["hit"]),
+                "scored": p["scored_at"] is not None,
+            }
+        results.append({
+            "id": row["id"], "name": row["name"], "event_date": row["event_date"], "event_time": row["event_time"],
+            "after_close": row["after_close"], "category": row["category"], "region": row["region"],
+            "us_involved": row["us_involved"], "severity": int(row["severity"]), "surprise": row["surprise"],
+            "n_articles": row["n_articles"], "n_sources": row["n_sources"], "classifier": row["classifier"],
+            "reasoning": row["reasoning"], "status": row["status"], "headlines": headlines,
+            "prediction": prediction, "progress": predict.progress(PRICES, row, ticker),
+        })
+    db.close()
+    return results
+
+
+@app.get("/api/live/scorecard")
+def live_scorecard(ticker: Ticker = "ITA"):
+    db = live_db()
+    card = predict.live_scorecard(db, ticker)
+    db.close()
+    return card
+
+
+@app.post("/api/live/events/{event_id}/{action}")
+def live_event_action(event_id: int, action: Literal["dismiss", "restore"]):
+    """Hide a false positive (or bring it back). Dismissed events don't count in the live scorecard."""
+    db = live_db()
+    status = "dismissed" if action == "dismiss" else "active"
+    changed = db.execute("UPDATE detected_events SET status = ? WHERE id = ?", (status, event_id)).rowcount
+    db.commit()
+    db.close()
+    if not changed:
+        raise HTTPException(status_code=404, detail="No such event")
+    return {"id": event_id, "status": status}
