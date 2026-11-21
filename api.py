@@ -29,7 +29,9 @@ import detect
 import news
 import pipeline
 import predict
-from calculate_reactions import DEFENSE_TICKERS, MARKET_TICKER, load_events, load_prices
+from calculate_reactions import (
+    BASKETS, DEFENSE_TICKERS, MARKET_OF, MARKETS, TICKER_NAMES, load_all_prices, load_events,
+)
 from check_events import ALLOWED
 from confounds import find_confounds, load_earnings
 from find_analogs import STRONG_MATCH, find_analogs, load_reactions, summarize, write_thesis
@@ -88,7 +90,7 @@ app.add_middleware(
 # load_data() runs again after the pipeline refreshes market data.
 def load_data():
     global PRICES, EVENTS, REACTIONS, EARNINGS
-    PRICES = load_prices("data/prices.csv")
+    PRICES = load_all_prices()
     EVENTS = load_events("data/events.csv")
     REACTIONS = load_reactions("data/event_reactions.csv")
     EARNINGS = load_earnings("data/earnings.csv")
@@ -96,7 +98,13 @@ def load_data():
         track_record.cache_clear()
 
 
+
 load_data()
+
+
+def price_data_ends():
+    """The latest date with prices in every market."""
+    return str(min(table.index[-1] for table in PRICES.values()).date())
 
 
 def confounds_for(event, ticker):
@@ -144,8 +152,15 @@ def options():
         "categories": sorted(ALLOWED["category"]),
         "regions": sorted(ALLOWED["region"]),
         "tickers": DEFENSE_TICKERS,
-        "market_ticker": MARKET_TICKER,
-        "price_data_ends": str(PRICES.index[-1].date()),
+        "markets": {
+            name: {"tickers": m["tickers"], "benchmark": m["benchmark"], "benchmark_name": m["benchmark_name"],
+                   "price_data_ends": str(PRICES[name].index[-1].date())}
+            for name, m in MARKETS.items()
+        },
+        "ticker_names": TICKER_NAMES,
+        "ticker_market": MARKET_OF,
+        "baskets": list(BASKETS),
+        "price_data_ends": price_data_ends(),
     }
 
 
@@ -166,14 +181,14 @@ def list_events(ticker: Ticker = "ITA"):
 
 @app.get("/api/events/{date}")
 def event_detail(date: str, ticker: Ticker = "ITA"):
-    """One event plus its day-by-day path for every ticker, ready to draw as a line chart."""
+    """One event plus its day-by-day path for every ticker in the chosen ticker's market."""
     match = EVENTS[EVENTS["date"] == pd.to_datetime(date, errors="coerce")]
     if match.empty:
         # 404 is the standard web code for "not found".
         raise HTTPException(status_code=404, detail=f"No event on {date}")
     event = match.iloc[0]
 
-    paths = {ticker: abnormal_path(PRICES, event, ticker) for ticker in DEFENSE_TICKERS}
+    paths = {t: abnormal_path(PRICES, event, t) for t in MARKETS[MARKET_OF[ticker]]["tickers"]}
     paths = {ticker: path for ticker, path in paths.items() if path is not None}
     if not paths:
         raise HTTPException(status_code=422, detail="Not enough price data around this event")
@@ -185,7 +200,9 @@ def event_detail(date: str, ticker: Ticker = "ITA"):
         {"day": int(day), **{ticker: to_number(path[day]) for ticker, path in paths.items()}}
         for day in days
     ]
-    return {"event": event_tags(event), "series": series, "confounds": confounds_for(event, ticker)}
+    market = MARKETS[MARKET_OF[ticker]]
+    return {"event": event_tags(event), "series": series, "confounds": confounds_for(event, ticker),
+            "benchmark": market["benchmark"], "benchmark_name": market["benchmark_name"]}
 
 
 @app.get("/api/categories")
@@ -345,7 +362,7 @@ def live_status():
         "classifier": "claude" if ai.claude_configured() else "rules",
         "articles": counts[0], "events": counts[1], "dismissed": counts[2],
         "market_refreshed_at": market.isoformat(timespec="seconds") if market else None,
-        "price_data_ends": str(PRICES.index[-1].date()),
+        "price_data_ends": price_data_ends(),
     }
 
 

@@ -10,7 +10,7 @@ import pandas as pd
 # Reuse the functions we already wrote, instead of copying them here.
 # This works because of the `if __name__ == "__main__":` line in calculate_reactions.py.
 from calculate_reactions import (
-    DEFENSE_TICKERS, MARKET_TICKER, load_prices, load_events, first_reaction_day,
+    MARKETS, benchmark_for, first_reaction_day, load_all_prices, load_events, prices_for,
 )
 
 DAYS_BEFORE = 5   # how many trading days to show before the event
@@ -27,16 +27,19 @@ def abnormal_path(prices, event, ticker):
 
     Returns a pandas Series: the index is the day relative to the event
     (-5 ... 0 ... +19) and each value is how far the stock has pulled ahead of
-    (or fallen behind) the market since the close just before the news.
+    (or fallen behind) its market since the close just before the news.
+    prices: {"US": table, "EU": table}.
     """
-    day0 = first_reaction_day(prices.index, event["date"], event["after_close"])
+    table = prices_for(prices, ticker)
+    bench = benchmark_for(ticker)
+    day0 = first_reaction_day(table.index, event["date"], event["after_close"])
     baseline = day0 - 1
     first, last = day0 - DAYS_BEFORE, day0 + DAYS_AFTER - 1
-    if first < 0 or last >= len(prices):
+    if first < 0 or last >= len(table):
         return None
 
-    stock = prices[ticker].iloc[first:last + 1] / prices[ticker].iloc[baseline] - 1
-    market = prices[MARKET_TICKER].iloc[first:last + 1] / prices[MARKET_TICKER].iloc[baseline] - 1
+    stock = table[ticker].iloc[first:last + 1] / table[ticker].iloc[baseline] - 1
+    market = table[bench].iloc[first:last + 1] / table[bench].iloc[baseline] - 1
     path = (stock - market) * 100
     path.index = range(-DAYS_BEFORE, DAYS_AFTER)  # relabel rows as relative days
     return path
@@ -55,7 +58,7 @@ def style_axes(ax, title):
 def chart_event(prices, event):
     """One line per defense ticker, showing how it moved vs the market around one event."""
     fig, ax = plt.subplots(figsize=(10, 5.5))  # a figure (the image) with one set of axes
-    for ticker in DEFENSE_TICKERS:
+    for ticker in MARKETS["US"]["tickers"]:
         path = abnormal_path(prices, event, ticker)
         if path is not None:
             # Make the ETF stand out, since it represents the whole sector.
@@ -123,7 +126,7 @@ def chart_category_bars(paths):
 
 if __name__ == "__main__":
     CHARTS.mkdir(exist_ok=True)
-    prices = load_prices("data/prices.csv")
+    prices = load_all_prices()
     events = load_events("data/events.csv")
 
     saved = []

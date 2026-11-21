@@ -16,7 +16,7 @@ from datetime import datetime, timedelta, timezone
 import detect
 import news
 import predict
-from calculate_reactions import load_events, load_prices
+from calculate_reactions import load_all_prices, load_events
 from classify import is_relevant
 from find_analogs import load_reactions
 from refresh import refresh_market_data
@@ -58,7 +58,7 @@ def run_once(force_market=False, log=print):
 
         events = load_events("data/events.csv")
         reactions = load_reactions("data/event_reactions.csv")
-        prices = load_prices("data/prices.csv")
+        prices = load_all_prices()
         summary["predicted"] = predict.predict_new(db, events, reactions, log=log)
         summary["scored"] = predict.score_due(db, prices, log=log)
 

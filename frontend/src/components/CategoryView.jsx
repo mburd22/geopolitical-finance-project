@@ -22,7 +22,62 @@ function BarValue({ x, y, width, height, value, color }) {
   )
 }
 
-export default function CategoryView({ ticker }) {
+// US vs Europe: each sector basket's average 20-day result by event type, side by side.
+function MarketComparison({ options }) {
+  const theme = useChartTheme()
+  const narrow = useNarrow()
+  const [data, setData] = useState(null)
+  const [us, eu] = options.baskets // ['ITA', 'EUDEF']
+
+  useEffect(() => {
+    Promise.all([getCategories(us), getCategories(eu)]).then(([usRows, euRows]) => {
+      const euBy = Object.fromEntries(euRows.map((r) => [r.category, r]))
+      setData(usRows
+        .map((r) => ({ category: r.category, us: r.avg_abnormal_20d, eu: euBy[r.category]?.avg_abnormal_20d, events: r.events }))
+        .sort((a, b) => b.eu - a.eu))
+    })
+  }, [us, eu])
+
+  if (!data) return null
+  const usLabel = `US (${us} vs ${options.markets.US.benchmark_name})`
+  const euLabel = `Europe (${eu} vs ${options.markets.EU.benchmark_name})`
+  return (
+    <div className="card">
+      <h2>US vs Europe</h2>
+      <p className="muted small">
+        Average 20-day return vs each market's own benchmark, by event type. {eu} is an equal-weighted basket of
+        Rheinmetall, BAE, Thales, Saab and Leonardo, in euros.
+      </p>
+      <div className="chart">
+        <ResponsiveContainer width="100%" height={460}>
+          <BarChart data={data} layout="vertical" margin={{ top: 8, right: 44, bottom: 8, left: 0 }} barGap={2}>
+            <CartesianGrid stroke={theme.grid} horizontal={false} />
+            <XAxis type="number" unit="%" stroke={theme.axis} tick={{ fill: theme.muted, fontSize: 12 }}
+              domain={[(min) => Math.floor(Math.min(min, 0)), (max) => Math.ceil(max)]} />
+            <YAxis type="category" dataKey="category" tickFormatter={label} width={narrow ? 92 : 120}
+              stroke={theme.axis} tick={{ fill: theme.text, fontSize: narrow ? 11 : 12 }} />
+            <ReferenceLine x={0} stroke={theme.axis} />
+            <Tooltip cursor={{ fill: theme.grid, opacity: 0.4 }}
+              contentStyle={{ background: theme.surface, border: `1px solid ${theme.grid}`, borderRadius: 8 }}
+              itemStyle={{ color: theme.text }} labelFormatter={label}
+              formatter={(value, name) => [pct(value), name]} />
+            <Legend wrapperStyle={{ fontSize: 13, paddingTop: 8 }} />
+            <Bar dataKey="us" name={usLabel} fill={theme.series[0]} radius={3} isAnimationActive={false}
+              label={(props) => <BarValue {...props} color={theme.text} />} />
+            <Bar dataKey="eu" name={euLabel} fill={theme.series[1]} radius={3} isAnimationActive={false}
+              label={(props) => <BarValue {...props} color={theme.text} />} />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+      <p className="muted small">
+        European defense stocks have also risen far more than their market since 2022, which lifts every category.
+        Compare the gap between categories, not just the levels.
+      </p>
+    </div>
+  )
+}
+
+export default function CategoryView({ ticker, options }) {
   const theme = useChartTheme()
   const narrow = useNarrow()
   const [rows, setRows] = useState([])
@@ -58,6 +113,7 @@ export default function CategoryView({ ticker }) {
 
   return (
     <section>
+      <MarketComparison options={options} />
       <div className="card">
         <h2>Average 20-day result by event type</h2>
         <p className="muted small">{ticker} return minus the market, averaged over every event in each category.</p>

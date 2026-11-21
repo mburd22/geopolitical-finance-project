@@ -191,10 +191,10 @@ if __name__ == "__main__":
         "surprise": args.surprise,
     }
 
-    from calculate_reactions import load_prices
+    from calculate_reactions import load_all_prices
     from confounds import find_confounds, load_earnings
 
-    prices = load_prices("data/prices.csv")
+    prices = load_all_prices()
     events = load_events("data/events.csv")
     reactions = load_reactions("data/event_reactions.csv")
     earnings = load_earnings("data/earnings.csv")

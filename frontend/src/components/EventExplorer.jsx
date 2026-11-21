@@ -78,7 +78,7 @@ export default function EventExplorer({ options, ticker }) {
           </table>
         </div>
         <p className="muted small">
-          {ticker} return minus the market (SPY). Click a row to see its chart.
+          {ticker} return minus its market's benchmark. Click a row to see its chart.
           ⚠ marks events where earnings, another event or market turmoil fell in the 20-day window (hover for details).
         </p>
       </div>

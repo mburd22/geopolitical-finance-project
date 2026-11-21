@@ -8,7 +8,7 @@
 
 import pandas as pd
 
-from calculate_reactions import DEFENSE_TICKERS, MARKET_TICKER, WINDOWS, first_reaction_day
+from calculate_reactions import BASKETS, MARKETS, WINDOWS, benchmark_for, first_reaction_day, prices_for
 
 TURMOIL_MOVE = 3.0  # a one-day SPY move (%) big enough to count as market turmoil
 WINDOW_DAYS = max(WINDOWS.values())
@@ -20,25 +20,29 @@ def load_earnings(path):
     return earnings
 
 
-def window_dates(prices, event):
-    """First and last trading day of an event's measurement window, or None if out of range."""
-    day0 = first_reaction_day(prices.index, event["date"], event["after_close"])
+def window_dates(table, event):
+    """First and last trading day of an event's measurement window in one market's price table."""
+    day0 = first_reaction_day(table.index, event["date"], event["after_close"])
     end = day0 + WINDOW_DAYS - 1
-    if day0 < 1 or end >= len(prices):
+    if day0 < 1 or end >= len(table):
         return None
-    return prices.index[day0], prices.index[end]
+    return table.index[day0], table.index[end]
 
 
 def find_confounds(prices, events, earnings, event, ticker="ITA"):
-    """Return a list of short warnings, each one a reason to doubt this event's numbers."""
-    window = window_dates(prices, event)
+    """Return a list of short warnings, each one a reason to doubt this event's numbers.
+
+    prices: {"US": table, "EU": table}. The checks use the ticker's own market.
+    """
+    table = prices_for(prices, ticker)
+    window = window_dates(table, event)
     if window is None:
         return []
     start, end = window
     flags = []
 
-    # 1. Earnings. The ETF holds all four companies, so any of their reports counts.
-    companies = [t for t in DEFENSE_TICKERS if t != "ITA"] if ticker == "ITA" else [ticker]
+    # 1. Earnings. A basket (ITA, EUDEF) holds several companies, so any of their reports counts.
+    companies = BASKETS.get(ticker, [ticker])
     reports = earnings[earnings["ticker"].isin(companies) & earnings["date"].between(start, end)]
     if not reports.empty:
         first = reports.sort_values("date").iloc[0]
@@ -50,25 +54,26 @@ def find_confounds(prices, events, earnings, event, ticker="ITA"):
     for _, other in events.iterrows():
         if other["date"] == event["date"] and other["event"] == event["event"]:
             continue  # skip the event itself
-        other_window = window_dates(prices, other)
+        other_window = window_dates(table, other)
         if other_window and start <= other_window[0] <= end:
             others.append(f"{other['event']} ({other['date'].date()})")
     if others:
         flags.append("Overlaps: " + "; ".join(others))
 
-    # 3. Market turmoil: the largest single-day SPY move inside the window.
-    daily = prices[MARKET_TICKER].pct_change() * 100
+    # 3. Market turmoil: the largest single-day move in this market's benchmark inside the window.
+    bench = benchmark_for(ticker)
+    daily = table[bench].pct_change() * 100
     biggest = daily.loc[start:end].abs().max()
     if biggest >= TURMOIL_MOVE:
-        flags.append(f"Market turmoil: SPY moved {biggest:.1f}% in one day")
+        flags.append(f"Market turmoil: {bench} moved {biggest:.1f}% in one day")
 
     return flags
 
 
 if __name__ == "__main__":
-    from calculate_reactions import load_events, load_prices
+    from calculate_reactions import load_all_prices, load_events
 
-    prices = load_prices("data/prices.csv")
+    prices = load_all_prices()
     events = load_events("data/events.csv")
     earnings = load_earnings("data/earnings.csv")
 

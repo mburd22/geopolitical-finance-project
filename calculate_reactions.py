@@ -6,8 +6,30 @@
 
 import pandas as pd
 
-DEFENSE_TICKERS = ["LMT", "RTX", "NOC", "GD", "ITA"]
-MARKET_TICKER = "SPY"
+# Each market has its own trading calendar, price file and benchmark ("the market").
+# European prices are converted to euros so they're comparable with their benchmark,
+# a STOXX Europe 600 fund. ITA and EUDEF are sector baskets: ITA is a US defense ETF,
+# EUDEF an equal-weighted basket of the five European companies (built in download_prices.py).
+MARKETS = {
+    "US": {"tickers": ["LMT", "RTX", "NOC", "GD", "ITA"], "benchmark": "SPY",
+           "benchmark_name": "S&P 500", "file": "data/prices.csv"},
+    "EU": {"tickers": ["RHM.DE", "BA.L", "HO.PA", "SAAB-B.ST", "LDO.MI", "EUDEF"], "benchmark": "EXSA.DE",
+           "benchmark_name": "STOXX Europe 600", "file": "data/prices_eu.csv"},
+}
+TICKER_NAMES = {
+    "ITA": "US defense ETF", "LMT": "Lockheed Martin", "RTX": "RTX", "NOC": "Northrop Grumman",
+    "GD": "General Dynamics", "EUDEF": "European defense basket", "RHM.DE": "Rheinmetall",
+    "BA.L": "BAE Systems", "HO.PA": "Thales", "SAAB-B.ST": "Saab", "LDO.MI": "Leonardo",
+}
+BASKETS = {"ITA": ["LMT", "RTX", "NOC", "GD"], "EUDEF": ["RHM.DE", "BA.L", "HO.PA", "SAAB-B.ST", "LDO.MI"]}
+
+DEFENSE_TICKERS = [t for m in MARKETS.values() for t in m["tickers"]]
+MARKET_OF = {t: name for name, m in MARKETS.items() for t in m["tickers"]}
+MARKET_TICKER = MARKETS["US"]["benchmark"]  # kept for older code paths: the US benchmark
+
+
+def benchmark_for(ticker):
+    return MARKETS[MARKET_OF[ticker]]["benchmark"]
 
 # How many trading days after the event to measure. Day 0 is the first day markets
 # could react, so a 5-day window covers day 0 through day 4.
@@ -17,6 +39,16 @@ WINDOWS = {"1d": 1, "5d": 5, "20d": 20}
 def load_prices(path):
     # index_col=0 makes the date column the row labels; parse_dates turns text into real dates.
     return pd.read_csv(path, index_col=0, parse_dates=True)
+
+
+def load_all_prices():
+    """{"US": prices table, "EU": prices table}: each market on its own trading calendar."""
+    return {name: load_prices(m["file"]) for name, m in MARKETS.items()}
+
+
+def prices_for(prices, ticker):
+    """The price table holding this ticker (and its benchmark)."""
+    return prices[MARKET_OF[ticker]]
 
 
 def load_events(path):
@@ -37,36 +69,44 @@ def first_reaction_day(trading_days, event_date, after_close):
 
 
 def measure_event(prices, event):
-    """Return a list of result rows (one per defense ticker) for a single event."""
-    trading_days = prices.index
-    day0 = first_reaction_day(trading_days, event["date"], event["after_close"])
+    """Return a list of result rows (one per defense ticker) for a single event.
 
-    # The baseline is the close on the trading day BEFORE the reaction: the last price before the news.
-    baseline = day0 - 1
-    longest = max(WINDOWS.values())
-    if baseline < 0 or day0 + longest - 1 >= len(trading_days):
-        return []  # not enough price history on one side of this event, so skip it
-
+    prices: {"US": table, "EU": table} from load_all_prices(). Each market's reaction day
+    comes from its own calendar. (after_close is about the US close; European markets close
+    earlier, so for news that broke during US hours Europe may really react a day later.)
+    """
     rows = []
-    for ticker in DEFENSE_TICKERS:
-        row = {
-            "date": event["date"].date(),
-            "event": event["event"],
-            "category": event["category"],
-            "region": event["region"],
-            "reaction_day": trading_days[day0].date(),
-            "ticker": ticker,
-        }
-        for name, days in WINDOWS.items():
-            end = day0 + days - 1
-            # .iloc picks rows by position. Return = end price / start price - 1.
-            stock_return = prices[ticker].iloc[end] / prices[ticker].iloc[baseline] - 1
-            market_return = prices[MARKET_TICKER].iloc[end] / prices[MARKET_TICKER].iloc[baseline] - 1
-            # Multiply by 100 to store percentages, round to keep the file readable.
-            row[f"return_{name}"] = round(stock_return * 100, 2)
-            row[f"market_{name}"] = round(market_return * 100, 2)
-            row[f"abnormal_{name}"] = round((stock_return - market_return) * 100, 2)
-        rows.append(row)
+    for name, market in MARKETS.items():
+        table = prices[name]
+        trading_days = table.index
+        day0 = first_reaction_day(trading_days, event["date"], event["after_close"])
+
+        # The baseline is the close on the trading day BEFORE the reaction: the last price before the news.
+        baseline = day0 - 1
+        longest = max(WINDOWS.values())
+        if baseline < 0 or day0 + longest - 1 >= len(trading_days):
+            continue  # not enough price history on one side of this event in this market
+
+        bench = table[market["benchmark"]]
+        for ticker in market["tickers"]:
+            row = {
+                "date": event["date"].date(),
+                "event": event["event"],
+                "category": event["category"],
+                "region": event["region"],
+                "reaction_day": trading_days[day0].date(),
+                "ticker": ticker,
+            }
+            for name, days in WINDOWS.items():
+                end = day0 + days - 1
+                # .iloc picks rows by position. Return = end price / start price - 1.
+                stock_return = table[ticker].iloc[end] / table[ticker].iloc[baseline] - 1
+                market_return = bench.iloc[end] / bench.iloc[baseline] - 1
+                # Multiply by 100 to store percentages, round to keep the file readable.
+                row[f"return_{name}"] = round(stock_return * 100, 2)
+                row[f"market_{name}"] = round(market_return * 100, 2)
+                row[f"abnormal_{name}"] = round((stock_return - market_return) * 100, 2)
+            rows.append(row)
     return rows
 
 
@@ -75,7 +115,7 @@ def measure_event(prices, event):
 # "from calculate_reactions import load_prices", Python skips this block,
 # so it can reuse the functions above without redoing all the calculations.
 if __name__ == "__main__":
-    prices = load_prices("data/prices.csv")
+    prices = load_all_prices()
     events = load_events("data/events.csv")
 
     all_rows = []
@@ -99,18 +139,19 @@ if __name__ == "__main__":
     if skipped:
         print("Skipped (not enough price data):", skipped)
 
-    # A first summary: the average abnormal return for the defense ETF (ITA) by event category.
+    # A first summary: the average abnormal return for each sector basket by event category.
     # groupby splits the table into groups, then .agg calculates something for each group.
-    ita = reactions[reactions["ticker"] == "ITA"]
-    summary = ita.groupby("category").agg(
-        events=("event", "count"),
-        avg_abnormal_1d=("abnormal_1d", "mean"),
-        avg_abnormal_5d=("abnormal_5d", "mean"),
-        avg_abnormal_20d=("abnormal_20d", "mean"),
-        # The share of events where ITA beat the market over 20 days.
-        beat_market_20d=("abnormal_20d", lambda values: (values > 0).mean() * 100),
-    ).round(1).sort_values("avg_abnormal_20d", ascending=False)
+    for basket in BASKETS:
+        rows = reactions[reactions["ticker"] == basket]
+        summary = rows.groupby("category").agg(
+            events=("event", "count"),
+            avg_abnormal_1d=("abnormal_1d", "mean"),
+            avg_abnormal_5d=("abnormal_5d", "mean"),
+            avg_abnormal_20d=("abnormal_20d", "mean"),
+            # The share of events where the basket beat its market over 20 days.
+            beat_market_20d=("abnormal_20d", lambda values: (values > 0).mean() * 100),
+        ).round(1).sort_values("avg_abnormal_20d", ascending=False)
 
-    print()
-    print("ITA (defense ETF) vs the market, by event category, in %:")
-    print(summary.to_string())
+        print()
+        print(f"{basket} ({TICKER_NAMES[basket]}) vs its market, by event category, in %:")
+        print(summary.to_string())

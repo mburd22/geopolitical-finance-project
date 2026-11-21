@@ -5,9 +5,9 @@
 import pandas as pd
 import yfinance as yf
 
-from calculate_reactions import DEFENSE_TICKERS
+from calculate_reactions import BASKETS
 
-COMPANIES = [t for t in DEFENSE_TICKERS if t != "ITA"]  # an ETF has no earnings of its own
+COMPANIES = [t for members in BASKETS.values() for t in members]  # baskets have no earnings of their own
 
 rows = []
 for ticker in COMPANIES:

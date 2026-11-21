@@ -33,7 +33,7 @@ export default function App() {
         <div>
           <h1>Defense Stock Event Tracker</h1>
           <p className="muted">
-            How defense stocks react to geopolitical events, measured against the S&amp;P 500.
+            How US and European defense stocks react to geopolitical events, measured against their own market.
             {options && ` Prices through ${options.price_data_ends}.`}
           </p>
         </div>
@@ -41,7 +41,11 @@ export default function App() {
           <label className="field ticker">
             <span>Stock</span>
             <select value={ticker} onChange={(e) => setTicker(e.target.value)}>
-              {options.tickers.map((t) => <option key={t} value={t}>{t}</option>)}
+              {Object.entries(options.markets).map(([market, m]) => (
+                <optgroup key={market} label={`${market === 'US' ? 'United States' : 'Europe'} (vs ${m.benchmark_name})`}>
+                  {m.tickers.map((t) => <option key={t} value={t}>{t} · {options.ticker_names[t]}</option>)}
+                </optgroup>
+              ))}
             </select>
           </label>
         )}
@@ -63,7 +67,7 @@ export default function App() {
       {options && tab === 'live' && <LiveFeed ticker={ticker} />}
       {options && tab === 'analogs' && <AnalogEngine options={options} ticker={ticker} />}
       {options && tab === 'events' && <EventExplorer options={options} ticker={ticker} />}
-      {options && tab === 'categories' && <CategoryView ticker={ticker} />}
+      {options && tab === 'categories' && <CategoryView ticker={ticker} options={options} />}
       {options && tab === 'track' && <TrackRecord ticker={ticker} />}
 
       <footer className="muted small">

@@ -8,7 +8,7 @@ from datetime import datetime, timezone
 import pandas as pd
 
 from backtest import track_record
-from calculate_reactions import DEFENSE_TICKERS, MARKET_TICKER, first_reaction_day, measure_event
+from calculate_reactions import DEFENSE_TICKERS, benchmark_for, first_reaction_day, measure_event, prices_for
 from find_analogs import STRONG_MATCH, find_analogs, summarize, write_thesis
 
 WINDOW_DAYS = 20
@@ -38,16 +38,23 @@ def as_event(row):
 
 
 def predict_new(db, events, reactions, log=print):
-    """Predict every active event that doesn't have predictions yet. Returns how many events."""
+    """Predict every active event missing a prediction for any ticker. Returns how many events.
+
+    Usually that's brand-new events. It also fills in tickers added later (like the European
+    stocks) for events already being tracked; made_at records when each prediction was made.
+    """
     ensure_tables(db)
-    rows = db.execute("SELECT * FROM detected_events WHERE status = 'active' AND id NOT IN "
-                      "(SELECT DISTINCT event_id FROM predictions)").fetchall()
+    have = {}
+    for event_id, ticker in db.execute("SELECT event_id, ticker FROM predictions"):
+        have.setdefault(event_id, set()).add(ticker)
+    rows = [r for r in db.execute("SELECT * FROM detected_events WHERE status = 'active'")
+            if set(DEFENSE_TICKERS) - have.get(r["id"], set())]
     now = datetime.now(timezone.utc).isoformat(timespec="seconds")
     records = {t: track_record(events, reactions, t) for t in DEFENSE_TICKERS} if rows else {}
     for row in rows:
         tags = {k: row[k] for k in ("category", "region", "us_involved", "severity", "surprise")}
         analogs = find_analogs(tags, events)
-        for ticker in DEFENSE_TICKERS:
+        for ticker in sorted(set(DEFENSE_TICKERS) - have.get(row["id"], set())):
             if analogs.empty:
                 db.execute("INSERT OR IGNORE INTO predictions (event_id, ticker, made_at, direction, n_analogs) "
                            "VALUES (?, ?, ?, 'flat', 0)", (row["id"], ticker, now))
@@ -65,22 +72,23 @@ def predict_new(db, events, reactions, log=print):
                  len(matched), int((matched["similarity"] >= STRONG_MATCH).sum()), json.dumps(top), thesis))
     db.commit()
     if rows:
-        log(f"Made predictions for {len(rows)} new events")
+        log(f"Made predictions for {len(rows)} events")
     return len(rows)
 
 
 def progress(prices, row, ticker):
-    """How the stock has done vs the market since the event, so far. None if markets haven't reacted yet."""
+    """How the stock has done vs its market since the event, so far. None if markets haven't reacted yet."""
     event = as_event(row)
-    day0 = first_reaction_day(prices.index, event["date"], event["after_close"])
-    if day0 >= len(prices) or day0 < 1:
+    table, bench = prices_for(prices, ticker), benchmark_for(ticker)
+    day0 = first_reaction_day(table.index, event["date"], event["after_close"])
+    if day0 >= len(table) or day0 < 1:
         return None
-    last = min(day0 + WINDOW_DAYS - 1, len(prices) - 1)
+    last = min(day0 + WINDOW_DAYS - 1, len(table) - 1)
     base = day0 - 1
-    stock = prices[ticker].iloc[last] / prices[ticker].iloc[base] - 1
-    market = prices[MARKET_TICKER].iloc[last] / prices[MARKET_TICKER].iloc[base] - 1
+    stock = table[ticker].iloc[last] / table[ticker].iloc[base] - 1
+    market = table[bench].iloc[last] / table[bench].iloc[base] - 1
     return {"days": int(last - day0 + 1), "abnormal": round(float(stock - market) * 100, 2),
-            "reaction_day": str(prices.index[day0].date())}
+            "reaction_day": str(table.index[day0].date())}
 
 
 def score_due(db, prices, log=print):

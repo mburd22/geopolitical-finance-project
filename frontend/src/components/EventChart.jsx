@@ -8,7 +8,7 @@ import {
   ResponsiveContainer, Tooltip, XAxis, YAxis,
 } from 'recharts'
 import { getEventDetail } from '../api'
-import { label, pct, tickerColor, useChartTheme } from '../theme'
+import { label, pct, shortTicker, tickerColor, useChartTheme } from '../theme'
 import { ConfoundList } from './Confounds'
 
 export default function EventChart({ date, highlight = 'ITA' }) {
@@ -31,7 +31,7 @@ export default function EventChart({ date, highlight = 'ITA' }) {
   if (error) return <p className="error">{error}</p>
   if (!detail) return <p className="muted">Loading chart…</p>
 
-  const { event, series, confounds } = detail
+  const { event, series, confounds, benchmark, benchmark_name: benchmarkName } = detail
   const tickers = Object.keys(series[0]).filter((key) => key !== 'day')
 
   return (
@@ -60,7 +60,7 @@ export default function EventChart({ date, highlight = 'ITA' }) {
             />
             <Legend wrapperStyle={{ fontSize: 13, paddingTop: 8 }} />
             {tickers.map((ticker) => (
-              <Line key={ticker} dataKey={ticker} type="monotone" dot={false}
+              <Line key={ticker} dataKey={ticker} name={shortTicker(ticker)} type="monotone" dot={false}
                 stroke={tickerColor(theme, ticker)}
                 strokeWidth={ticker === highlight ? 3 : 1.5}
                 strokeOpacity={ticker === highlight ? 1 : 0.75}
@@ -70,7 +70,7 @@ export default function EventChart({ date, highlight = 'ITA' }) {
         </ResponsiveContainer>
       </div>
       <p className="muted small">
-        Lines show each stock's return minus the S&amp;P 500 (SPY), starting from the close before the news.
+        Lines show each stock's return minus the {benchmarkName} ({benchmark}), starting from the close before the news.
       </p>
       <ConfoundList confounds={confounds} />
     </div>

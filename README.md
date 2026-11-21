@@ -2,7 +2,10 @@
 
 How do defense stocks react to geopolitical events, and can past reactions tell us anything about the next one?
 
-This project measures how US defense stocks (Lockheed Martin, RTX, Northrop Grumman, General Dynamics and the ITA defense ETF) moved against the S&P 500 around 71 geopolitical events from 2015 to 2025. An **analog engine** takes a new event, finds the most similar past events, and writes a thesis from how the stocks reacted then. A **backtest** checks whether the engine is actually any good.
+This project measures how defense stocks moved against their own market around 71 geopolitical events from 2015 to 2025:
+
+- **US:** Lockheed Martin, RTX, Northrop Grumman, General Dynamics and the ITA defense ETF, vs the S&P 500.
+- **Europe:** Rheinmetall, BAE Systems, Thales, Saab, Leonardo and an equal-weighted basket of the five (EUDEF), in euros, vs the STOXX Europe 600. An **analog engine** takes a new event, finds the most similar past events, and writes a thesis from how the stocks reacted then. A **backtest** checks whether the engine is actually any good.
 
 It also runs on its own. A **live pipeline** reads 14 news sources every hour and detects new geopolitical events. For each one it makes a prediction for every stock, locks the prediction in, and scores it once 20 trading days have passed, building a live track record nobody can quietly revise.
 
@@ -15,6 +18,7 @@ It comes with a React dashboard backed by a Python API.
 - **Spending announcements and elections move defense stocks the most.** Over 20 trading days, ITA beat the market by an average of +5.3% after elections and +3.9% after defense-spending announcements (4 events each).
 - **War outbreaks help, and individual strikes barely register.** Outbreaks averaged +2.6%; one-off military strikes and escalations about +0.6%.
 - **De-escalation holds defense stocks back.** Ceasefires and summits were the only category to lag the market (−0.1%, beating it in only 29% of cases).
+- **European defense stocks react two to four times as strongly.** After defense-spending announcements, the European basket beat its market by +16.7% over 20 days (vs +3.9% for ITA). After war outbreaks it was +8.7% (vs +2.6%). Seven trading days after Russia invaded Ukraine, Rheinmetall was up 69% vs the European market.
 - **Individual stocks swing far more than the sector.** After Russia invaded Ukraine, NOC and LMT were up about 25% and 21% vs the market within 7 trading days, while the ETF moved about 6%.
 
 ![Defense stocks vs the market around the Russian invasion of Ukraine](docs/event_2022-02-24.png)
@@ -30,7 +34,7 @@ Each event was hidden in turn and predicted from the others:
 | Baseline: "defense always beats the market" | 62% |
 | Baseline: same-category average | 64% |
 
-**Bottom line: the engine roughly matches a simple "defense beats the market" guess.** It's modestly better on ITA and NOC, and no better on LMT, RTX or GD. With about 70 events, differences of a few points are noise.
+**Bottom line: the engine roughly matches a simple "defense beats the market" guess.** It's modestly better on ITA and NOC, and no better on LMT, RTX or GD. It's the same story in Europe: the EUDEF basket scores 67% vs a 64% baseline (58% vs 61% using only earlier events). With about 70 events, differences of a few points are noise.
 
 Other things the backtest showed:
 - The **first similarity weights were a coin flip** (54% on ITA). Tuning showed severity matters most, and that US involvement and surprise added nothing. The tuned weights also improved NOC, which they weren't tuned on.
@@ -41,7 +45,7 @@ This is a research and learning project. **Nothing here is investment advice.**
 
 ## How it works
 
-1. **Prices:** daily closes since 2015 from Yahoo Finance (`yfinance`), with SPY as the market benchmark.
+1. **Prices:** daily closes since 2015 from Yahoo Finance (`yfinance`). Each market is kept on its own trading calendar, with its own benchmark: SPY for the US, the iShares STOXX Europe 600 fund (EXSA.DE) for Europe. BAE and Saab are converted to euros with daily exchange rates.
 2. **Events:** a hand-built database (`data/events.csv`) tagged by category, region, US involvement, severity, surprise, and whether the news broke after the US market close.
 3. **Event study:** for each event, find the first trading day markets could react. Measure each stock's return minus SPY's (the *abnormal return*) over 1, 5 and 20 trading days.
 4. **Confound checks:** flag events whose window contains company earnings, another event, or market turmoil.
@@ -118,5 +122,7 @@ Then open http://localhost:5173.
 - **Tags are judgment calls,** especially severity and surprise.
 - **Live detection without Claude is noisy.** The keyword rules catch the big stories, but also let through things like company weapons tests or human-interest pieces that mention a war.
 - **The live pipeline only runs while the API server is running** on your computer.
-- **Only US defense stocks** for now. European defense stocks reacted very differently after 2022.
+- **Event timing is US-based.** The `after_close` flag refers to the 4pm New York close. European markets close at 11:30 New York time, so for news that broke during US hours, Europe may really react a day later than measured.
+- **European defense stocks have trended up hard since 2022,** so "beat the market" is partly that trend, not the event.
+- **BAE and Thales have no earnings dates** in the Yahoo data, so earnings confounds are missed for those two.
 - **Market-adjusted returns only:** stock return minus SPY. A fuller model would adjust for each stock's sensitivity to the market (beta).

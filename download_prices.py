@@ -1,44 +1,60 @@
-# Step 2: download daily stock prices and save them to a file.
+# Download daily prices for every market in calculate_reactions.MARKETS and save
+# one file per market (each on its own trading calendar).
+#
+#   data/prices.csv     US defense stocks, ITA, and SPY (the US market)
+#   data/prices_eu.csv  European defense stocks in euros, the EUDEF basket, and EXSA.DE (European market)
 
-# "import" loads a library so we can use it.
-# yfinance downloads price history from Yahoo Finance. "as yf" gives it a short nickname.
-import yfinance as yf
-
-# pathlib helps us work with folders and file paths.
 from pathlib import Path
 
-# The defense stocks we're studying, plus SPY.
-# SPY is a fund that tracks the S&P 500 (the 500 biggest US companies).
-# It stands in for "the whole market", so later we can ask:
-# did defense stocks move MORE than the market did?
-tickers = ["LMT", "RTX", "NOC", "GD", "ITA", "SPY"]
+import pandas as pd
+import yfinance as yf
 
-# How far back to go. Dates are written year-month-day.
-start_date = "2015-01-01"
+from calculate_reactions import BASKETS, MARKETS
 
-print("Downloading prices for:", tickers)
+START = "2015-01-01"
 
-# This one line fetches every ticker's history from start_date to today.
-# auto_adjust=True corrects old prices for stock splits and dividends,
-# so a jump in the chart reflects a real change in value, not paperwork.
-data = yf.download(tickers, start=start_date, auto_adjust=True, progress=False)
+# European stocks trade in different currencies. To compare them with a euro-denominated
+# benchmark, convert each to euros with the daily exchange rate.
+CURRENCY = {"BA.L": "GBPEUR=X", "SAAB-B.ST": "SEKEUR=X"}  # the rest already trade in EUR
 
-# The download includes several prices per day (Open, High, Low, Close, Volume).
-# We only need the Close: the price when the market shut that day.
-prices = data["Close"]
 
-# .head() shows the first 5 rows, .tail() the last 5. Great for a quick look.
-print()
-print("First few days:")
-print(prices.head())
-print()
-print("Most recent days:")
-print(prices.tail())
-print()
-print("Total trading days downloaded:", len(prices))
+def download(symbols):
+    # auto_adjust=True corrects old prices for splits and dividends.
+    return yf.download(symbols, start=START, auto_adjust=True, progress=False)["Close"]
 
-# Save to a CSV file inside a "data" folder (created if it doesn't exist yet).
-# exist_ok=True means "don't complain if the folder is already there".
-Path("data").mkdir(exist_ok=True)
-prices.round(2).to_csv("data/prices.csv")
-print("Saved to data/prices.csv")
+
+def us_prices():
+    market = MARKETS["US"]
+    return download(market["tickers"] + [market["benchmark"]])
+
+
+def eu_prices():
+    market = MARKETS["EU"]
+    companies = BASKETS["EUDEF"]
+    raw = download(companies + [market["benchmark"]] + list(CURRENCY.values()))
+
+    # Use the benchmark's trading days (the Frankfurt exchange) as the calendar. A stock whose
+    # own exchange was closed that day (a UK bank holiday, say) keeps its last price.
+    calendar = raw[market["benchmark"]].dropna().index
+    raw = raw.reindex(calendar).ffill()
+
+    prices = pd.DataFrame(index=calendar)
+    for ticker in companies:
+        fx = raw[CURRENCY[ticker]] if ticker in CURRENCY else 1.0
+        prices[ticker] = raw[ticker] * fx
+
+    # EUDEF: equal-weighted, rebalanced daily. Each day's return is the average of the five
+    # companies' returns, compounded into an index starting at 100.
+    daily = prices[companies].pct_change().mean(axis=1).fillna(0)
+    prices["EUDEF"] = 100 * (1 + daily).cumprod()
+    prices[market["benchmark"]] = raw[market["benchmark"]]
+    return prices.dropna(how="all")
+
+
+if __name__ == "__main__":
+    Path("data").mkdir(exist_ok=True)
+    for name, build in [("US", us_prices), ("EU", eu_prices)]:
+        prices = build()
+        prices.round(4).to_csv(MARKETS[name]["file"])
+        print(f"{name}: {len(prices)} trading days, {prices.index[0].date()} to {prices.index[-1].date()}, "
+              f"saved to {MARKETS[name]['file']}")

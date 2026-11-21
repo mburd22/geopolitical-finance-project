@@ -47,9 +47,16 @@ export function useChartTheme() {
 // True on phone-sized screens, so charts can use smaller margins and labels.
 export const useNarrow = () => useMediaQuery('(max-width: 520px)')
 
-// Each ticker always gets the same color, whichever chart it appears in.
-const TICKER_ORDER = ['ITA', 'LMT', 'RTX', 'NOC', 'GD']
-export const tickerColor = (theme, ticker) => theme.series[TICKER_ORDER.indexOf(ticker)] ?? theme.muted
+// Each ticker always gets the same color, whichever chart it appears in. Charts only ever
+// show one market at a time, so the two markets can reuse the same palette slots.
+const TICKER_SLOTS = {
+  ITA: 0, LMT: 1, RTX: 2, NOC: 3, GD: 4,
+  EUDEF: 0, 'RHM.DE': 1, 'BA.L': 2, 'HO.PA': 3, 'SAAB-B.ST': 4, 'LDO.MI': 6,
+}
+export const tickerColor = (theme, ticker) => theme.series[TICKER_SLOTS[ticker]] ?? theme.muted
+
+// Short display names: "SAAB-B.ST" -> "SAAB-B", "RHM.DE" -> "RHM"
+export const shortTicker = (ticker) => ticker.split('.')[0]
 
 // Same idea for categories. There are 9 categories but only 8 palette colors,
 // so the ninth (coup) uses the muted gray rather than an invented color.
