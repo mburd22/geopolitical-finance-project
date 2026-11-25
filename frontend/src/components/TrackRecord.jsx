@@ -6,6 +6,7 @@ import {
   Scatter, ScatterChart, Tooltip, XAxis, YAxis, ZAxis,
 } from 'recharts'
 import { getBacktest } from '../api'
+import RunupSection from './RunupSection'
 import { label, pct, signClass, useChartTheme, useNarrow } from '../theme'
 
 function Tile({ title, value, note, emphasis }) {
@@ -176,6 +177,8 @@ export default function TrackRecord({ ticker }) {
             .map(([k, v]) => `${label(k)} ${v}`).join(', ')}.
         </p>
       </div>
+
+      <RunupSection ticker={ticker} />
     </section>
   )
 }

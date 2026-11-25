@@ -8,7 +8,9 @@ from datetime import datetime, timezone
 import pandas as pd
 
 from backtest import track_record
-from calculate_reactions import DEFENSE_TICKERS, benchmark_for, first_reaction_day, measure_event, prices_for
+from calculate_reactions import (
+    DEFENSE_TICKERS, benchmark_for, first_reaction_day, measure_event, prices_for, runup,
+)
 from find_analogs import STRONG_MATCH, find_analogs, summarize, write_thesis
 
 WINDOW_DAYS = 20
@@ -89,6 +91,16 @@ def progress(prices, row, ticker):
     market = table[bench].iloc[last] / table[bench].iloc[base] - 1
     return {"days": int(last - day0 + 1), "abnormal": round(float(stock - market) * 100, 2),
             "reaction_day": str(table.index[day0].date())}
+
+
+def runup_before(prices, row, ticker, days=60):
+    """How far the stock had beaten its market in the `days` trading days before the news.
+    Shown as context only: in the backtest, run-up did not predict the reaction (see runup.py)."""
+    event = as_event(row)
+    table = prices_for(prices, ticker)
+    day0 = first_reaction_day(table.index, event["date"], event["after_close"])
+    baseline = min(day0, len(table)) - 1  # if markets haven't reacted yet, use the latest close
+    return runup(table, ticker, benchmark_for(ticker), baseline, days)
 
 
 def score_due(db, prices, log=print):

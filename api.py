@@ -29,6 +29,7 @@ import detect
 import news
 import pipeline
 import predict
+import runup
 from calculate_reactions import (
     BASKETS, DEFENSE_TICKERS, MARKET_OF, MARKETS, TICKER_NAMES, load_all_prices, load_events,
 )
@@ -96,6 +97,7 @@ def load_data():
     EARNINGS = load_earnings("data/earnings.csv")
     if "track_record" in globals():
         track_record.cache_clear()
+        runup_analysis.cache_clear()
 
 
 
@@ -283,6 +285,33 @@ def analogs(new_event: NewEvent):
     return run_analogs(new_event)
 
 
+@lru_cache(maxsize=None)
+def runup_analysis(ticker, window):
+    return runup.analyze(REACTIONS, PRICES, ticker, window)
+
+
+@app.get("/api/runup")
+def runup_results(ticker: Ticker = "ITA", window: Literal["20d", "60d"] = "60d"):
+    """Does a big run-up before an event predict a weaker (or stronger) move after it?"""
+    a = runup_analysis(ticker, window)
+    col = f"runup_{window}"
+    return {
+        "ticker": ticker, "window": window, "events": a["events"],
+        "event_corr": a["event_corr"], "event_p": a["event_p"],
+        "ordinary_corr": a["ordinary_corr"], "ordinary_days": a["ordinary_days"],
+        "thirds": [
+            {"third": str(name), "events": int(r["events"]), "avg_runup": to_number(r["avg_runup"]),
+             "avg_after": to_number(r["avg_after"]), "beat_market": to_number(r["beat_market"])}
+            for name, r in a["thirds"].iterrows()
+        ],
+        "points": [
+            {"date": str(r["date"])[:10], "event": r["event"], "category": r["category"],
+             "runup": to_number(r[col]), "after": to_number(r["abnormal_20d"])}
+            for _, r in a["points"].iterrows()
+        ],
+    }
+
+
 @app.get("/api/backtest")
 def backtest_results(ticker: Ticker = "ITA"):
     """How often the analog engine has been right, against simple baselines, plus every prediction."""
@@ -404,6 +433,7 @@ def live_events(ticker: Ticker = "ITA", include_dismissed: bool = False, limit: 
             "n_articles": row["n_articles"], "n_sources": row["n_sources"], "classifier": row["classifier"],
             "reasoning": row["reasoning"], "status": row["status"], "headlines": headlines,
             "prediction": prediction, "progress": predict.progress(PRICES, row, ticker),
+            "runup_60d": predict.runup_before(PRICES, row, ticker),
         })
     db.close()
     return results

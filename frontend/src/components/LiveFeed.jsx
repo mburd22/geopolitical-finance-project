@@ -142,6 +142,14 @@ function EventCard({ event, ticker, onStatus }) {
         </div>
       )}
       <Progress event={event} />
+      {event.runup_60d !== null && event.runup_60d !== undefined && (
+        <div className="live-line">
+          <span className="live-key">Run-up</span>
+          <span className={signClass(event.runup_60d)}>{pct(event.runup_60d)}</span>
+          <span className="muted"> vs the market in the 60 trading days before the news (context only: run-ups
+            haven't predicted reactions in the backtest)</span>
+        </div>
+      )}
 
       <button type="button" className="link-button" onClick={() => setOpen(!open)} aria-expanded={open}>
         {open ? 'Hide details' : 'Show headlines, analogs and thesis'}

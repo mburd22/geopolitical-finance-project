@@ -97,17 +97,36 @@ def measure_event(prices, event):
                 "reaction_day": trading_days[day0].date(),
                 "ticker": ticker,
             }
-            for name, days in WINDOWS.items():
+            for window, days in WINDOWS.items():
                 end = day0 + days - 1
                 # .iloc picks rows by position. Return = end price / start price - 1.
                 stock_return = table[ticker].iloc[end] / table[ticker].iloc[baseline] - 1
                 market_return = bench.iloc[end] / bench.iloc[baseline] - 1
                 # Multiply by 100 to store percentages, round to keep the file readable.
-                row[f"return_{name}"] = round(stock_return * 100, 2)
-                row[f"market_{name}"] = round(market_return * 100, 2)
-                row[f"abnormal_{name}"] = round((stock_return - market_return) * 100, 2)
+                row[f"return_{window}"] = round(stock_return * 100, 2)
+                row[f"market_{window}"] = round(market_return * 100, 2)
+                row[f"abnormal_{window}"] = round((stock_return - market_return) * 100, 2)
+            for window, days in RUNUP_WINDOWS.items():
+                row[f"runup_{window}"] = runup(table, ticker, market["benchmark"], baseline, days)
             rows.append(row)
     return rows
+
+
+# Run-up: how far the stock had already pulled ahead of (or behind) its market in the
+# trading days BEFORE the news, ending at the baseline close. A big run-up can mean the
+# good news was already priced in ("buy the rumor, sell the news").
+RUNUP_WINDOWS = {"20d": 20, "60d": 60}
+
+
+def runup(table, ticker, benchmark, baseline, days):
+    """Abnormal return (in %) over the `days` trading days ending at position `baseline`.
+    None if there isn't that much history."""
+    start = baseline - days
+    if start < 0:
+        return None
+    stock = table[ticker].iloc[baseline] / table[ticker].iloc[start] - 1
+    market = table[benchmark].iloc[baseline] / table[benchmark].iloc[start] - 1
+    return round((stock - market) * 100, 2)
 
 
 # Everything below only runs when you run THIS file directly

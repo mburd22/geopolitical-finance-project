@@ -30,6 +30,8 @@ export const getCategories = (ticker) => request(`/api/categories?ticker=${ticke
 
 export const getBacktest = (ticker) => request(`/api/backtest?ticker=${ticker}`)
 
+export const getRunup = (ticker, window) => request(`/api/runup?ticker=${ticker}&window=${window}`)
+
 // Live: events the pipeline found in the news by itself.
 export const getLiveStatus = () => request('/api/live/status')
 export const getLiveEvents = (ticker, includeDismissed) =>

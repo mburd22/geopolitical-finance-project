@@ -43,6 +43,16 @@ How we got here, honestly:
 - **Confidence labels didn't work either.** A high/medium/low label was tested and removed: "high" calls were right *less* often. The dashboard shows the real backtested hit rate next to the baseline instead.
 - **Confounding is everywhere.** 84 of 113 events had earnings, another event, or a 3%+ market day inside their 20-day window. The dashboard flags these on every event.
 
+### Does a run-up predict the reaction?
+
+The 2026 Iran war suggested "buy the rumor, sell the news": ITA had beaten the market by 21% over the 60 trading days before the war started, then lagged by 4%. `runup.py` tests whether that's a general pattern across all events, using ordinary days as a control:
+
+- **US stocks: no reliable link.** Bigger 60-day run-ups went with slightly weaker moves afterwards (rank correlation −0.08 for ITA, p ≈ 0.19). That's no stronger than on ordinary days (−0.05), so it's general mean reversion, not something events cause.
+- **Europe: momentum, if anything.** Stocks that had already run up tended to keep going. The European basket's top third by run-up beat its market by +7.2% afterwards. Much of this is the 2022 rearmament wave, when events came in clusters.
+- **Adding run-up to the engine didn't help.** Averaged over all 11 stocks it scored 56% (leave one out) and 55% (only earlier events), against 58% for the always-up baseline.
+
+So the 2026 sell-off was the exception, not the rule. The dashboard shows each event's run-up as context only.
+
 So treat this as a research tool. Its value is in the measured history, the confound flags and the analogs as context, **not in its calls.** Nothing here is investment advice.
 
 ## How it works
@@ -112,7 +122,8 @@ Then open http://localhost:5173.
 | `calculate_reactions.py` | The event study: abnormal returns per event and stock |
 | `confounds.py` | Earnings, overlapping-event and market-turmoil checks |
 | `find_analogs.py` | The analog engine and template thesis (also a command-line tool) |
-| `backtest.py` | Scores the engine; `--tune` searches for better weights |
+| `backtest.py` | Scores the engine; `--tune` searches for better weights across all stocks |
+| `runup.py` | Tests whether pre-event run-ups predict the reaction |
 | `make_charts.py` | Static PNG charts |
 | `api.py` | FastAPI back end for the dashboard |
 | `ai.py` | Optional Claude features |
