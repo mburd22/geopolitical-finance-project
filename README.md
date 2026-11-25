@@ -108,6 +108,27 @@ Then open http://localhost:5173.
 
 **Optional Claude features:** copy `.env.example` to `.env` and add your `ANTHROPIC_API_KEY`. Without it, everything else still works.
 
+## Tests
+
+```bash
+.\.venv\Scripts\python.exe -m pip install -r requirements-dev.txt
+.\.venv\Scripts\python.exe -m pytest
+```
+
+71 tests, about 10 seconds. They never touch the internet or the live news database (`data/news.db`). They cover:
+
+- **The event-study maths**, on synthetic prices with known answers: reaction day, after-close news, weekends, benchmark subtraction and run-ups.
+- **The event database checker.**
+- **The analog engine:** related categories only, measured events only, and the thesis.
+- **The backtest,** including that the past-only mode never peeks at the future.
+- **Confound flags,** on known real cases.
+- **Feed parsing,** including rejecting `javascript:` links and malicious XML.
+- **The keyword classifier.**
+- **The live pipeline end to end:** clustering, merging follow-up coverage, locked predictions and scoring.
+- **Every API endpoint,** including the polite failure when there's no Claude key.
+
+GitHub runs the tests and the dashboard build on every push (`.github/workflows/tests.yml`).
+
 ## Project layout
 
 | File | What it does |
@@ -128,6 +149,7 @@ Then open http://localhost:5173.
 | `api.py` | FastAPI back end for the dashboard |
 | `ai.py` | Optional Claude features |
 | `frontend/` | React + Recharts dashboard |
+| `tests/` | The pytest suite |
 
 ## Limitations
 

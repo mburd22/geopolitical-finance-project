@@ -6,6 +6,7 @@
 # The Python virtual environment (rebuild it from requirements.txt)
 .venv/
 __pycache__/
+.pytest_cache/
 
 # Generated output (rebuild by running the scripts)
 charts/
