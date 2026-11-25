@@ -1,56 +1,82 @@
 date,event,category,region,us_involved,severity,surprise,after_close
 2015-01-07,Charlie Hebdo attack in Paris,terrorism,europe,no,2,yes,no
+2015-04-02,Al-Shabaab attack on Garissa University in Kenya,terrorism,africa,no,2,yes,no
 2015-07-14,Iran nuclear deal agreed,de_escalation,middle_east,yes,2,no,no
+2015-07-20,US and Cuba restore diplomatic relations,de_escalation,americas,yes,1,no,no
 2015-09-30,Russia begins airstrikes in Syria,military_strike,middle_east,no,2,yes,no
 2015-11-13,Paris terrorist attacks,terrorism,europe,no,3,yes,yes
 2015-11-24,Turkey shoots down Russian jet,escalation,middle_east,no,2,yes,no
 2016-01-06,North Korea fourth nuclear test,weapons_test,east_asia,no,2,yes,no
+2016-01-12,Iran detains US Navy sailors in the Gulf,escalation,middle_east,yes,1,yes,no
 2016-03-22,Brussels bombings,terrorism,europe,no,2,yes,no
 2016-06-23,UK votes for Brexit,election,europe,no,2,yes,yes
 2016-07-14,Nice truck attack,terrorism,europe,no,2,yes,yes
 2016-07-15,Coup attempt in Turkey,coup,middle_east,no,2,yes,yes
 2016-09-09,North Korea fifth nuclear test,weapons_test,east_asia,no,2,yes,no
+2016-09-26,Colombia signs peace deal with FARC,de_escalation,americas,no,1,no,no
 2016-11-08,Trump wins US election,election,americas,yes,3,yes,yes
 2017-04-06,US missile strike on Syrian airbase,military_strike,middle_east,yes,2,yes,yes
 2017-04-13,US drops largest non-nuclear bomb in Afghanistan,military_strike,south_asia,yes,1,yes,no
+2017-05-07,Macron wins French presidential election,election,europe,no,2,no,no
 2017-07-04,North Korea first ICBM test,weapons_test,east_asia,no,2,yes,no
 2017-08-08,Trump threatens North Korea with fire and fury,escalation,east_asia,yes,2,yes,yes
 2017-08-29,North Korea fires missile over Japan,weapons_test,east_asia,no,2,yes,no
 2017-09-03,North Korea sixth nuclear test,weapons_test,east_asia,no,3,yes,no
+2017-11-15,Military takes control in Zimbabwe,coup,africa,no,1,yes,no
 2018-03-01,Putin unveils new nuclear weapons,weapons_test,europe,no,1,yes,no
 2018-04-14,US UK and France strike Syria,military_strike,middle_east,yes,2,no,no
 2018-05-08,US exits Iran nuclear deal,escalation,middle_east,yes,2,no,no
 2018-06-12,Trump-Kim summit in Singapore,de_escalation,east_asia,yes,2,no,no
+2018-11-25,Russia seizes Ukrainian ships in Kerch Strait,escalation,europe,no,2,yes,no
+2019-01-23,Guaido declares himself Venezuela's interim president,escalation,americas,yes,1,yes,no
 2019-02-26,India airstrike in Pakistan,military_strike,south_asia,no,2,yes,no
 2019-02-28,Trump-Kim Hanoi summit collapses,escalation,east_asia,yes,1,yes,no
+2019-04-11,Sudan's Bashir ousted by the military,coup,africa,no,1,no,no
+2019-06-13,Tankers attacked in the Gulf of Oman,military_strike,middle_east,no,2,yes,no
 2019-06-20,Iran shoots down US drone,escalation,middle_east,yes,2,yes,no
+2019-08-02,US withdraws from INF nuclear treaty,escalation,europe,yes,1,no,no
 2019-09-14,Drone attack on Saudi oil facilities,military_strike,middle_east,no,2,yes,no
 2019-10-09,Turkey invades northern Syria,war_outbreak,middle_east,no,2,no,no
 2020-01-03,US strike kills Iranian general Soleimani,military_strike,middle_east,yes,3,yes,no
 2020-01-08,Iran fires missiles at US bases in Iraq,military_strike,middle_east,yes,2,yes,no
+2020-01-11,Tsai re-elected president of Taiwan,election,east_asia,no,1,no,no
 2020-06-15,India-China border clash in Galwan Valley,escalation,south_asia,no,1,yes,no
 2020-09-27,Nagorno-Karabakh war begins,war_outbreak,europe,no,2,yes,no
+2020-11-04,Ethiopia launches offensive in Tigray,war_outbreak,africa,no,2,yes,no
 2020-11-07,Biden declared winner of US election,election,americas,yes,2,no,no
 2021-02-01,Military coup in Myanmar,coup,east_asia,no,1,yes,no
 2021-04-14,Biden announces Afghanistan withdrawal,de_escalation,south_asia,yes,1,no,no
 2021-05-10,Israel-Gaza war begins,war_outbreak,middle_east,no,2,yes,no
+2021-07-07,Haiti's president Moise assassinated,coup,americas,no,1,yes,no
 2021-08-15,Taliban take Kabul,coup,south_asia,yes,2,yes,no
 2021-09-15,AUKUS submarine pact announced,defense_spending,east_asia,yes,2,yes,yes
+2021-10-25,Military coup in Sudan,coup,africa,no,1,yes,no
+2022-01-24,Military coup in Burkina Faso,coup,africa,no,1,yes,no
 2022-02-21,Putin recognizes breakaway Ukrainian regions,escalation,europe,no,2,no,no
 2022-02-24,Russia invades Ukraine,war_outbreak,europe,no,3,no,no
 2022-02-27,Germany announces EUR 100bn defense fund,defense_spending,europe,no,3,yes,no
+2022-06-29,NATO invites Finland and Sweden to join,escalation,europe,yes,1,no,no
 2022-08-02,Pelosi visits Taiwan,escalation,east_asia,yes,2,no,no
 2022-09-21,Putin announces mobilization,escalation,europe,no,2,yes,no
 2022-10-08,Kerch bridge explosion,military_strike,europe,no,1,yes,no
+2022-10-10,Russia launches mass missile strikes on Ukrainian cities,military_strike,europe,no,2,yes,no
 2022-11-15,Missile lands in Poland,escalation,europe,no,2,yes,no
+2023-01-25,US and Germany agree to send tanks to Ukraine,defense_spending,europe,yes,2,no,no
 2023-02-04,US shoots down Chinese spy balloon,escalation,americas,yes,1,no,no
+2023-04-04,Finland joins NATO,escalation,europe,no,1,no,no
+2023-04-15,Civil war breaks out in Sudan,war_outbreak,africa,no,2,yes,no
 2023-06-24,Wagner mutiny in Russia,coup,europe,no,2,yes,no
+2023-07-26,Military coup in Niger,coup,africa,no,2,yes,no
+2023-08-30,Military coup in Gabon,coup,africa,no,1,yes,no
 2023-10-07,Hamas attack on Israel,war_outbreak,middle_east,no,3,yes,no
 2024-01-11,US and UK strike Houthis in Yemen,military_strike,middle_east,yes,2,no,yes
+2024-01-13,Lai wins Taiwan presidential election,election,east_asia,no,2,no,no
 2024-01-28,Drone kills three US soldiers in Jordan,military_strike,middle_east,yes,1,yes,no
 2024-04-01,Israel strikes Iranian consulate in Damascus,military_strike,middle_east,no,2,yes,no
 2024-04-13,Iran drone and missile attack on Israel,military_strike,middle_east,yes,2,no,no
 2024-04-19,Israel strikes back at Iran near Isfahan,military_strike,middle_east,no,1,yes,no
+2024-04-20,US House passes 95bn aid for Ukraine Israel and Taiwan,defense_spending,americas,yes,2,no,no
+2024-07-04,Labour wins UK general election,election,europe,no,1,no,yes
 2024-08-06,Ukraine launches incursion into Kursk,escalation,europe,no,1,yes,no
 2024-09-17,Pager explosions across Lebanon,military_strike,middle_east,no,2,yes,no
 2024-09-27,Israel kills Hezbollah leader Nasrallah,military_strike,middle_east,no,2,yes,no
@@ -58,9 +84,11 @@ date,event,category,region,us_involved,severity,surprise,after_close
 2024-11-05,Trump wins US election,election,americas,yes,3,no,yes
 2024-12-08,Assad government falls in Syria,coup,middle_east,no,2,yes,no
 2025-01-19,Gaza ceasefire takes effect,de_escalation,middle_east,no,1,no,no
+2025-02-23,Merz's CDU wins German election,election,europe,no,2,no,no
 2025-02-28,Trump-Zelensky Oval Office clash,escalation,europe,yes,1,yes,no
 2025-03-04,EU unveils ReArm Europe plan,defense_spending,europe,no,3,no,no
 2025-03-15,US launches strikes on Houthis,military_strike,middle_east,yes,1,no,no
+2025-03-18,Bundestag frees defense spending from debt brake,defense_spending,europe,no,2,no,no
 2025-04-22,Terrorist attack in Pahalgam Kashmir,terrorism,south_asia,no,2,yes,no
 2025-05-07,India strikes Pakistan,military_strike,south_asia,no,2,no,no
 2025-05-10,India-Pakistan ceasefire,de_escalation,south_asia,no,1,yes,no
@@ -68,5 +96,19 @@ date,event,category,region,us_involved,severity,surprise,after_close
 2025-06-21,US strikes Iranian nuclear sites,military_strike,middle_east,yes,3,yes,no
 2025-06-24,Israel-Iran ceasefire takes hold,de_escalation,middle_east,yes,2,yes,no
 2025-06-25,NATO allies agree 5% of GDP spending target,defense_spending,europe,yes,2,no,no
+2025-08-15,Trump-Putin summit in Alaska,de_escalation,europe,yes,1,no,yes
+2025-09-02,US strikes alleged drug boat from Venezuela,military_strike,americas,yes,1,yes,no
 2025-09-10,Russian drones enter Polish airspace,escalation,europe,no,2,yes,no
 2025-10-10,Gaza ceasefire under US plan takes effect,de_escalation,middle_east,yes,1,no,no
+2025-12-29,China stages blockade drills around Taiwan,escalation,east_asia,no,2,yes,no
+2026-01-03,US strikes Venezuela and captures Maduro,military_strike,americas,yes,3,yes,no
+2026-02-28,US and Israel launch war on Iran,war_outbreak,middle_east,yes,3,yes,no
+2026-03-02,Hezbollah opens front against Israel,war_outbreak,middle_east,no,2,yes,no
+2026-03-04,Iran declares Strait of Hormuz closed,escalation,middle_east,yes,3,no,no
+2026-04-07,US-Iran two-week ceasefire announced,de_escalation,middle_east,yes,3,no,yes
+2026-04-12,US announces naval blockade of Iranian ports,escalation,middle_east,yes,2,yes,no
+2026-05-08,Russia and Ukraine agree three-day ceasefire,de_escalation,europe,yes,1,no,no
+2026-06-17,US and Iran sign Islamabad Memorandum,de_escalation,middle_east,yes,2,no,no
+2026-07-07,NATO summit in Ankara,defense_spending,europe,yes,1,no,no
+2026-07-08,Iran ceasefire collapses as US strikes 80 targets,military_strike,middle_east,yes,3,yes,no
+2026-11-03,Democrats win both houses in US midterms,election,americas,yes,2,no,yes
