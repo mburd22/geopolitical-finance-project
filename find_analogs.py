@@ -22,16 +22,17 @@ CATEGORY_FAMILIES = [
 ]
 
 # How many points each kind of similarity is worth (scores are scaled to 0-100).
-# Chosen by backtest.py --tune (Nov 2026). The original guesses (category 4, region 2,
-# us_involved 1.5, severity 1.5, surprise 1) called ITA's direction right only 54% of
-# the time. In the backtest, US involvement and surprise didn't help, and severity mattered most.
-# These weights raised ITA to 67% (leave-one-out) and also helped NOC, which they weren't tuned on.
-# Re-run the tuning whenever the event database grows.
+# Chosen by backtest.py --tune, scored across all 11 stocks (Nov 2026, 113 events).
+# History: the first guesses (category 4, region 2, us_involved 1.5, severity 1.5, surprise 1)
+# were a coin flip. A severity-heavy set tuned on ITA alone with 71 events looked better (67%)
+# but was overfit: on 113 events across all stocks it fell 4.7 points below the "always beats
+# the market" baseline. Matching on event type and region only, equally weighted, holds up best,
+# though no weighting beats that baseline on average. Re-run the tuning whenever events are added.
 WEIGHTS = {
     "category": 4.0,
-    "region": 1.0,
+    "region": 4.0,
     "us_involved": 0.0,
-    "severity": 3.0,
+    "severity": 0.0,
     "surprise": 0.0,
 }
 STRONG_MATCH = 70  # similarity % at which we call an analog a strong match
@@ -68,8 +69,15 @@ def similarity(new_event, past_event, weights=WEIGHTS):
     return round(score / sum(weights.values()) * 100)
 
 
-def find_analogs(new_event, events, top_n=8, weights=WEIGHTS):
-    """Return up to top_n most similar past events, best first, with a 'similarity' column."""
+def find_analogs(new_event, events, top_n=8, weights=WEIGHTS, reactions=None):
+    """Return up to top_n most similar past events, best first, with a 'similarity' column.
+
+    reactions: if given, only events with a measured reaction can be analogs. A very recent
+    event whose 20-day window hasn't finished would otherwise take a slot and then drop out.
+    """
+    if reactions is not None:
+        measured = set(zip(reactions["date"], reactions["event"]))
+        events = events[[(d, e) in measured for d, e in zip(events["date"], events["event"])]]
     # An event of an unrelated type is never a true analog, however well the other tags match:
     # a NATO spending deal is the opposite of a ceasefire, even if both are in Europe.
     related = [same_family(new_event["category"], category) for category in events["category"]]
@@ -199,7 +207,7 @@ if __name__ == "__main__":
     reactions = load_reactions("data/event_reactions.csv")
     earnings = load_earnings("data/earnings.csv")
 
-    analogs = find_analogs(new_event, events, top_n=args.top)
+    analogs = find_analogs(new_event, events, top_n=args.top, reactions=reactions)
     if analogs.empty:
         print("No comparable past events found. Try adding more events of this type to data/events.csv.")
         raise SystemExit  # stop the script here

@@ -2,46 +2,48 @@
 
 How do defense stocks react to geopolitical events, and can past reactions tell us anything about the next one?
 
-This project measures how defense stocks moved against their own market around 71 geopolitical events from 2015 to 2025:
+This project measures how defense stocks moved against their own market around 113 geopolitical events from 2015 to November 2026:
 
 - **US:** Lockheed Martin, RTX, Northrop Grumman, General Dynamics and the ITA defense ETF, vs the S&P 500.
-- **Europe:** Rheinmetall, BAE Systems, Thales, Saab, Leonardo and an equal-weighted basket of the five (EUDEF), in euros, vs the STOXX Europe 600. An **analog engine** takes a new event, finds the most similar past events, and writes a thesis from how the stocks reacted then. A **backtest** checks whether the engine is actually any good.
+- **Europe:** Rheinmetall, BAE Systems, Thales, Saab, Leonardo and an equal-weighted basket of the five (EUDEF), in euros, vs the STOXX Europe 600.
+
+An **analog engine** takes a new event, finds the most similar past events, and writes a thesis from how the stocks reacted then. A **backtest** checks whether the engine is actually any good.
 
 It also runs on its own. A **live pipeline** reads 14 news sources every hour and detects new geopolitical events. For each one it makes a prediction for every stock, locks the prediction in, and scores it once 20 trading days have passed, building a live track record nobody can quietly revise.
 
 It comes with a React dashboard backed by a Python API.
 
-![Average reaction of the ITA defense ETF by event type](docs/category_paths.png)
-
 ## What it found
 
-- **Spending announcements and elections move defense stocks the most.** Over 20 trading days, ITA beat the market by an average of +5.3% after elections and +3.9% after defense-spending announcements (4 events each).
-- **War outbreaks help, and individual strikes barely register.** Outbreaks averaged +2.6%; one-off military strikes and escalations about +0.6%.
-- **De-escalation holds defense stocks back.** Ceasefires and summits were the only category to lag the market (−0.1%, beating it in only 29% of cases).
-- **European defense stocks react two to four times as strongly.** After defense-spending announcements, the European basket beat its market by +16.7% over 20 days (vs +3.9% for ITA). After war outbreaks it was +8.7% (vs +2.6%). Seven trading days after Russia invaded Ukraine, Rheinmetall was up 69% vs the European market.
-- **Individual stocks swing far more than the sector.** After Russia invaded Ukraine, NOC and LMT were up about 25% and 21% vs the market within 7 trading days, while the ETF moved about 6%.
+From 113 events (2015 to November 2026), measured over 20 trading days against each stock's own market:
+
+- **Elections and defense-spending decisions move defense stocks the most.** ITA beat the market by an average of +4.2% after elections (9 events) and +2.3% after spending decisions (8).
+- **De-escalation hurts.** Ceasefires, deals and summits were the clearest negative: ITA −1.2% on average, beating the market only 38% of the time.
+- **War outbreaks are not reliably good for defense stocks.** ITA averaged +1.3%, but beat the market only half the time. When the US and Israel went to war with Iran on 28 Feb 2026, ITA *lagged* the market by 4% and Rheinmetall by 8%. Defense stocks had already rallied hard before it: LMT was up 22–26% vs the market after China's December Taiwan drills and the January Maduro raid.
+- **"Sell the news" can be brutal.** After the April 2026 US–Iran ceasefire, LMT fell 28.7% and ITA 13.3% vs the market.
+- **European defense stocks react two to four times as strongly.** After spending decisions, the European basket beat its market by +11.9% (vs +2.3% for ITA). After war outbreaks it was +6.4% (vs +1.3%). Seven trading days after Russia invaded Ukraine, Rheinmetall was up 69% vs the European market.
+- **Individual stocks swing far more than the sector.** After the invasion of Ukraine, NOC and LMT were up about 25% and 21% vs the market within 7 trading days, while the ETF moved about 6%.
 
 ![Defense stocks vs the market around the Russian invasion of Ukraine](docs/event_2022-02-24.png)
 
 ## Does the analog engine work?
 
-Each event was hidden in turn and predicted from the others:
+**No better than a simple guess.** Each event was hidden in turn and predicted from the others:
 
-| | ITA hit rate |
-|---|---|
-| Analog engine (leave one out) | **67%** |
-| Analog engine (only earlier events) | 61% |
-| Baseline: "defense always beats the market" | 62% |
-| Baseline: same-category average | 64% |
+| Share of directional calls that were right | ITA | European basket | Average, all 11 stocks |
+|---|---|---|---|
+| Analog engine (leave one out) | 53% | 49% | 56% |
+| Analog engine (only earlier events) | 51% | 50% | 57% |
+| Baseline: "defense always beats the market" | 59–64% | 57–60% | 58% |
 
-**Bottom line: the engine roughly matches a simple "defense beats the market" guess.** It's modestly better on ITA and NOC, and no better on LMT, RTX or GD. It's the same story in Europe: the EUDEF basket scores 67% vs a 64% baseline (58% vs 61% using only earlier events). With about 70 events, differences of a few points are noise.
+How we got here, honestly:
+- **The first weights were a coin flip.** With 71 events, a severity-heavy set tuned on ITA looked good: 67% vs a 62% baseline.
+- **That was overfitting.** After adding 42 events and scoring across all 11 stocks, those weights fell 4.7 points *below* the baseline. No weight combination we tried beats the baseline on average. The most robust choice is the simplest, matching on event type and region only, and that's what the engine uses now. `backtest.py --tune` now always scores across all stocks, to make this kind of luck harder to mistake for skill.
+- **Where it fails:** war outbreaks (0 of 5 calls right for ITA), coups and de-escalation. In those categories, what happened last time is a poor guide to what happens next.
+- **Confidence labels didn't work either.** A high/medium/low label was tested and removed: "high" calls were right *less* often. The dashboard shows the real backtested hit rate next to the baseline instead.
+- **Confounding is everywhere.** 84 of 113 events had earnings, another event, or a 3%+ market day inside their 20-day window. The dashboard flags these on every event.
 
-Other things the backtest showed:
-- The **first similarity weights were a coin flip** (54% on ITA). Tuning showed severity matters most, and that US involvement and surprise added nothing. The tuned weights also improved NOC, which they weren't tuned on.
-- The old **high/medium/low confidence label didn't predict accuracy.** "High confidence" calls were right *less* often than "low" ones. It was removed, and the dashboard now shows the real backtested hit rate instead.
-- **Confounding is everywhere.** 48 of 71 events had earnings, another event, or a 3%+ market day inside their 20-day window. The dashboard flags these on every event.
-
-This is a research and learning project. **Nothing here is investment advice.**
+So treat this as a research tool. Its value is in the measured history, the confound flags and the analogs as context, **not in its calls.** Nothing here is investment advice.
 
 ## How it works
 
@@ -118,7 +120,7 @@ Then open http://localhost:5173.
 
 ## Limitations
 
-- **Small sample:** 71 events, some categories with only 4. No African events yet.
+- **Small sample:** 113 events, some categories with only 6. Africa has 9 and the Americas 12, so analogs there are thin.
 - **Tags are judgment calls,** especially severity and surprise.
 - **Live detection without Claude is noisy.** The keyword rules catch the big stories, but also let through things like company weapons tests or human-interest pieces that mention a war.
 - **The live pipeline only runs while the API server is running** on your computer.

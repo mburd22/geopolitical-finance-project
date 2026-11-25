@@ -53,7 +53,7 @@ def predict_new(db, events, reactions, log=print):
     records = {t: track_record(events, reactions, t) for t in DEFENSE_TICKERS} if rows else {}
     for row in rows:
         tags = {k: row[k] for k in ("category", "region", "us_involved", "severity", "surprise")}
-        analogs = find_analogs(tags, events)
+        analogs = find_analogs(tags, events, reactions=reactions)
         for ticker in sorted(set(DEFENSE_TICKERS) - have.get(row["id"], set())):
             if analogs.empty:
                 db.execute("INSERT OR IGNORE INTO predictions (event_id, ticker, made_at, direction, n_analogs) "

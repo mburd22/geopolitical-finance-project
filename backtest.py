@@ -174,8 +174,17 @@ def track_record(events, reactions, ticker="ITA", weights=WEIGHTS):
     return record
 
 
-def tune(backtester):
-    """Try many weight combinations. Returns a table, best leave-one-out result first."""
+def tune(events, reactions):
+    """Try many weight combinations, scoring each across EVERY ticker in both modes.
+
+    Tuning on one stock overfits: in Nov 2026 a set tuned on ITA alone looked 5 points better
+    than the baseline there, but fell 4.7 points below it across all stocks. Averaging over
+    11 stocks and both modes makes it much harder for luck to win.
+    Returns a table, best first, by average points above the "always beats the market" baseline.
+    """
+    from calculate_reactions import DEFENSE_TICKERS
+
+    testers = [Backtester(events, reactions, ticker=t) for t in DEFENSE_TICKERS]
     grid = {
         "category": [2, 4, 6],
         "region": [0, 1, 2, 4],
@@ -186,14 +195,18 @@ def tune(backtester):
     rows = []
     for values in itertools.product(*grid.values()):
         weights = dict(zip(grid.keys(), values))
-        loo = score(backtester.run("leave_one_out", weights))
-        past = score(backtester.run("past_only", weights))
-        rows.append({**weights,
-                     "loo_hit": loo["hit_rate"], "loo_coverage": loo["coverage"], "loo_mae": loo["mae"],
-                     "past_hit": past["hit_rate"], "past_coverage": past["coverage"], "past_mae": past["mae"]})
+        row = dict(weights)
+        for mode in MODES:
+            scores = [score(bt.run(mode, weights)) for bt in testers]
+            row[f"{mode}_hit"] = round(float(np.mean([s["hit_rate"] for s in scores])), 1)
+            row[f"{mode}_edge"] = round(float(np.mean([s["hit_rate"] - s["always_up_hit_rate"] for s in scores])), 1)
+            row[f"{mode}_coverage"] = round(float(np.mean([s["coverage"] for s in scores])), 1)
+        rows.append(row)
     table = pd.DataFrame(rows)
-    table = table[table["loo_coverage"] >= 60]  # an engine that rarely makes a call isn't useful
-    return table.sort_values(["loo_hit", "loo_mae"], ascending=[False, True])
+    # An engine that rarely makes a call isn't useful.
+    table = table[(table["leave_one_out_coverage"] >= 60) & (table["past_only_coverage"] >= 60)]
+    table["edge"] = (table["leave_one_out_edge"] + table["past_only_edge"]) / 2
+    return table.sort_values("edge", ascending=False)
 
 
 def test_matches_find_analogs(events, reactions):
@@ -204,7 +217,7 @@ def test_matches_find_analogs(events, reactions):
     for i in range(0, bt.n, 7):
         tags = events.iloc[i][["category", "region", "us_involved", "severity", "surprise"]].to_dict()
         pool = events.drop(index=i)
-        slow = find_analogs(tags, pool, top_n=TOP_N)["event"].tolist()
+        slow = find_analogs(tags, pool, top_n=TOP_N, reactions=reactions)["event"].tolist()
         candidates = np.where(bt.pool(i, "leave_one_out") & bt.related[i] & (sim[i] >= MIN_SIMILARITY))[0]
         fast_idx = sorted(candidates, key=lambda j: (sim[i, j], bt.dates[j]), reverse=True)[:TOP_N]
         fast = bt.events.loc[fast_idx, "event"].tolist()
@@ -231,10 +244,12 @@ if __name__ == "__main__":
             print(f"  {key}: {value}")
 
     if args.tune:
-        table = tune(bt)
-        print("\nTop 10 weight sets by leave-one-out hit rate:")
+        print("\nSearching weights across all tickers (takes a few minutes)...")
+        table = tune(events, reactions)
+        print("Top 10 weight sets by average points above the always-up baseline:")
         print(table.head(10).to_string(index=False))
-        current = table[(table["category"] == 4) & (table["region"] == 2) & (table["us_involved"] == 1.5)
-                        & (table["severity"] == 1.5) & (table["surprise"] == 1)]
+        current = table
+        for key, value in WEIGHTS.items():
+            current = current[current[key] == value]
         print("\nCurrent weights:")
-        print(current.to_string(index=False))
+        print(current.to_string(index=False) if len(current) else "  (not in the search grid)")

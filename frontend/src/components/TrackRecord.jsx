@@ -60,7 +60,7 @@ export default function TrackRecord({ ticker }) {
         <p className="muted">
           Each past event was hidden in turn and predicted from the others. For {ticker}, the engine {verdict} the
           simplest possible guess, that defense stocks beat the market after any event.
-          Small sample (about 70 events): treat differences of a few points as noise.
+          Small sample ({data.predictions.length} events): treat differences of a few points as noise.
         </p>
       </div>
 

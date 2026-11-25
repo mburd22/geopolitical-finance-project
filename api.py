@@ -243,7 +243,7 @@ class NewEvent(BaseModel):
 def run_analogs(new_event: NewEvent):
     """Shared by both analog endpoints: find analogs and package everything as JSON-ready data."""
     event = new_event.model_dump()  # turn the Pydantic model into a plain dictionary
-    found = find_analogs(event, EVENTS, top_n=new_event.top)
+    found = find_analogs(event, EVENTS, top_n=new_event.top, reactions=REACTIONS)
     if found.empty:
         return {"analogs": [], "stats": None, "thesis": None, "track_record": None}
 
