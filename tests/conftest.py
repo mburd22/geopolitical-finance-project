@@ -53,8 +53,10 @@ def news_db(tmp_path, monkeypatch):
     """A fresh, empty live database in a temporary folder, with all tables created."""
     import detect
     import news
+    import pipeline
     import predict
     monkeypatch.setattr(news, "DB_PATH", tmp_path / "news.db")
+    monkeypatch.setattr(pipeline, "LOG_PATH", tmp_path / "pipeline.log")
     db = news.connect()
     detect.ensure_tables(db)
     predict.ensure_tables(db)

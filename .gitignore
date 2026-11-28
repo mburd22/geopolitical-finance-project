@@ -14,3 +14,6 @@ data/backtest_*.csv
 
 # Live news database (articles, detected events, predictions). Grows every run.
 data/news.db
+
+# What each pipeline run did (see pipeline.py)
+data/pipeline.log*

@@ -37,6 +37,14 @@ GOOGLE_QUERIES = [
 
 GDELT_QUERY = "(airstrike OR invasion OR ceasefire OR missile OR coup OR \"defense budget\") sourcelang:english"
 
+# Servers say "too many requests" (429) or "try again later" (5xx) when busy. GDELT in
+# particular allows about one request every 5 seconds. Instead of giving up, wait and try
+# again, waiting twice as long each time ("exponential backoff").
+RETRY_STATUSES = {429, 500, 502, 503, 504}
+RETRY_ATTEMPTS = 3       # tries in total, including the first
+RETRY_BASE_SECONDS = 5   # wait 5 s, then 10 s
+RETRY_MAX_SECONDS = 60   # never wait longer than this, whatever the server asks
+
 
 def connect():
     DB_PATH.parent.mkdir(exist_ok=True)
@@ -109,10 +117,34 @@ def parse_rss(xml_text, feed_name):
     return items
 
 
-def fetch_gdelt(client):
+def retry_wait(response, attempt):
+    """Seconds to wait before the next try: the server's Retry-After if it gave one, else backoff."""
+    asked = response.headers.get("Retry-After", "")
+    seconds = float(asked) if asked.replace(".", "", 1).isdigit() else RETRY_BASE_SECONDS * 2 ** attempt
+    return min(seconds, RETRY_MAX_SECONDS)
+
+
+def get_with_retry(client, url, attempts=RETRY_ATTEMPTS, sleep=time.sleep, log=None):
+    """client.get(url), retrying busy-server answers (429, 5xx). Returns the last response.
+
+    Connection errors are NOT retried: if the network is down, waiting won't fix it, and
+    retrying 14 sources would only make a run take minutes. `sleep` is swappable for tests.
+    """
+    for attempt in range(attempts):
+        response = client.get(url)
+        if response.status_code not in RETRY_STATUSES or attempt == attempts - 1:
+            return response
+        wait = retry_wait(response, attempt)
+        if log:
+            log(f"{urlsplit(url).netloc} answered {response.status_code}, retrying in {wait:.0f}s")
+        sleep(wait)
+    return response
+
+
+def fetch_gdelt(client, sleep=time.sleep, log=None):
     url = ("https://api.gdeltproject.org/api/v2/doc/doc?query=" + quote_plus(GDELT_QUERY)
            + "&mode=artlist&format=json&maxrecords=100&timespan=12h&sort=datedesc")
-    response = client.get(url)
+    response = get_with_retry(client, url, sleep=sleep, log=log)
     if response.status_code != 200 or not response.text.startswith("{"):
         raise RuntimeError(f"GDELT returned {response.status_code}")
     items = []
@@ -127,7 +159,7 @@ def fetch_gdelt(client):
     return items
 
 
-def fetch_all(log=print):
+def fetch_all(log=print, sleep=time.sleep):
     """Download every feed. Returns (articles, errors). One failing feed never stops the rest."""
     articles, errors = [], []
     sources = dict(FEEDS)
@@ -138,13 +170,13 @@ def fetch_all(log=print):
     with httpx.Client(headers=HEADERS, timeout=20, follow_redirects=True) as client:
         for name, url in sources.items():
             try:
-                response = client.get(url)
+                response = get_with_retry(client, url, sleep=sleep, log=log)
                 response.raise_for_status()
                 articles.extend(parse_rss(response.text, name))
             except Exception as error:  # a broken feed shouldn't stop the run
                 errors.append(f"{name}: {type(error).__name__}")
         try:
-            articles.extend(fetch_gdelt(client))
+            articles.extend(fetch_gdelt(client, sleep=sleep, log=log))
         except Exception as error:
             errors.append(f"GDELT: {error}")
     log(f"Fetched {len(articles)} items from {len(sources) + 1} sources"

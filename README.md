@@ -78,6 +78,8 @@ news feeds ─► store new articles ─► group by story ─► classify ─�
 - **Classification:** with an `ANTHROPIC_API_KEY`, Claude tags each story and decides whether it's genuinely new and market-relevant. Without one, keyword rules do it. They're free, but noisier: expect some false positives, which you can dismiss in the dashboard.
 - **Timing:** each event's reaction day comes from the earliest article's time in New York, so news that breaks after the 4pm close counts from the next trading day.
 - **Running it:** the API server runs the pipeline every hour in the background (`AUTO_PIPELINE`, `PIPELINE_EVERY_MINUTES` in `.env`). To run it without the dashboard: `python pipeline.py` (once) or `python pipeline.py --loop 60`. Market data refreshes at most every 12 hours. `python refresh.py` refreshes it on demand.
+- **When a source is busy:** a "too many requests" (429) or server error (5xx) is retried twice, waiting 5 then 10 seconds, or as long as the server asks (up to a minute). GDELT does this often. Connection errors aren't retried, so a run with no network still finishes quickly.
+- **Checking on it:** every run writes a line-by-line account to `data/pipeline.log` (not in git; rolls over at about 1 MB). `python live_report.py --ticker ITA` prints the live record for one stock: each detected event, the locked-in call, how the stock has done since, and the final score. Add `--all` to include dismissed events. It opens the database read-only.
 
 ## Running it
 
@@ -115,7 +117,7 @@ Then open http://localhost:5173.
 .\.venv\Scripts\python.exe -m pytest
 ```
 
-71 tests, about 10 seconds. They never touch the internet or the live news database (`data/news.db`). They cover:
+82 tests, about 15 seconds. They never touch the internet or the live news database (`data/news.db`). They cover:
 
 - **The event-study maths**, on synthetic prices with known answers: reaction day, after-close news, weekends, benchmark subtraction and run-ups.
 - **The event database checker.**
@@ -125,6 +127,7 @@ Then open http://localhost:5173.
 - **Feed parsing,** including rejecting `javascript:` links and malicious XML.
 - **The keyword classifier.**
 - **The live pipeline end to end:** clustering, merging follow-up coverage, locked predictions and scoring.
+- **Pipeline robustness:** retrying busy servers (with a fake server), the run log and its rollover, and the read-only live report.
 - **Every API endpoint,** including the polite failure when there's no Claude key.
 
 GitHub runs the tests and the dashboard build on every push (`.github/workflows/tests.yml`).
@@ -137,6 +140,7 @@ GitHub runs the tests and the dashboard build on every push (`.github/workflows/
 | `refresh.py` | One command to re-download and recalculate all market data |
 | `download_prices.py`, `download_earnings.py` | Fetch market data |
 | `pipeline.py` | The live loop: news → events → predictions → scores |
+| `live_report.py` | Prints the live record (events, calls, results) for one stock |
 | `news.py` | Fetch RSS feeds and GDELT into `data/news.db` |
 | `detect.py`, `classify.py` | Group headlines into stories and tag them as events |
 | `predict.py` | Locked-in live predictions and later scoring |

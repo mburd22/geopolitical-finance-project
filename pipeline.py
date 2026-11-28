@@ -12,6 +12,7 @@ import json
 import threading
 import time
 from datetime import datetime, timedelta, timezone
+from pathlib import Path
 
 import detect
 import news
@@ -24,6 +25,29 @@ from refresh import refresh_market_data
 MARKET_REFRESH_HOURS = 12
 _lock = threading.Lock()  # never let two runs overlap (the API might trigger one while another runs)
 
+# Every run also writes what it did to a log file, so you can see what happened while you
+# weren't watching (the API server's console scrolls away). When the file passes about 1 MB
+# it's renamed pipeline.log.1 (replacing any older one) and a fresh file starts.
+LOG_PATH = Path(__file__).parent / "data" / "pipeline.log"
+LOG_MAX_BYTES = 1_000_000
+
+
+def write_log_line(message):
+    LOG_PATH.parent.mkdir(exist_ok=True)
+    if LOG_PATH.exists() and LOG_PATH.stat().st_size > LOG_MAX_BYTES:
+        LOG_PATH.replace(LOG_PATH.with_name(LOG_PATH.name + ".1"))
+    stamp = datetime.now(timezone.utc).isoformat(timespec="seconds")
+    with LOG_PATH.open("a", encoding="utf-8") as file:
+        file.write(f"{stamp}  {message}\n")
+
+
+def also_to_file(log):
+    """Wrap a log function so every message is also written to LOG_PATH."""
+    def both(message):
+        log(message)
+        write_log_line(message)
+    return both
+
 
 def last_market_refresh(db):
     db.execute("CREATE TABLE IF NOT EXISTS meta (key TEXT PRIMARY KEY, value TEXT)")
@@ -32,10 +56,13 @@ def last_market_refresh(db):
 
 
 def run_once(force_market=False, log=print):
-    """One full pass. Returns a summary dict (also stored in the runs table)."""
+    """One full pass. Returns a summary dict (also stored in the runs table and the log file)."""
+    log = also_to_file(log)
     if not _lock.acquire(blocking=False):
+        log("Run skipped: a run is already in progress")
         return {"skipped": "a run is already in progress"}
     try:
+        log("Run started")
         started = datetime.now(timezone.utc)
         db = news.connect()
         summary = {"started_at": started.isoformat(timespec="seconds")}
@@ -67,7 +94,13 @@ def run_once(force_market=False, log=print):
                    (summary["started_at"], summary["finished_at"], json.dumps(summary)))
         db.commit()
         db.close()
+        log(f"Run finished: {summary['new_articles']} new articles, {summary['new_events']} new events, "
+            f"{summary['predicted']} predicted, {summary['scored']} scored"
+            + (f", {len(errors)} sources failed" if errors else ""))
         return summary
+    except Exception as error:
+        log(f"Run failed: {type(error).__name__}: {error}")
+        raise
     finally:
         _lock.release()
 
@@ -76,8 +109,8 @@ def run_forever(every_minutes, log=print):
     while True:
         try:
             run_once(log=log)
-        except Exception as error:  # keep the loop alive through a bad run
-            log(f"Run failed: {type(error).__name__}: {error}")
+        except Exception:  # keep the loop alive through a bad run (run_once already logged it)
+            pass
         time.sleep(every_minutes * 60)
 
 
