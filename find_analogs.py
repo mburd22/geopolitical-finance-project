@@ -27,7 +27,9 @@ CATEGORY_FAMILIES = [
 # were a coin flip. A severity-heavy set tuned on ITA alone with 71 events looked better (67%)
 # but was overfit: on 113 events across all stocks it fell 4.7 points below the "always beats
 # the market" baseline. Matching on event type and region only, equally weighted, holds up best,
-# though no weighting beats that baseline on average. Re-run the tuning whenever events are added.
+# though no weighting beats that baseline on average. Re-tuned on 144 events (Nov 2026): the top
+# set (category 6, severity 1.5, no region) beat these by only 0.1 and 0.6 points in the two
+# modes, which is noise, so these were kept. Re-run the tuning whenever events are added.
 WEIGHTS = {
     "category": 4.0,
     "region": 4.0,

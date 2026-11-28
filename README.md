@@ -2,7 +2,7 @@
 
 How do defense stocks react to geopolitical events, and can past reactions tell us anything about the next one?
 
-This project measures how defense stocks moved against their own market around 113 geopolitical events from 2015 to November 2026:
+This project measures how defense stocks moved against their own market around 144 geopolitical events from 2015 to November 2026:
 
 - **US:** Lockheed Martin, RTX, Northrop Grumman, General Dynamics and the ITA defense ETF, vs the S&P 500.
 - **Europe:** Rheinmetall, BAE Systems, Thales, Saab, Leonardo and an equal-weighted basket of the five (EUDEF), in euros, vs the STOXX Europe 600.
@@ -15,13 +15,15 @@ It comes with a React dashboard backed by a Python API.
 
 ## What it found
 
-From 113 events (2015 to November 2026), measured over 20 trading days against each stock's own market. Ranges in brackets are 90% bootstrap confidence intervals: with 6 to 25 events per category, the true average could plausibly sit anywhere inside them.
+From 143 measured events (2015 to November 2026; the newest is still inside its 20-day window), measured over 20 trading days against each stock's own market. Ranges in brackets are 90% bootstrap confidence intervals: with 10 to 25 events per category, the true average could plausibly sit anywhere inside them.
 
-- **Elections and defense-spending decisions move defense stocks the most.** ITA beat the market by an average of +4.2% after elections (9 events; +1.4% to +7.2%) and +2.3% after spending decisions (8; +0.7% to +3.9%). They're the only two US categories whose range stays above zero.
-- **De-escalation leans negative, but not clearly.** Ceasefires, deals and summits are the only category where ITA did worse than the market on average: −1.2%, beating it only 38% of the time. The range (−3.3% to +0.6%) still includes zero.
+- **Defense-spending decisions are the one reliable positive in the US.** ITA beat the market by +2.2% on average after them (12 events; +0.7% to +3.9%), the only US category whose range stays above zero.
+- **Elections looked like the strongest signal, until there were more of them.** With 9 elections, ITA averaged +4.2% (+1.4% to +7.2%). Adding 7 more, from India, the UK, France, Germany, Taiwan and the 2018 US midterms, brought it down to +1.1% (−1.0% to +3.5%). The big moves were a handful of US and European results: Biden in 2020 (+14.1%, the same week as the first vaccine results), Merz in 2025, Labour in 2024 and Trump in 2016.
+- **Terrorist attacks don't help defense stocks.** Across 15 attacks, ITA averaged −0.3% (−1.5% to +0.8%) and beat the market 47% of the time.
+- **De-escalation leans negative, but not clearly.** After ceasefires, deals and summits, ITA did worse than the market on average: −1.2%, beating it only 36% of the time. The range (−3.1% to +0.5%) still includes zero.
 - **War outbreaks are not reliably good for defense stocks.** ITA averaged +1.3% (−1.2% to +3.8%), and beat the market only half the time. When the US and Israel went to war with Iran on 28 Feb 2026, ITA *lagged* the market by 4% and Rheinmetall by 8%. Defense stocks had already rallied hard before it: LMT was up 22–26% vs the market after China's December Taiwan drills and the January Maduro raid.
 - **"Sell the news" can be brutal.** After the April 2026 US–Iran ceasefire, LMT fell 28.7% and ITA 13.3% vs the market.
-- **European defense stocks react two to four times as strongly.** After spending decisions, the European basket beat its market by +11.9% (+5.8% to +20.3%), vs +2.3% for ITA. After war outbreaks it was +6.4% (vs +1.3%). Seven trading days after Russia invaded Ukraine, Rheinmetall was up 69% vs the European market.
+- **European defense stocks react two to five times as strongly.** After spending decisions, the European basket beat its market by +10.8% (+5.2% to +17.5%), vs +2.2% for ITA. After war outbreaks it was +6.4% (vs +1.3%). Five of its nine event types have ranges entirely above zero, against one for ITA. Seven trading days after Russia invaded Ukraine, Rheinmetall was up 69% vs the European market.
 - **Individual stocks swing far more than the sector.** After the invasion of Ukraine, NOC and LMT were up about 25% and 21% vs the market within 7 trading days, while the ETF moved about 6%.
 
 ![Defense stocks vs the market around the Russian invasion of Ukraine](docs/event_2022-02-24.png)
@@ -32,25 +34,25 @@ From 113 events (2015 to November 2026), measured over 20 trading days against e
 
 | Share of directional calls that were right | ITA | European basket | Average, all 11 stocks |
 |---|---|---|---|
-| Analog engine (leave one out) | 53% | 49% | 56% |
-| Analog engine (only earlier events) | 51% | 50% | 57% |
-| Baseline: "defense always beats the market" | 59–64% | 57–60% | 58% |
+| Analog engine (leave one out) | 47% | 58% | 55% |
+| Analog engine (only earlier events) | 43% | 52% | 55% |
+| Baseline: "defense always beats the market" | 49–56% | 56–60% | 55–56% |
 
 How we got here, honestly:
 - **The first weights were a coin flip.** With 71 events, a severity-heavy set tuned on ITA looked good: 67% vs a 62% baseline.
-- **That was overfitting.** After adding 42 events and scoring across all 11 stocks, those weights fell 4.7 points *below* the baseline. No weight combination we tried beats the baseline on average. The most robust choice is the simplest, matching on event type and region only, and that's what the engine uses now. `backtest.py --tune` now always scores across all stocks, to make this kind of luck harder to mistake for skill.
-- **Per stock, the gaps are mostly noise.** The dashboard shows a 90% range for "engine minus baseline", resampled event by event. It crosses zero for 7 of the 11 stocks (leave one out) and 10 of 11 (only earlier events). Where it doesn't, it points both ways: the engine beat the baseline for Lockheed (+13 points) but trailed it for General Dynamics, Thales and the European basket. With 22 comparisons, a few clear-looking results are expected by luck alone.
-- **Where it fails:** war outbreaks (0 of 5 calls right for ITA), coups and de-escalation. In those categories, what happened last time is a poor guide to what happens next.
+- **That was overfitting.** After adding 42 events and scoring across all 11 stocks, those weights fell 4.7 points *below* the baseline. No weight combination we tried beats the baseline on average. The most robust choice is the simplest, matching on event type and region only, and that's what the engine uses now. Re-tuned after adding 31 more events (144 in all): still no set beats the baseline, and the best one beat the current weights by only 0.1 and 0.6 points, so they were left alone. `backtest.py --tune` now always scores across all stocks, to make this kind of luck harder to mistake for skill.
+- **Per stock, the gaps are mostly noise.** The dashboard shows a 90% range for "engine minus baseline", resampled event by event. With only earlier events, it crosses zero for 10 of the 11 stocks. With leave one out it's clearer, but points both ways: the engine beat the baseline for Lockheed (+15 points) and Northrop (+20), and trailed it for General Dynamics, Thales, Saab and Leonardo (−7 to −11). With 22 comparisons, a few clear-looking results are expected by luck alone.
+- **Where it fails:** war outbreaks (4 of 9 calls right for ITA), coups and de-escalation. In those categories, what happened last time is a poor guide to what happens next.
 - **Confidence labels didn't work either.** A high/medium/low label was tested and removed: "high" calls were right *less* often. The dashboard shows the real backtested hit rate next to the baseline instead.
-- **Confounding is everywhere.** 84 of 113 events had earnings, another event, or a 3%+ market day inside their 20-day window. The dashboard flags these on every event.
+- **Confounding is everywhere.** 115 of 144 events had earnings, another event, or a 3%+ market day inside their 20-day window. The dashboard flags these on every event.
 
 ### Does a run-up predict the reaction?
 
 The 2026 Iran war suggested "buy the rumor, sell the news": ITA had beaten the market by 21% over the 60 trading days before the war started, then lagged by 4%. `runup.py` tests whether that's a general pattern across all events, using ordinary days as a control:
 
-- **US stocks: no reliable link.** Bigger 60-day run-ups went with slightly weaker moves afterwards (rank correlation −0.08 for ITA, p ≈ 0.21). That's no stronger than on ordinary days (−0.15), so it's general mean reversion, not something events cause.
-- **Europe: momentum, if anything.** Stocks that had already run up tended to keep going. The European basket's top third by run-up beat its market by +7.2% afterwards. Much of this is the 2022 rearmament wave, when events came in clusters.
-- **Adding run-up to the engine didn't help.** Averaged over all 11 stocks it scored 56% (leave one out) and 55% (only earlier events), against 58% for the always-up baseline.
+- **US stocks: no reliable link.** Bigger 60-day run-ups went with slightly weaker moves afterwards (rank correlation −0.14 for ITA, p ≈ 0.06). That's no stronger than on ordinary days (−0.15), so it's general mean reversion, not something events cause.
+- **Europe: momentum, if anything.** Stocks that had already run up tended to keep going. The European basket's top third by run-up beat its market by +6.4% afterwards. Much of this is the 2022 rearmament wave, when events came in clusters.
+- **Adding run-up to the engine didn't help.** Tested on the first 113 events: averaged over all 11 stocks it scored 56% (leave one out) and 55% (only earlier events), against 58% for the always-up baseline.
 
 So the 2026 sell-off was the exception, not the rule. The dashboard shows each event's run-up as context only.
 
@@ -58,11 +60,11 @@ So the 2026 sell-off was the exception, not the rule. The dashboard shows each e
 
 The numbers above are *market-adjusted*: a stock's return minus its market's. That treats every stock as moving one-for-one with the market. The textbook event-study alternative is the *market model*: fit each stock's alpha (its own drift) and beta (how strongly it follows the market) on the 120 trading days ending 10 days before each event, and count only the move beyond alpha + beta × the market's move. Defense stocks are low-beta (Lockheed and Northrop about 0.4, ITA 0.9), so this matters. `compare_models.py` reruns everything both ways:
 
-- **The ranking of event types holds.** Elections and spending decisions stay on top for ITA (+4.1% and +2.0%) and de-escalation at the bottom, now more clearly: −2.4%, beating the market only 23% of the time (and −2.4% for the European basket too). Most averages shrink, because alpha soaks up some of the sector's drift. The European basket's spending reaction falls from +11.9% to +8.4%.
-- **Individual events often flip.** The two models agree closely overall (correlation 0.92), but 204 of 1,232 stock-event results change sign.
-- **The engine still has no real edge.** With the beta model, it's right 52% (leave one out) and 53% (only earlier events) of the time, averaged over the 11 stocks. That's 2–4 points above the always-up baseline, but only because the baseline drops to a coin flip (49–50%). Re-tuning the weights for the beta model gains a further 0.4 points, which is noise.
-- **Events do matter, a little.** Under both models, every one of the 11 stocks beat its market more often in the 20 days after an event than over ordinary 20-day spells: 58.6% vs 51.6% on average (market-adjusted), 50.8% vs 46.2% (beta). For each stock alone the gap is within noise, but it points the same way for all 11.
-- **Run-ups still don't predict anything.** The weak US mean reversion disappears (ITA +0.05, ordinary days −0.09), and Europe keeps its mild momentum.
+- **The ranking of event types holds.** Spending decisions stay on top for ITA (+2.0%) and de-escalation at the bottom, now more clearly: −2.4%, beating the market only 21% of the time (and −2.3% for the European basket too). Most averages shrink, because alpha soaks up some of the sector's drift. The European basket's spending reaction falls from +10.8% to +8.3%.
+- **Individual events often flip.** The two models agree closely overall (correlation 0.92), but 247 of 1,573 stock-event results change sign.
+- **The engine still has no real edge.** With the beta model, it's right 52% of the time in both modes, averaged over the 11 stocks. That's 1–3 points above the always-up baseline, but only because the baseline drops to a coin flip (49–51%). On the first 113 events, re-tuning the weights for the beta model gained a further 0.4 points, which is noise.
+- **Events matter for European stocks, not US ones.** Market-adjusted, the five European stocks and their basket beat their market in 60% of the 20-day windows after events, against 52% of ordinary 20-day spells. With the beta model it's 50% vs 45%. The US stocks show almost no difference (52% vs 51%, and 50% vs 48%). Lockheed and Northrop actually beat the market slightly *less* often after events.
+- **Run-ups still don't predict anything.** The weak US mean reversion disappears (ITA −0.03, ordinary days −0.09), and Europe keeps its mild momentum.
 
 So the project keeps the simpler market-adjusted model as its default. Switching is one line: `ABNORMAL_MODEL` in `calculate_reactions.py`.
 
@@ -173,7 +175,7 @@ GitHub runs the tests and the dashboard build on every push (`.github/workflows/
 
 ## Limitations
 
-- **Small sample:** 113 events, some categories with only 6. Africa has 9 and the Americas 12, so analogs there are thin.
+- **Small sample:** 144 events, 10 to 25 per category. South Asia has 12 events, Africa 14 and the Americas 15, so analogs there are thin, and only one event (Christchurch) is outside the six regions.
 - **Tags are judgment calls,** especially severity and surprise.
 - **Live detection without Claude is noisy.** In Nov 2026 the first 24 stories the keyword rules flagged were hand-labelled: only 8 were real, market-relevant events. The rest were company weapons tests, court cases, foiled plots, tributes and pleas for peace. The tightened rules keep those 8 and drop the other 16, and the labelled cases are now tests. But that's one week of news, so expect new kinds of false alarm. Events detected before the change stay in the database; dismiss them in the dashboard.
 - **The live pipeline only runs while the API server is running** on your computer.

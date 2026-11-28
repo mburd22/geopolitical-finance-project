@@ -98,6 +98,28 @@ date,event,category,region,reaction_day,ticker,return_1d,market_1d,abnormal_1d,r
 2016-01-12,Iran detains US Navy sailors in the Gulf,escalation,middle_east,2016-01-12,SAAB-B.ST,1.86,0.73,1.13,-2.24,-3.52,1.28,-7.37,-7.83,0.46,-0.05,13.88
 2016-01-12,Iran detains US Navy sailors in the Gulf,escalation,middle_east,2016-01-12,LDO.MI,1.12,0.73,0.39,-9.0,-3.52,-5.48,-26.06,-7.83,-18.24,0.86,10.13
 2016-01-12,Iran detains US Navy sailors in the Gulf,escalation,middle_east,2016-01-12,EUDEF,0.92,0.73,0.19,-5.39,-3.52,-1.88,-12.84,-7.83,-5.02,4.08,16.05
+2016-01-16,Tsai wins Taiwan presidential election,election,east_asia,2016-01-19,LMT,-0.32,0.13,-0.46,-2.31,-0.09,-2.22,-3.24,1.05,-4.29,8.49,11.22
+2016-01-16,Tsai wins Taiwan presidential election,election,east_asia,2016-01-19,RTX,-0.46,0.13,-0.59,-0.85,-0.09,-0.76,0.99,1.05,-0.06,-0.8,-2.89
+2016-01-16,Tsai wins Taiwan presidential election,election,east_asia,2016-01-19,NOC,1.38,0.13,1.25,-1.29,-0.09,-1.2,0.01,1.05,-1.04,6.26,13.03
+2016-01-16,Tsai wins Taiwan presidential election,election,east_asia,2016-01-19,GD,1.1,0.13,0.97,-1.1,-0.09,-1.01,4.38,1.05,3.33,-0.12,-3.35
+2016-01-16,Tsai wins Taiwan presidential election,election,east_asia,2016-01-19,ITA,-0.64,0.13,-0.78,-1.38,-0.09,-1.29,-2.51,1.05,-3.56,1.52,3.7
+2016-01-16,Tsai wins Taiwan presidential election,election,east_asia,2016-01-18,RHM.DE,-0.32,-0.36,0.04,6.25,2.45,3.79,2.51,-5.15,7.66,-1.91,14.38
+2016-01-16,Tsai wins Taiwan presidential election,election,east_asia,2016-01-18,BA.L,-2.47,-0.36,-2.11,-5.39,2.45,-7.84,-12.4,-5.15,-7.25,7.68,20.67
+2016-01-16,Tsai wins Taiwan presidential election,election,east_asia,2016-01-18,HO.PA,-1.04,-0.36,-0.67,2.24,2.45,-0.22,-10.44,-5.15,-5.29,7.46,19.73
+2016-01-16,Tsai wins Taiwan presidential election,election,east_asia,2016-01-18,SAAB-B.ST,-0.98,-0.36,-0.61,3.52,2.45,1.07,0.25,-5.15,5.4,3.01,17.48
+2016-01-16,Tsai wins Taiwan presidential election,election,east_asia,2016-01-18,LDO.MI,-1.82,-0.36,-1.46,-0.78,2.45,-3.23,-23.22,-5.15,-18.08,-1.76,6.55
+2016-01-16,Tsai wins Taiwan presidential election,election,east_asia,2016-01-18,EUDEF,-1.33,-0.36,-0.96,1.12,2.45,-1.33,-8.96,-5.15,-3.81,2.94,16.14
+2016-02-07,North Korea long-range rocket launch,weapons_test,east_asia,2016-02-08,LMT,1.22,-1.35,2.57,-2.76,-0.7,-2.06,2.61,6.73,-4.12,2.51,8.58
+2016-02-07,North Korea long-range rocket launch,weapons_test,east_asia,2016-02-08,RTX,-1.21,-1.35,0.14,-2.15,-0.7,-1.45,11.16,6.73,4.43,-1.27,-2.15
+2016-02-07,North Korea long-range rocket launch,weapons_test,east_asia,2016-02-08,NOC,-0.47,-1.35,0.88,-2.81,-0.7,-2.11,0.53,6.73,-6.2,2.28,12.23
+2016-02-07,North Korea long-range rocket launch,weapons_test,east_asia,2016-02-08,GD,-1.45,-1.35,-0.1,-3.0,-0.7,-2.29,-1.39,6.73,-8.12,6.28,2.63
+2016-02-07,North Korea long-range rocket launch,weapons_test,east_asia,2016-02-08,ITA,-0.74,-1.35,0.6,-3.12,-0.7,-2.41,6.37,6.73,-0.35,-2.64,0.6
+2016-02-07,North Korea long-range rocket launch,weapons_test,east_asia,2016-02-08,RHM.DE,-6.6,-3.68,-2.93,-6.19,-4.01,-2.18,12.86,5.3,7.56,8.1,12.01
+2016-02-07,North Korea long-range rocket launch,weapons_test,east_asia,2016-02-08,BA.L,-2.4,-3.68,1.27,-4.18,-4.01,-0.17,5.24,5.3,-0.05,-5.9,13.88
+2016-02-07,North Korea long-range rocket launch,weapons_test,east_asia,2016-02-08,HO.PA,-2.49,-3.68,1.18,-3.41,-4.01,0.61,14.3,5.3,9.0,-3.98,8.93
+2016-02-07,North Korea long-range rocket launch,weapons_test,east_asia,2016-02-08,SAAB-B.ST,-5.38,-3.68,-1.71,1.1,-4.01,5.11,13.67,5.3,8.37,1.2,10.06
+2016-02-07,North Korea long-range rocket launch,weapons_test,east_asia,2016-02-08,LDO.MI,-4.46,-3.68,-0.79,-8.04,-4.01,-4.03,3.37,5.3,-1.93,-17.75,-7.16
+2016-02-07,North Korea long-range rocket launch,weapons_test,east_asia,2016-02-08,EUDEF,-4.27,-3.68,-0.59,-4.12,-4.01,-0.11,10.01,5.3,4.72,-3.92,7.67
 2016-03-22,Brussels bombings,terrorism,europe,2016-03-22,LMT,-0.24,-0.05,-0.19,-0.23,0.22,-0.45,2.37,2.56,-0.18,-1.94,1.37
 2016-03-22,Brussels bombings,terrorism,europe,2016-03-22,RTX,-0.51,-0.05,-0.46,0.96,0.22,0.74,5.88,2.56,3.32,1.74,4.22
 2016-03-22,Brussels bombings,terrorism,europe,2016-03-22,NOC,0.08,-0.05,0.14,1.29,0.22,1.07,3.82,2.56,1.26,-4.2,1.88
@@ -109,6 +131,17 @@ date,event,category,region,reaction_day,ticker,return_1d,market_1d,abnormal_1d,r
 2016-03-22,Brussels bombings,terrorism,europe,2016-03-22,SAAB-B.ST,1.28,-0.12,1.39,4.41,0.03,4.38,-3.94,3.54,-7.48,-3.21,9.33
 2016-03-22,Brussels bombings,terrorism,europe,2016-03-22,LDO.MI,1.08,-0.12,1.19,1.44,0.03,1.41,-0.99,3.54,-4.53,14.98,-6.95
 2016-03-22,Brussels bombings,terrorism,europe,2016-03-22,EUDEF,0.85,-0.12,0.96,3.45,0.03,3.42,0.19,3.54,-3.35,3.26,6.12
+2016-06-12,Orlando nightclub shooting,terrorism,americas,2016-06-13,LMT,-1.09,-0.77,-0.32,-1.26,-1.18,-0.08,5.74,2.11,3.63,-2.8,7.18
+2016-06-12,Orlando nightclub shooting,terrorism,americas,2016-06-13,RTX,-0.77,-0.77,-0.0,-0.78,-1.18,0.39,1.92,2.11,-0.19,-0.5,1.48
+2016-06-12,Orlando nightclub shooting,terrorism,americas,2016-06-13,NOC,-1.06,-0.77,-0.29,-1.4,-1.18,-0.22,2.12,2.11,0.0,-1.56,10.1
+2016-06-12,Orlando nightclub shooting,terrorism,americas,2016-06-13,GD,-1.71,-0.77,-0.94,-1.79,-1.18,-0.62,0.33,2.11,-1.78,-4.3,2.4
+2016-06-12,Orlando nightclub shooting,terrorism,americas,2016-06-13,ITA,-1.26,-0.77,-0.49,-1.45,-1.18,-0.27,1.45,2.11,-0.67,-0.34,5.69
+2016-06-12,Orlando nightclub shooting,terrorism,americas,2016-06-13,RHM.DE,-0.83,-1.91,1.08,-3.4,-2.16,-1.24,-5.71,-1.44,-4.26,-7.5,-15.43
+2016-06-12,Orlando nightclub shooting,terrorism,americas,2016-06-13,BA.L,-1.91,-1.91,0.0,-0.81,-2.16,1.35,2.33,-1.44,3.77,-1.09,-3.76
+2016-06-12,Orlando nightclub shooting,terrorism,americas,2016-06-13,HO.PA,-2.08,-1.91,-0.17,-2.19,-2.16,-0.04,2.33,-1.44,3.77,-2.97,2.99
+2016-06-12,Orlando nightclub shooting,terrorism,americas,2016-06-13,SAAB-B.ST,-1.13,-1.91,0.78,-2.8,-2.16,-0.64,3.01,-1.44,4.45,-4.5,0.02
+2016-06-12,Orlando nightclub shooting,terrorism,americas,2016-06-13,LDO.MI,-0.11,-1.91,1.8,3.13,-2.16,5.29,0.22,-1.44,1.66,-14.11,-13.49
+2016-06-12,Orlando nightclub shooting,terrorism,americas,2016-06-13,EUDEF,-1.21,-1.91,0.7,-1.22,-2.16,0.94,0.63,-1.44,2.07,-6.08,-5.88
 2016-06-23,UK votes for Brexit,election,europe,2016-06-24,LMT,-0.13,-3.59,3.47,3.4,-0.63,4.04,7.21,3.05,4.16,-0.92,5.53
 2016-06-23,UK votes for Brexit,election,europe,2016-06-24,RTX,-3.36,-3.59,0.23,0.22,-0.63,0.85,2.74,3.05,-0.31,0.75,-0.1
 2016-06-23,UK votes for Brexit,election,europe,2016-06-24,NOC,-0.93,-3.59,2.66,3.53,-0.63,4.16,2.28,3.05,-0.77,-0.66,5.63
@@ -175,6 +208,17 @@ date,event,category,region,reaction_day,ticker,return_1d,market_1d,abnormal_1d,r
 2016-11-08,Trump wins US election,election,americas,2016-11-09,SAAB-B.ST,4.28,1.61,2.67,8.32,1.37,6.95,11.86,3.1,8.76,-0.59,2.22
 2016-11-08,Trump wins US election,election,americas,2016-11-09,LDO.MI,7.61,1.61,6.0,13.83,1.37,12.46,21.63,3.1,18.53,8.05,9.31
 2016-11-08,Trump wins US election,election,americas,2016-11-09,EUDEF,5.89,1.61,4.28,9.41,1.37,8.04,12.2,3.1,9.1,4.12,4.51
+2016-12-19,Berlin Christmas market truck attack,terrorism,europe,2016-12-19,LMT,0.84,0.22,0.62,-0.2,0.3,-0.49,1.6,0.76,0.84,-7.73,-2.13
+2016-12-19,Berlin Christmas market truck attack,terrorism,europe,2016-12-19,RTX,2.12,0.22,1.9,1.96,0.3,1.66,1.75,0.76,0.99,-1.66,1.78
+2016-12-19,Berlin Christmas market truck attack,terrorism,europe,2016-12-19,NOC,0.79,0.22,0.58,0.56,0.3,0.26,-0.63,0.76,-1.39,-8.32,3.18
+2016-12-19,Berlin Christmas market truck attack,terrorism,europe,2016-12-19,GD,0.13,0.22,-0.09,0.48,0.3,0.18,1.34,0.76,0.58,1.93,8.95
+2016-12-19,Berlin Christmas market truck attack,terrorism,europe,2016-12-19,ITA,0.75,0.22,0.53,0.73,0.3,0.43,0.13,0.76,-0.63,-2.32,5.24
+2016-12-19,Berlin Christmas market truck attack,terrorism,europe,2016-12-19,RHM.DE,1.02,-0.03,1.05,1.95,0.03,1.92,4.13,0.81,3.32,-14.17,-7.43
+2016-12-19,Berlin Christmas market truck attack,terrorism,europe,2016-12-19,BA.L,0.91,-0.03,0.94,-1.13,0.03,-1.15,-1.96,0.81,-2.77,-4.47,8.76
+2016-12-19,Berlin Christmas market truck attack,terrorism,europe,2016-12-19,HO.PA,-0.72,-0.03,-0.69,0.09,0.03,0.06,-3.06,0.81,-3.86,-2.97,9.15
+2016-12-19,Berlin Christmas market truck attack,terrorism,europe,2016-12-19,SAAB-B.ST,-0.95,-0.03,-0.92,1.62,0.03,1.6,4.74,0.81,3.93,-3.01,5.66
+2016-12-19,Berlin Christmas market truck attack,terrorism,europe,2016-12-19,LDO.MI,0.0,-0.03,0.03,0.6,0.03,0.57,-4.1,0.81,-4.91,7.2,25.62
+2016-12-19,Berlin Christmas market truck attack,terrorism,europe,2016-12-19,EUDEF,0.05,-0.03,0.08,0.63,0.03,0.6,-0.06,0.81,-0.87,-3.62,8.17
 2017-04-06,US missile strike on Syrian airbase,military_strike,middle_east,2017-04-07,LMT,1.17,-0.1,1.27,0.33,-1.24,1.58,2.22,1.81,0.41,-0.42,0.57
 2017-04-06,US missile strike on Syrian airbase,military_strike,middle_east,2017-04-07,RTX,0.52,-0.1,0.62,-0.28,-1.24,0.96,7.95,1.81,6.14,0.6,-2.78
 2017-04-06,US missile strike on Syrian airbase,military_strike,middle_east,2017-04-07,NOC,0.9,-0.1,1.01,1.49,-1.24,2.74,5.17,1.81,3.36,-2.88,-2.52
@@ -208,6 +252,28 @@ date,event,category,region,reaction_day,ticker,return_1d,market_1d,abnormal_1d,r
 2017-05-07,Macron wins French presidential election,election,europe,2017-05-08,SAAB-B.ST,-0.54,-0.03,-0.52,-1.87,0.56,-2.43,3.32,0.23,3.09,10.33,8.36
 2017-05-07,Macron wins French presidential election,election,europe,2017-05-08,LDO.MI,0.85,-0.03,0.87,2.28,0.56,1.72,4.02,0.23,3.79,10.31,16.7
 2017-05-07,Macron wins French presidential election,election,europe,2017-05-08,EUDEF,-0.16,-0.03,-0.13,0.08,0.56,-0.48,2.88,0.23,2.65,5.74,8.93
+2017-05-20,US and Saudi Arabia sign 110bn arms deal,defense_spending,middle_east,2017-05-22,LMT,1.55,0.51,1.05,3.98,1.43,2.55,4.15,3.17,0.99,-1.7,2.48
+2017-05-20,US and Saudi Arabia sign 110bn arms deal,defense_spending,middle_east,2017-05-22,RTX,0.41,0.51,-0.1,0.57,1.43,-0.86,0.57,3.17,-2.6,4.36,7.45
+2017-05-20,US and Saudi Arabia sign 110bn arms deal,defense_spending,middle_east,2017-05-22,NOC,-0.17,0.51,-0.68,2.85,1.43,1.42,4.96,3.17,1.8,-0.14,1.62
+2017-05-20,US and Saudi Arabia sign 110bn arms deal,defense_spending,middle_east,2017-05-22,GD,0.96,0.51,0.45,3.25,1.43,1.83,4.42,3.17,1.25,2.08,3.26
+2017-05-20,US and Saudi Arabia sign 110bn arms deal,defense_spending,middle_east,2017-05-22,ITA,0.87,0.51,0.36,2.89,1.43,1.46,4.22,3.17,1.05,-0.41,0.92
+2017-05-20,US and Saudi Arabia sign 110bn arms deal,defense_spending,middle_east,2017-05-22,RHM.DE,0.28,-0.03,0.31,0.37,0.1,0.27,3.42,0.49,2.93,1.14,12.99
+2017-05-20,US and Saudi Arabia sign 110bn arms deal,defense_spending,middle_east,2017-05-22,BA.L,-0.17,-0.03,-0.15,2.86,0.1,2.76,3.37,0.49,2.89,-3.65,-2.37
+2017-05-20,US and Saudi Arabia sign 110bn arms deal,defense_spending,middle_east,2017-05-22,HO.PA,-0.06,-0.03,-0.04,1.39,0.1,1.29,2.92,0.49,2.44,1.67,2.27
+2017-05-20,US and Saudi Arabia sign 110bn arms deal,defense_spending,middle_east,2017-05-22,SAAB-B.ST,-0.32,-0.03,-0.3,2.82,0.1,2.72,3.92,0.49,3.43,1.81,9.16
+2017-05-20,US and Saudi Arabia sign 110bn arms deal,defense_spending,middle_east,2017-05-22,LDO.MI,-1.85,-0.03,-1.83,2.58,0.1,2.48,3.57,0.49,3.08,5.46,22.15
+2017-05-20,US and Saudi Arabia sign 110bn arms deal,defense_spending,middle_east,2017-05-22,EUDEF,-0.43,-0.03,-0.4,2.02,0.1,1.92,3.51,0.49,3.03,1.36,8.93
+2017-05-22,Manchester Arena bombing,terrorism,europe,2017-05-23,LMT,0.48,0.22,0.26,1.76,0.83,0.93,2.77,1.95,0.82,-0.69,3.25
+2017-05-22,Manchester Arena bombing,terrorism,europe,2017-05-23,RTX,0.34,0.22,0.12,-0.32,0.83,-1.15,-0.12,1.95,-2.08,4.17,7.16
+2017-05-22,Manchester Arena bombing,terrorism,europe,2017-05-23,NOC,0.48,0.22,0.26,2.71,0.83,1.88,4.7,1.95,2.75,-0.87,0.56
+2017-05-22,Manchester Arena bombing,terrorism,europe,2017-05-23,GD,0.79,0.22,0.57,2.15,0.83,1.33,3.09,1.95,1.14,2.05,3.14
+2017-05-22,Manchester Arena bombing,terrorism,europe,2017-05-23,ITA,0.38,0.22,0.16,1.57,0.83,0.75,2.5,1.95,0.55,-0.27,1.23
+2017-05-22,Manchester Arena bombing,terrorism,europe,2017-05-23,RHM.DE,0.07,0.25,-0.18,0.85,0.28,0.57,1.95,-0.29,2.24,1.37,14.36
+2017-05-22,Manchester Arena bombing,terrorism,europe,2017-05-23,BA.L,-0.43,0.25,-0.69,2.43,0.28,2.15,3.59,-0.29,3.87,-4.04,-2.71
+2017-05-22,Manchester Arena bombing,terrorism,europe,2017-05-23,HO.PA,0.13,0.25,-0.12,1.34,0.28,1.06,2.7,-0.29,2.99,0.82,3.02
+2017-05-22,Manchester Arena bombing,terrorism,europe,2017-05-23,SAAB-B.ST,0.61,0.25,0.35,2.82,0.28,2.54,3.84,-0.29,4.13,1.98,9.41
+2017-05-22,Manchester Arena bombing,terrorism,europe,2017-05-23,LDO.MI,0.74,0.25,0.49,2.83,0.28,2.55,2.02,-0.29,2.31,2.3,20.63
+2017-05-22,Manchester Arena bombing,terrorism,europe,2017-05-23,EUDEF,0.22,0.25,-0.03,2.07,0.28,1.79,2.89,-0.29,3.18,0.58,9.05
 2017-07-04,North Korea first ICBM test,weapons_test,east_asia,2017-07-05,LMT,1.25,0.23,1.02,2.69,-0.01,2.7,4.92,2.11,2.81,-0.19,1.72
 2017-07-04,North Korea first ICBM test,weapons_test,east_asia,2017-07-05,RTX,0.58,0.23,0.35,1.2,-0.01,1.2,-2.62,2.11,-4.73,1.15,5.82
 2017-07-04,North Korea first ICBM test,weapons_test,east_asia,2017-07-05,NOC,1.0,0.23,0.77,1.92,-0.01,1.93,2.69,2.11,0.58,1.06,5.93
@@ -252,6 +318,17 @@ date,event,category,region,reaction_day,ticker,return_1d,market_1d,abnormal_1d,r
 2017-09-03,North Korea sixth nuclear test,weapons_test,east_asia,2017-09-04,SAAB-B.ST,3.56,-0.64,4.2,1.65,-0.21,1.87,12.3,3.08,9.23,-0.3,-11.89
 2017-09-03,North Korea sixth nuclear test,weapons_test,east_asia,2017-09-04,LDO.MI,3.85,-0.64,4.48,2.94,-0.21,3.15,10.84,3.08,7.76,-1.32,-7.75
 2017-09-03,North Korea sixth nuclear test,weapons_test,east_asia,2017-09-04,EUDEF,1.28,-0.64,1.92,1.34,-0.21,1.55,8.93,3.08,5.85,0.67,-5.96
+2017-10-14,Mogadishu truck bombing,terrorism,africa,2017-10-16,LMT,-0.14,0.13,-0.27,0.19,0.85,-0.66,-2.57,1.23,-3.81,3.34,7.23
+2017-10-14,Mogadishu truck bombing,terrorism,africa,2017-10-16,RTX,0.24,0.13,0.11,1.86,0.85,1.01,-0.51,1.23,-1.75,2.68,-6.15
+2017-10-14,Mogadishu truck bombing,terrorism,africa,2017-10-16,NOC,-0.21,0.13,-0.34,-0.61,0.85,-1.45,0.58,1.23,-0.65,8.69,8.67
+2017-10-14,Mogadishu truck bombing,terrorism,africa,2017-10-16,GD,0.05,0.13,-0.09,0.24,0.85,-0.6,-6.36,1.23,-7.59,5.72,2.14
+2017-10-14,Mogadishu truck bombing,terrorism,africa,2017-10-16,ITA,-0.03,0.13,-0.17,1.04,0.85,0.19,-1.59,1.23,-2.82,4.59,8.13
+2017-10-14,Mogadishu truck bombing,terrorism,africa,2017-10-16,RHM.DE,-0.04,-0.05,0.01,0.68,-0.39,1.07,1.49,-0.7,2.19,4.27,10.75
+2017-10-14,Mogadishu truck bombing,terrorism,africa,2017-10-16,BA.L,-0.15,-0.05,-0.09,-3.72,-0.39,-3.33,-8.75,-0.7,-8.05,-0.16,-1.55
+2017-10-14,Mogadishu truck bombing,terrorism,africa,2017-10-16,HO.PA,0.14,-0.05,0.19,-3.04,-0.39,-2.65,-6.49,-0.7,-5.79,-1.94,-1.17
+2017-10-14,Mogadishu truck bombing,terrorism,africa,2017-10-16,SAAB-B.ST,-0.53,-0.05,-0.48,1.03,-0.39,1.42,1.11,-0.7,1.81,3.92,0.25
+2017-10-14,Mogadishu truck bombing,terrorism,africa,2017-10-16,LDO.MI,0.66,-0.05,0.71,-1.38,-0.39,-1.0,-27.03,-0.7,-26.33,-1.02,-2.52
+2017-10-14,Mogadishu truck bombing,terrorism,africa,2017-10-16,EUDEF,0.02,-0.05,0.07,-1.28,-0.39,-0.9,-8.11,-0.7,-7.41,1.05,1.25
 2017-11-15,Military takes control in Zimbabwe,coup,africa,2017-11-15,LMT,-0.99,-0.5,-0.49,1.02,0.88,0.14,1.93,3.5,-1.57,-2.31,-2.09
 2017-11-15,Military takes control in Zimbabwe,coup,africa,2017-11-15,RTX,-1.04,-0.5,-0.53,-0.89,0.88,-1.77,5.26,3.5,1.76,-1.35,-3.58
 2017-11-15,Military takes control in Zimbabwe,coup,africa,2017-11-15,NOC,-0.17,-0.5,0.33,1.28,0.88,0.4,3.0,3.5,-0.5,1.2,6.02
@@ -263,6 +340,17 @@ date,event,category,region,reaction_day,ticker,return_1d,market_1d,abnormal_1d,r
 2017-11-15,Military takes control in Zimbabwe,coup,africa,2017-11-15,SAAB-B.ST,-1.07,-0.42,-0.65,-0.77,1.24,-2.01,-3.76,2.38,-6.14,2.55,8.6
 2017-11-15,Military takes control in Zimbabwe,coup,africa,2017-11-15,LDO.MI,4.46,-0.42,4.89,2.38,1.24,1.14,0.0,2.38,-2.38,-31.53,-31.74
 2017-11-15,Military takes control in Zimbabwe,coup,africa,2017-11-15,EUDEF,0.58,-0.42,1.0,1.06,1.24,-0.18,0.4,2.38,-1.98,-8.65,-6.37
+2017-11-28,North Korea Hwasong-15 ICBM test,weapons_test,east_asia,2017-11-28,LMT,0.73,1.01,-0.29,-0.94,1.5,-2.44,1.2,3.2,-2.0,1.85,-1.97
+2017-11-28,North Korea Hwasong-15 ICBM test,weapons_test,east_asia,2017-11-28,RTX,0.5,1.01,-0.51,2.49,1.5,0.99,8.56,3.2,5.36,-2.03,-7.26
+2017-11-28,North Korea Hwasong-15 ICBM test,weapons_test,east_asia,2017-11-28,NOC,1.41,1.01,0.39,-0.69,1.5,-2.19,0.4,3.2,-2.8,1.03,5.87
+2017-11-28,North Korea Hwasong-15 ICBM test,weapons_test,east_asia,2017-11-28,GD,1.55,1.01,0.54,0.31,1.5,-1.19,0.45,3.2,-2.75,-2.89,-5.41
+2017-11-28,North Korea Hwasong-15 ICBM test,weapons_test,east_asia,2017-11-28,ITA,1.24,1.01,0.23,1.02,1.5,-0.49,3.9,3.2,0.7,-0.65,0.77
+2017-11-28,North Korea Hwasong-15 ICBM test,weapons_test,east_asia,2017-11-28,RHM.DE,1.1,0.58,0.52,2.19,0.76,1.43,3.05,1.47,1.58,5.84,19.09
+2017-11-28,North Korea Hwasong-15 ICBM test,weapons_test,east_asia,2017-11-28,BA.L,0.89,0.58,0.31,4.17,0.76,3.41,5.68,1.47,4.21,-7.69,-11.0
+2017-11-28,North Korea Hwasong-15 ICBM test,weapons_test,east_asia,2017-11-28,HO.PA,-2.28,0.58,-2.86,-1.6,0.76,-2.37,4.12,1.47,2.65,-1.17,-10.31
+2017-11-28,North Korea Hwasong-15 ICBM test,weapons_test,east_asia,2017-11-28,SAAB-B.ST,-0.5,0.58,-1.08,0.23,0.76,-0.54,-0.97,1.47,-2.44,-4.32,0.42
+2017-11-28,North Korea Hwasong-15 ICBM test,weapons_test,east_asia,2017-11-28,LDO.MI,-0.49,0.58,-1.07,-3.62,0.76,-4.39,-1.96,1.47,-3.43,-28.52,-34.18
+2017-11-28,North Korea Hwasong-15 ICBM test,weapons_test,east_asia,2017-11-28,EUDEF,-0.26,0.58,-0.84,0.25,0.76,-0.51,2.03,1.47,0.56,-7.49,-8.15
 2018-03-01,Putin unveils new nuclear weapons,weapons_test,europe,2018-03-01,LMT,-3.62,-1.45,-2.16,-2.91,0.42,-3.32,-4.85,-3.97,-0.89,4.74,8.03
 2018-03-01,Putin unveils new nuclear weapons,weapons_test,europe,2018-03-01,RTX,-3.3,-1.45,-1.84,-2.83,0.42,-3.24,-7.64,-3.97,-3.67,2.85,8.53
 2018-03-01,Putin unveils new nuclear weapons,weapons_test,europe,2018-03-01,NOC,-3.0,-1.45,-1.55,-0.6,0.42,-1.01,-1.2,-3.97,2.77,6.7,11.21
@@ -307,6 +395,17 @@ date,event,category,region,reaction_day,ticker,return_1d,market_1d,abnormal_1d,r
 2018-06-12,Trump-Kim summit in Singapore,de_escalation,east_asia,2018-06-12,SAAB-B.ST,-0.55,-0.03,-0.52,-1.25,-0.61,-0.64,-5.19,-0.84,-4.35,11.7,-5.49
 2018-06-12,Trump-Kim summit in Singapore,de_escalation,east_asia,2018-06-12,LDO.MI,0.58,-0.03,0.61,-1.18,-0.61,-0.57,-4.04,-0.84,-3.19,-3.0,-7.59
 2018-06-12,Trump-Kim summit in Singapore,de_escalation,east_asia,2018-06-12,EUDEF,-0.26,-0.03,-0.23,-1.11,-0.61,-0.51,-4.37,-0.84,-3.53,2.66,0.76
+2018-11-06,Democrats win US House in midterms,election,americas,2018-11-07,LMT,1.06,2.14,-1.08,-0.27,-1.11,0.84,-5.91,-1.92,-3.99,-7.46,0.39
+2018-11-06,Democrats win US House in midterms,election,americas,2018-11-07,RTX,2.04,2.14,-0.1,0.92,-1.11,2.03,-4.53,-1.92,-2.61,-1.57,-0.66
+2018-11-06,Democrats win US House in midterms,election,americas,2018-11-07,NOC,1.12,2.14,-1.02,-3.22,-1.11,-2.11,-8.68,-1.92,-6.76,-5.74,-0.75
+2018-11-06,Democrats win US House in midterms,election,americas,2018-11-07,GD,1.55,2.14,-0.59,-1.16,-1.11,-0.05,-6.14,-1.92,-4.22,-6.48,-2.56
+2018-11-06,Democrats win US House in midterms,election,americas,2018-11-07,ITA,0.87,2.14,-1.27,-2.44,-1.11,-1.33,-7.41,-1.92,-5.5,-1.82,0.95
+2018-11-06,Democrats win US House in midterms,election,americas,2018-11-07,RHM.DE,0.03,1.13,-1.11,2.98,0.63,2.36,9.48,-0.95,10.43,-4.72,-16.58
+2018-11-06,Democrats win US House in midterms,election,americas,2018-11-07,BA.L,2.55,1.13,1.42,3.95,0.63,3.33,-11.04,-0.95,-10.09,-10.38,-9.46
+2018-11-06,Democrats win US House in midterms,election,americas,2018-11-07,HO.PA,-0.31,1.13,-1.44,0.04,0.63,-0.59,-6.55,-0.95,-5.6,0.89,5.24
+2018-11-06,Democrats win US House in midterms,election,americas,2018-11-07,SAAB-B.ST,0.4,1.13,-0.74,0.9,0.63,0.27,10.02,-0.95,10.97,-15.21,-2.8
+2018-11-06,Democrats win US House in midterms,election,americas,2018-11-07,LDO.MI,1.18,1.13,0.05,-6.03,0.63,-6.66,-9.23,-0.95,-8.28,-2.75,2.98
+2018-11-06,Democrats win US House in midterms,election,americas,2018-11-07,EUDEF,0.77,1.13,-0.36,0.44,0.63,-0.19,-1.62,-0.95,-0.67,-6.28,-3.9
 2018-11-25,Russia seizes Ukrainian ships in Kerch Strait,escalation,europe,2018-11-26,LMT,-0.03,1.61,-1.65,2.45,4.71,-2.26,-16.37,-10.46,-5.91,-1.07,0.92
 2018-11-25,Russia seizes Ukrainian ships in Kerch Strait,escalation,europe,2018-11-26,RTX,-0.82,1.61,-2.44,-5.58,4.71,-10.29,-20.91,-10.46,-10.45,6.85,6.4
 2018-11-25,Russia seizes Ukrainian ships in Kerch Strait,escalation,europe,2018-11-26,NOC,-0.26,1.61,-1.87,-2.07,4.71,-6.78,-14.75,-10.46,-4.28,1.27,-1.0
@@ -329,6 +428,17 @@ date,event,category,region,reaction_day,ticker,return_1d,market_1d,abnormal_1d,r
 2019-01-23,Guaido declares himself Venezuela's interim president,escalation,americas,2019-01-23,SAAB-B.ST,0.22,-0.13,0.35,-0.52,0.34,-0.86,4.99,3.87,1.13,-12.15,-8.62
 2019-01-23,Guaido declares himself Venezuela's interim president,escalation,americas,2019-01-23,LDO.MI,-0.1,-0.13,0.03,4.16,0.34,3.82,10.19,3.87,6.33,-6.4,-19.55
 2019-01-23,Guaido declares himself Venezuela's interim president,escalation,americas,2019-01-23,EUDEF,-0.34,-0.13,-0.21,1.32,0.34,0.98,6.21,3.87,2.35,-2.32,-6.09
+2019-02-14,Pulwama attack in Kashmir,terrorism,south_asia,2019-02-14,LMT,-1.12,-0.22,-0.9,0.03,0.88,-0.85,-1.24,2.24,-3.48,4.67,-1.29
+2019-02-14,Pulwama attack in Kashmir,terrorism,south_asia,2019-02-14,RTX,0.36,-0.22,0.58,2.13,0.88,1.25,2.59,2.24,0.35,6.41,-5.28
+2019-02-14,Pulwama attack in Kashmir,terrorism,south_asia,2019-02-14,NOC,-0.95,-0.22,-0.73,1.48,0.88,0.6,-2.61,2.24,-4.86,3.78,2.76
+2019-02-14,Pulwama attack in Kashmir,terrorism,south_asia,2019-02-14,GD,-0.8,-0.22,-0.57,-1.07,0.88,-1.95,-2.24,2.24,-4.49,1.32,-5.35
+2019-02-14,Pulwama attack in Kashmir,terrorism,south_asia,2019-02-14,ITA,-0.12,-0.22,0.1,1.57,0.88,0.68,-2.92,2.24,-5.17,6.52,3.5
+2019-02-14,Pulwama attack in Kashmir,terrorism,south_asia,2019-02-14,RHM.DE,0.54,-0.25,0.79,2.8,1.82,0.98,8.12,3.34,4.78,6.19,15.49
+2019-02-14,Pulwama attack in Kashmir,terrorism,south_asia,2019-02-14,BA.L,2.01,-0.25,2.26,-1.3,1.82,-3.12,-9.04,3.34,-12.37,-0.64,-5.7
+2019-02-14,Pulwama attack in Kashmir,terrorism,south_asia,2019-02-14,HO.PA,2.76,-0.25,3.01,5.77,1.82,3.95,5.67,3.34,2.33,-1.58,-10.49
+2019-02-14,Pulwama attack in Kashmir,terrorism,south_asia,2019-02-14,SAAB-B.ST,2.93,-0.25,3.18,4.19,1.82,2.37,-4.65,3.34,-7.99,-5.09,-7.61
+2019-02-14,Pulwama attack in Kashmir,terrorism,south_asia,2019-02-14,LDO.MI,-0.81,-0.25,-0.56,0.81,1.82,-1.01,-2.4,3.34,-5.74,12.16,-1.53
+2019-02-14,Pulwama attack in Kashmir,terrorism,south_asia,2019-02-14,EUDEF,1.49,-0.25,1.74,2.47,1.82,0.65,-0.44,3.34,-3.78,2.14,-1.93
 2019-02-26,India airstrike in Pakistan,military_strike,south_asia,2019-02-26,LMT,-0.03,-0.07,0.04,0.3,-0.04,0.34,-3.18,0.27,-3.45,1.43,-0.72
 2019-02-26,India airstrike in Pakistan,military_strike,south_asia,2019-02-26,RTX,-0.84,-0.07,-0.77,-1.97,-0.04,-1.93,-2.24,0.27,-2.51,6.25,-4.28
 2019-02-26,India airstrike in Pakistan,military_strike,south_asia,2019-02-26,NOC,-0.17,-0.07,-0.1,-1.38,-0.04,-1.33,-6.43,0.27,-6.7,0.48,3.8
@@ -351,6 +461,17 @@ date,event,category,region,reaction_day,ticker,return_1d,market_1d,abnormal_1d,r
 2019-02-28,Trump-Kim Hanoi summit collapses,escalation,east_asia,2019-02-28,SAAB-B.ST,-1.75,0.08,-1.83,-2.51,0.88,-3.39,-8.97,1.78,-10.75,-4.15,-14.49
 2019-02-28,Trump-Kim Hanoi summit collapses,escalation,east_asia,2019-02-28,LDO.MI,-0.83,0.08,-0.91,-1.79,0.88,-2.67,13.03,1.78,11.25,3.0,0.14
 2019-02-28,Trump-Kim Hanoi summit collapses,escalation,east_asia,2019-02-28,EUDEF,-0.32,0.08,-0.4,1.54,0.88,0.65,0.32,1.78,-1.46,-1.67,-1.93
+2019-03-15,Christchurch mosque shootings,terrorism,global,2019-03-15,LMT,-0.79,0.49,-1.28,0.17,1.72,-1.55,2.37,2.96,-0.59,-3.48,-4.07
+2019-03-15,Christchurch mosque shootings,terrorism,global,2019-03-15,RTX,-0.76,0.49,-1.26,-0.01,1.72,-1.72,4.67,2.96,1.71,0.35,-1.13
+2019-03-15,Christchurch mosque shootings,terrorism,global,2019-03-15,NOC,-1.29,0.49,-1.78,-0.83,1.72,-2.54,0.96,2.96,-2.0,-4.86,-3.55
+2019-03-15,Christchurch mosque shootings,terrorism,global,2019-03-15,GD,0.12,0.49,-0.38,0.14,1.72,-1.57,1.7,2.96,-1.26,-4.49,-7.63
+2019-03-15,Christchurch mosque shootings,terrorism,global,2019-03-15,ITA,-0.16,0.49,-0.66,0.71,1.72,-1.0,2.13,2.96,-0.83,-5.17,-0.13
+2019-03-15,Christchurch mosque shootings,terrorism,global,2019-03-15,RHM.DE,1.58,0.82,0.76,-0.55,0.54,-1.09,-2.86,2.65,-5.52,2.02,14.84
+2019-03-15,Christchurch mosque shootings,terrorism,global,2019-03-15,BA.L,1.59,0.82,0.77,1.95,0.54,1.42,6.7,2.65,4.04,-12.52,-0.42
+2019-03-15,Christchurch mosque shootings,terrorism,global,2019-03-15,HO.PA,0.87,0.82,0.05,-1.1,0.54,-1.63,-3.02,2.65,-5.67,0.6,-5.28
+2019-03-15,Christchurch mosque shootings,terrorism,global,2019-03-15,SAAB-B.ST,0.41,0.82,-0.41,1.7,0.54,1.16,2.73,2.65,0.07,-10.92,-21.04
+2019-03-15,Christchurch mosque shootings,terrorism,global,2019-03-15,LDO.MI,1.76,0.82,0.94,6.18,0.54,5.64,4.64,2.65,1.99,7.03,10.68
+2019-03-15,Christchurch mosque shootings,terrorism,global,2019-03-15,EUDEF,1.24,0.82,0.42,1.63,0.54,1.1,1.65,2.65,-1.01,-2.72,-0.4
 2019-04-11,Sudan's Bashir ousted by the military,coup,africa,2019-04-11,LMT,2.16,-0.03,2.19,3.8,0.4,3.4,13.45,-0.57,14.02,-4.35,-3.93
 2019-04-11,Sudan's Bashir ousted by the military,coup,africa,2019-04-11,RTX,0.88,-0.03,0.91,3.14,0.4,2.73,3.95,-0.57,4.51,1.04,6.98
 2019-04-11,Sudan's Bashir ousted by the military,coup,africa,2019-04-11,NOC,2.54,-0.03,2.56,3.05,0.4,2.64,9.05,-0.57,9.61,-6.01,-7.99
@@ -362,6 +483,28 @@ date,event,category,region,reaction_day,ticker,return_1d,market_1d,abnormal_1d,r
 2019-04-11,Sudan's Bashir ousted by the military,coup,africa,2019-04-11,SAAB-B.ST,1.14,0.16,0.98,4.54,0.86,3.68,-10.34,-2.88,-7.46,-0.8,-14.34
 2019-04-11,Sudan's Bashir ousted by the military,coup,africa,2019-04-11,LDO.MI,0.1,0.16,-0.06,4.55,0.86,3.69,-6.26,-2.88,-3.39,15.09,23.19
 2019-04-11,Sudan's Bashir ousted by the military,coup,africa,2019-04-11,EUDEF,0.91,0.16,0.75,3.61,0.86,2.75,-5.32,-2.88,-2.44,1.12,-0.68
+2019-04-21,Sri Lanka Easter bombings,terrorism,south_asia,2019-04-22,LMT,0.32,0.09,0.23,4.48,1.17,3.31,7.55,-1.44,8.99,3.24,1.06
+2019-04-21,Sri Lanka Easter bombings,terrorism,south_asia,2019-04-22,RTX,-0.07,0.09,-0.15,2.76,1.17,1.59,-1.83,-1.44,-0.39,6.12,7.16
+2019-04-21,Sri Lanka Easter bombings,terrorism,south_asia,2019-04-22,NOC,0.62,0.09,0.53,0.7,1.17,-0.47,9.08,-1.44,10.52,1.33,-6.11
+2019-04-21,Sri Lanka Easter bombings,terrorism,south_asia,2019-04-22,GD,0.1,0.09,0.02,0.69,1.17,-0.48,-5.93,-1.44,-4.48,2.91,-5.19
+2019-04-21,Sri Lanka Easter bombings,terrorism,south_asia,2019-04-22,ITA,-0.3,0.09,-0.39,1.59,1.17,0.42,0.02,-1.44,1.46,1.45,0.75
+2019-04-21,Sri Lanka Easter bombings,terrorism,south_asia,2019-04-23,RHM.DE,0.25,0.23,0.01,1.18,0.43,0.75,-0.15,-1.86,1.71,0.66,2.16
+2019-04-21,Sri Lanka Easter bombings,terrorism,south_asia,2019-04-23,BA.L,0.12,0.23,-0.11,1.41,0.43,0.99,-7.45,-1.86,-5.6,-2.27,-14.51
+2019-04-21,Sri Lanka Easter bombings,terrorism,south_asia,2019-04-23,HO.PA,-0.05,0.23,-0.28,4.22,0.43,3.8,-4.17,-1.86,-2.31,-3.68,1.39
+2019-04-21,Sri Lanka Easter bombings,terrorism,south_asia,2019-04-23,SAAB-B.ST,0.67,0.23,0.44,1.89,0.43,1.46,-12.07,-1.86,-10.21,0.71,-8.49
+2019-04-21,Sri Lanka Easter bombings,terrorism,south_asia,2019-04-23,LDO.MI,0.14,0.23,-0.09,-1.88,0.43,-2.31,-3.5,-1.86,-1.65,-1.0,18.92
+2019-04-21,Sri Lanka Easter bombings,terrorism,south_asia,2019-04-23,EUDEF,0.23,0.23,-0.01,1.37,0.43,0.94,-5.43,-1.86,-3.57,-1.03,-0.11
+2019-05-23,Modi wins India election landslide,election,south_asia,2019-05-23,LMT,-0.36,-1.22,0.86,0.19,-2.31,2.5,6.99,3.58,3.41,5.65,9.67
+2019-05-23,Modi wins India election landslide,election,south_asia,2019-05-23,RTX,-3.66,-1.22,-2.44,-5.18,-2.31,-2.87,-3.97,3.58,-7.55,-0.2,4.34
+2019-05-23,Modi wins India election landslide,election,south_asia,2019-05-23,NOC,-1.75,-1.22,-0.53,-2.15,-2.31,0.16,2.71,3.58,-0.87,15.34,7.79
+2019-05-23,Modi wins India election landslide,election,south_asia,2019-05-23,GD,-3.37,-1.22,-2.15,-4.16,-2.31,-1.85,5.13,3.58,1.55,-4.08,-2.53
+2019-05-23,Modi wins India election landslide,election,south_asia,2019-05-23,ITA,-1.63,-1.22,-0.41,-1.69,-2.31,0.62,4.16,3.58,0.57,2.11,-2.48
+2019-05-23,Modi wins India election landslide,election,south_asia,2019-05-23,RHM.DE,-2.92,-1.4,-1.52,-4.15,-2.05,-2.09,5.87,2.47,3.4,2.67,5.44
+2019-05-23,Modi wins India election landslide,election,south_asia,2019-05-23,BA.L,-1.65,-1.4,-0.26,-3.79,-2.05,-1.74,4.18,2.47,1.71,-5.79,-7.25
+2019-05-23,Modi wins India election landslide,election,south_asia,2019-05-23,HO.PA,-1.97,-1.4,-0.57,-3.71,-2.05,-1.65,5.78,2.47,3.31,-2.37,-8.42
+2019-05-23,Modi wins India election landslide,election,south_asia,2019-05-23,SAAB-B.ST,-1.31,-1.4,0.08,-4.1,-2.05,-2.05,7.93,2.47,5.45,-11.07,-18.06
+2019-05-23,Modi wins India election landslide,election,south_asia,2019-05-23,LDO.MI,-1.37,-1.4,0.02,-7.5,-2.05,-5.44,9.37,2.47,6.9,-0.55,14.13
+2019-05-23,Modi wins India election landslide,election,south_asia,2019-05-23,EUDEF,-1.84,-1.4,-0.45,-4.64,-2.05,-2.59,6.7,2.47,4.23,-3.41,-2.95
 2019-06-13,Tankers attacked in the Gulf of Oman,military_strike,middle_east,2019-06-13,LMT,1.03,0.41,0.62,2.96,1.62,1.34,6.58,4.29,2.28,1.68,14.69
 2019-06-13,Tankers attacked in the Gulf of Oman,military_strike,middle_east,2019-06-13,RTX,0.6,0.41,0.18,2.17,1.62,0.55,5.86,4.29,1.57,-8.65,-3.84
 2019-06-13,Tankers attacked in the Gulf of Oman,military_strike,middle_east,2019-06-13,NOC,0.91,0.41,0.5,3.39,1.62,1.77,6.59,4.29,2.3,1.8,9.23
@@ -417,6 +560,17 @@ date,event,category,region,reaction_day,ticker,return_1d,market_1d,abnormal_1d,r
 2019-10-09,Turkey invades northern Syria,war_outbreak,middle_east,2019-10-09,SAAB-B.ST,0.92,0.55,0.37,4.29,4.04,0.25,17.73,6.99,10.74,-8.16,-15.74
 2019-10-09,Turkey invades northern Syria,war_outbreak,middle_east,2019-10-09,LDO.MI,-1.75,0.55,-2.29,4.22,4.04,0.17,8.43,6.99,1.45,-9.68,-10.71
 2019-10-09,Turkey invades northern Syria,war_outbreak,middle_east,2019-10-09,EUDEF,-0.01,0.55,-0.56,0.57,4.04,-3.47,3.77,6.99,-3.21,-4.77,-1.63
+2019-12-12,Conservatives win UK general election,election,europe,2019-12-13,LMT,0.63,0.06,0.57,-0.23,1.19,-1.42,9.11,3.92,5.19,-2.93,-8.49
+2019-12-12,Conservatives win UK general election,election,europe,2019-12-13,RTX,-0.23,0.06,-0.29,-0.47,1.19,-1.66,1.77,3.92,-2.15,-1.35,3.27
+2019-12-12,Conservatives win UK general election,election,europe,2019-12-13,NOC,-0.36,0.06,-0.42,-1.07,1.19,-2.26,8.94,3.92,5.02,-4.44,-13.82
+2019-12-12,Conservatives win UK general election,election,europe,2019-12-13,GD,-0.8,0.06,-0.86,-1.01,1.19,-2.2,0.37,3.92,-3.55,-4.9,-10.43
+2019-12-12,Conservatives win UK general election,election,europe,2019-12-13,ITA,-0.27,0.06,-0.33,-1.7,1.19,-2.89,1.75,3.92,-2.17,-3.39,-6.86
+2019-12-12,Conservatives win UK general election,election,europe,2019-12-13,RHM.DE,-0.12,1.03,-1.15,4.81,1.94,2.87,6.29,3.31,2.98,-5.69,-21.47
+2019-12-12,Conservatives win UK general election,election,europe,2019-12-13,BA.L,2.42,1.03,1.39,-0.85,1.94,-2.79,6.51,3.31,3.2,0.41,-3.14
+2019-12-12,Conservatives win UK general election,election,europe,2019-12-13,HO.PA,0.09,1.03,-0.94,6.54,1.94,4.61,12.9,3.31,9.6,-2.31,-22.65
+2019-12-12,Conservatives win UK general election,election,europe,2019-12-13,SAAB-B.ST,-0.96,1.03,-1.99,-1.45,1.94,-3.39,5.76,3.31,2.45,1.03,4.96
+2019-12-12,Conservatives win UK general election,election,europe,2019-12-13,LDO.MI,-0.57,1.03,-1.59,0.33,1.94,-1.61,3.82,3.31,0.52,-8.33,-9.92
+2019-12-12,Conservatives win UK general election,election,europe,2019-12-13,EUDEF,0.17,1.03,-0.86,1.87,1.94,-0.07,7.12,3.31,3.81,-2.93,-10.62
 2020-01-03,US strike kills Iranian general Soleimani,military_strike,middle_east,2020-01-03,LMT,3.6,-0.76,4.36,3.9,0.55,3.35,7.2,-0.97,8.17,-0.81,-6.69
 2020-01-03,US strike kills Iranian general Soleimani,military_strike,middle_east,2020-01-03,RTX,0.14,-0.76,0.89,0.33,0.55,-0.21,-1.92,-0.97,-0.95,1.08,4.59
 2020-01-03,US strike kills Iranian general Soleimani,military_strike,middle_east,2020-01-03,NOC,5.43,-0.76,6.19,4.68,0.55,4.14,5.31,-0.97,6.27,-1.81,-14.35
@@ -461,6 +615,17 @@ date,event,category,region,reaction_day,ticker,return_1d,market_1d,abnormal_1d,r
 2020-06-15,India-China border clash in Galwan Valley,escalation,south_asia,2020-06-15,SAAB-B.ST,3.84,-0.47,4.31,5.51,3.02,2.49,8.36,3.77,4.59,6.64,-10.75
 2020-06-15,India-China border clash in Galwan Valley,escalation,south_asia,2020-06-15,LDO.MI,0.29,-0.47,0.76,3.78,3.02,0.75,-7.31,3.77,-11.08,4.9,-9.08
 2020-06-15,India-China border clash in Galwan Valley,escalation,south_asia,2020-06-15,EUDEF,0.3,-0.47,0.78,3.72,3.02,0.69,0.94,3.77,-2.83,5.34,-9.06
+2020-08-18,Military coup in Mali,coup,africa,2020-08-18,LMT,0.33,0.22,0.12,1.56,1.48,0.08,1.54,0.67,0.87,2.22,-9.0
+2020-08-18,Military coup in Mali,coup,africa,2020-08-18,RTX,-1.07,0.22,-1.28,-1.42,1.48,-2.9,-2.12,0.67,-2.79,-1.21,-9.88
+2020-08-18,Military coup in Mali,coup,africa,2020-08-18,NOC,-0.64,0.22,-0.85,1.37,1.48,-0.11,-0.1,0.67,-0.77,8.5,-11.11
+2020-08-18,Military coup in Mali,coup,africa,2020-08-18,GD,-0.45,0.22,-0.66,-0.27,1.48,-1.76,-5.58,0.67,-6.25,1.5,-3.42
+2020-08-18,Military coup in Mali,coup,africa,2020-08-18,ITA,-1.12,0.22,-1.33,0.49,1.48,-0.99,-2.31,0.67,-2.98,0.01,-4.9
+2020-08-18,Military coup in Mali,coup,africa,2020-08-18,RHM.DE,0.08,-0.52,0.59,0.48,0.5,-0.02,0.86,-0.22,1.08,-3.29,7.48
+2020-08-18,Military coup in Mali,coup,africa,2020-08-18,BA.L,0.41,-0.52,0.93,1.5,0.5,0.99,-5.01,-0.22,-4.79,11.38,-1.78
+2020-08-18,Military coup in Mali,coup,africa,2020-08-18,HO.PA,-2.31,-0.52,-1.79,1.2,0.5,0.69,0.41,-0.22,0.63,-1.46,1.26
+2020-08-18,Military coup in Mali,coup,africa,2020-08-18,SAAB-B.ST,-2.09,-0.52,-1.57,-2.06,0.5,-2.57,-2.4,-0.22,-2.18,0.15,25.24
+2020-08-18,Military coup in Mali,coup,africa,2020-08-18,LDO.MI,0.75,-0.52,1.27,2.88,0.5,2.37,-5.55,-0.22,-5.33,-8.14,5.92
+2020-08-18,Military coup in Mali,coup,africa,2020-08-18,EUDEF,-0.63,-0.52,-0.11,0.81,0.5,0.3,-2.3,-0.22,-2.08,-0.23,8.13
 2020-09-27,Nagorno-Karabakh war begins,war_outbreak,europe,2020-09-28,LMT,0.99,1.66,-0.68,-1.58,1.55,-3.14,-3.2,5.19,-8.39,3.74,1.66
 2020-09-27,Nagorno-Karabakh war begins,war_outbreak,europe,2020-09-28,RTX,2.44,1.66,0.77,3.22,1.55,1.66,8.84,5.19,3.65,-0.35,-12.28
 2020-09-27,Nagorno-Karabakh war begins,war_outbreak,europe,2020-09-28,NOC,0.46,1.66,-1.2,-4.28,1.55,-5.84,-5.97,5.19,-11.15,-0.37,0.6
@@ -494,6 +659,17 @@ date,event,category,region,reaction_day,ticker,return_1d,market_1d,abnormal_1d,r
 2020-11-07,Biden declared winner of US election,election,americas,2020-11-09,SAAB-B.ST,6.63,3.89,2.74,7.5,5.15,2.36,11.98,7.6,4.38,-18.97,-22.6
 2020-11-07,Biden declared winner of US election,election,americas,2020-11-09,LDO.MI,16.27,3.89,12.38,21.29,5.15,16.14,50.69,7.6,43.09,-13.96,-27.19
 2020-11-07,Biden declared winner of US election,election,americas,2020-11-09,EUDEF,8.98,3.89,5.09,13.24,5.15,8.09,25.65,7.6,18.05,-12.4,-17.83
+2021-01-06,Mob storms US Capitol,coup,americas,2021-01-06,LMT,-0.22,0.6,-0.82,-1.99,2.0,-3.99,-4.7,2.83,-7.54,-5.69,-18.09
+2021-01-06,Mob storms US Capitol,coup,americas,2021-01-06,RTX,1.24,0.6,0.64,3.03,2.0,1.02,1.67,2.83,-1.16,-6.9,6.53
+2021-01-06,Mob storms US Capitol,coup,americas,2021-01-06,NOC,0.86,0.6,0.26,0.32,2.0,-1.68,1.4,2.83,-1.43,-4.29,-15.26
+2021-01-06,Mob storms US Capitol,coup,americas,2021-01-06,GD,2.55,0.6,1.96,5.13,2.0,3.13,5.6,2.83,2.77,-7.26,-7.81
+2021-01-06,Mob storms US Capitol,coup,americas,2021-01-06,ITA,1.02,0.6,0.42,2.23,2.0,0.22,1.73,2.83,-1.1,-4.47,4.06
+2021-01-06,Mob storms US Capitol,coup,americas,2021-01-06,RHM.DE,0.34,1.34,-0.99,1.61,1.71,-0.1,1.17,1.1,0.08,10.4,4.01
+2021-01-06,Mob storms US Capitol,coup,americas,2021-01-06,BA.L,0.89,1.34,-0.45,-0.94,1.71,-2.65,-2.73,1.1,-3.83,-6.12,-7.94
+2021-01-06,Mob storms US Capitol,coup,americas,2021-01-06,HO.PA,-1.02,1.34,-2.36,-1.84,1.71,-3.55,0.81,1.1,-0.28,-4.95,7.4
+2021-01-06,Mob storms US Capitol,coup,americas,2021-01-06,SAAB-B.ST,0.5,1.34,-0.84,-5.59,1.71,-7.31,-4.3,1.1,-5.4,6.79,-13.85
+2021-01-06,Mob storms US Capitol,coup,americas,2021-01-06,LDO.MI,1.47,1.34,0.14,0.17,1.71,-1.55,-2.61,1.1,-3.71,-5.41,5.99
+2021-01-06,Mob storms US Capitol,coup,americas,2021-01-06,EUDEF,0.44,1.34,-0.9,-1.31,1.71,-3.02,-1.46,1.1,-2.55,0.05,-0.29
 2021-02-01,Military coup in Myanmar,coup,east_asia,2021-02-01,LMT,0.69,1.66,-0.98,4.73,4.77,-0.04,4.41,5.27,-0.86,-8.62,-20.6
 2021-02-01,Military coup in Myanmar,coup,east_asia,2021-02-01,RTX,0.34,1.66,-1.32,8.39,4.77,3.63,12.12,5.27,6.85,-5.97,8.01
 2021-02-01,Military coup in Myanmar,coup,east_asia,2021-02-01,NOC,1.99,1.66,0.32,4.25,4.77,-0.52,2.88,5.27,-2.39,-4.77,-15.48
@@ -549,6 +725,17 @@ date,event,category,region,reaction_day,ticker,return_1d,market_1d,abnormal_1d,r
 2021-08-15,Taliban take Kabul,coup,south_asia,2021-08-16,SAAB-B.ST,-0.28,-0.48,0.2,-2.89,-1.47,-1.42,-3.6,-2.01,-1.59,7.76,-3.38
 2021-08-15,Taliban take Kabul,coup,south_asia,2021-08-16,LDO.MI,-1.62,-0.48,-1.15,-4.56,-1.47,-3.09,-3.34,-2.01,-1.33,5.91,-5.32
 2021-08-15,Taliban take Kabul,coup,south_asia,2021-08-16,EUDEF,-0.5,-0.48,-0.02,-3.22,-1.47,-1.75,-4.95,-2.01,-2.95,2.32,-2.1
+2021-09-05,Military coup in Guinea,coup,africa,2021-09-07,LMT,-1.91,-0.36,-1.55,-2.72,-1.43,-1.29,-2.81,-5.09,2.28,-3.35,-14.82
+2021-09-05,Military coup in Guinea,coup,africa,2021-09-07,RTX,-0.78,-0.36,-0.42,-0.01,-1.43,1.42,4.83,-5.09,9.92,-6.31,-11.95
+2021-09-05,Military coup in Guinea,coup,africa,2021-09-07,NOC,-1.93,-0.36,-1.57,-3.34,-1.43,-1.91,-0.07,-5.09,5.02,-0.9,-8.65
+2021-09-05,Military coup in Guinea,coup,africa,2021-09-07,GD,-0.03,-0.36,0.32,-1.5,-1.43,-0.07,-2.44,-5.09,2.65,-0.7,-0.9
+2021-09-05,Military coup in Guinea,coup,africa,2021-09-07,ITA,-1.25,-0.36,-0.89,-1.48,-1.43,-0.05,0.57,-5.09,5.66,-5.46,-12.72
+2021-09-05,Military coup in Guinea,coup,africa,2021-09-06,RHM.DE,-1.21,0.71,-1.92,-4.89,-1.17,-3.72,4.84,-3.73,8.57,-4.51,-9.07
+2021-09-05,Military coup in Guinea,coup,africa,2021-09-06,BA.L,0.1,0.71,-0.61,-1.3,-1.17,-0.13,0.0,-3.73,3.73,-3.39,2.09
+2021-09-05,Military coup in Guinea,coup,africa,2021-09-06,HO.PA,0.21,0.71,-0.5,-3.15,-1.17,-1.97,-0.96,-3.73,2.77,-3.46,-3.58
+2021-09-05,Military coup in Guinea,coup,africa,2021-09-06,SAAB-B.ST,-0.15,0.71,-0.86,-3.73,-1.17,-2.56,-1.57,-3.73,2.16,-2.72,0.51
+2021-09-05,Military coup in Guinea,coup,africa,2021-09-06,LDO.MI,2.3,0.71,1.59,-2.59,-1.17,-1.41,2.76,-3.73,6.49,1.52,-6.79
+2021-09-05,Military coup in Guinea,coup,africa,2021-09-06,EUDEF,0.25,0.71,-0.46,-3.13,-1.17,-1.96,1.05,-3.73,4.78,-2.48,-3.22
 2021-09-15,AUKUS submarine pact announced,defense_spending,east_asia,2021-09-16,LMT,-1.03,-0.16,-0.88,-0.97,-1.92,0.96,4.84,-2.52,7.36,-4.75,-15.55
 2021-09-15,AUKUS submarine pact announced,defense_spending,east_asia,2021-09-16,RTX,-1.0,-0.16,-0.84,0.47,-1.92,2.4,5.67,-2.52,8.19,-2.29,-9.4
 2021-09-15,AUKUS submarine pact announced,defense_spending,east_asia,2021-09-16,NOC,-1.71,-0.16,-1.55,-2.03,-1.92,-0.11,9.27,-2.52,11.79,-3.95,-10.71
@@ -560,6 +747,17 @@ date,event,category,region,reaction_day,ticker,return_1d,market_1d,abnormal_1d,r
 2021-09-15,AUKUS submarine pact announced,defense_spending,east_asia,2021-09-16,SAAB-B.ST,0.54,0.57,-0.02,2.13,-0.01,2.14,2.85,-0.58,3.43,-0.36,6.18
 2021-09-15,AUKUS submarine pact announced,defense_spending,east_asia,2021-09-16,LDO.MI,0.32,0.57,-0.24,1.63,-0.01,1.64,6.28,-0.58,6.86,-0.06,-4.83
 2021-09-15,AUKUS submarine pact announced,defense_spending,east_asia,2021-09-16,EUDEF,0.35,0.57,-0.22,2.22,-0.01,2.23,5.78,-0.58,6.36,-2.02,-2.52
+2021-09-26,SPD wins German election,election,europe,2021-09-27,LMT,1.1,-0.29,1.38,-0.49,-2.18,1.69,7.18,2.07,5.1,-2.44,-10.99
+2021-09-26,SPD wins German election,election,europe,2021-09-27,RTX,0.21,-0.29,0.49,0.37,-2.18,2.55,5.39,2.07,3.32,3.04,-1.25
+2021-09-26,SPD wins German election,election,europe,2021-09-27,NOC,0.42,-0.29,0.71,1.47,-2.18,3.65,14.2,2.07,12.13,-2.39,-5.74
+2021-09-26,SPD wins German election,election,europe,2021-09-27,GD,0.17,-0.29,0.46,0.41,-2.18,2.58,6.77,2.07,4.69,-0.62,1.5
+2021-09-26,SPD wins German election,election,europe,2021-09-27,ITA,1.12,-0.29,1.41,0.85,-2.18,3.02,2.94,2.07,0.87,0.37,-7.72
+2021-09-26,SPD wins German election,election,europe,2021-09-27,RHM.DE,1.09,-0.17,1.26,2.76,-2.02,4.78,2.11,2.01,0.1,0.85,-2.4
+2021-09-26,SPD wins German election,election,europe,2021-09-27,BA.L,0.61,-0.17,0.78,0.13,-2.02,2.15,6.55,2.01,4.54,0.66,6.06
+2021-09-26,SPD wins German election,election,europe,2021-09-27,HO.PA,2.62,-0.17,2.79,1.99,-2.02,4.01,-2.21,2.01,-4.21,-1.19,-5.78
+2021-09-26,SPD wins German election,election,europe,2021-09-27,SAAB-B.ST,1.47,-0.17,1.64,-0.18,-2.02,1.84,-1.36,2.01,-3.37,-0.94,8.29
+2021-09-26,SPD wins German election,election,europe,2021-09-27,LDO.MI,4.2,-0.17,4.37,4.23,-2.02,6.24,-4.61,2.01,-6.61,1.33,-2.68
+2021-09-26,SPD wins German election,election,europe,2021-09-27,EUDEF,1.99,-0.17,2.17,1.8,-2.02,3.82,0.16,2.01,-1.85,0.19,0.8
 2021-10-25,Military coup in Sudan,coup,africa,2021-10-25,LMT,0.46,0.54,-0.07,-11.29,1.35,-12.64,-8.85,3.48,-12.33,5.1,-1.9
 2021-10-25,Military coup in Sudan,coup,africa,2021-10-25,RTX,-0.61,0.54,-1.15,-3.27,1.35,-4.62,-6.45,3.48,-9.93,3.32,2.27
 2021-10-25,Military coup in Sudan,coup,africa,2021-10-25,NOC,0.1,0.54,-0.44,-12.06,1.35,-13.41,-13.07,3.48,-16.55,12.13,8.41
@@ -615,6 +813,28 @@ date,event,category,region,reaction_day,ticker,return_1d,market_1d,abnormal_1d,r
 2022-02-27,Germany announces EUR 100bn defense fund,defense_spending,europe,2022-02-28,SAAB-B.ST,17.41,-0.23,17.64,23.28,-7.24,30.51,54.89,0.29,54.6,11.32,1.3
 2022-02-27,Germany announces EUR 100bn defense fund,defense_spending,europe,2022-02-28,LDO.MI,15.11,-0.23,15.34,8.75,-7.24,15.98,36.12,0.29,35.82,10.19,17.29
 2022-02-27,Germany announces EUR 100bn defense fund,defense_spending,europe,2022-02-28,EUDEF,15.9,-0.23,16.13,18.82,-7.24,26.05,44.22,0.29,43.93,13.45,21.8
+2022-03-24,North Korea Hwasong-17 ICBM test,weapons_test,east_asia,2022-03-24,LMT,1.01,1.51,-0.5,0.16,3.36,-3.2,-1.28,-1.29,0.01,9.77,34.71
+2022-03-24,North Korea Hwasong-17 ICBM test,weapons_test,east_asia,2022-03-24,RTX,0.47,1.51,-1.03,-0.4,3.36,-3.75,0.49,-1.29,1.79,4.85,26.14
+2022-03-24,North Korea Hwasong-17 ICBM test,weapons_test,east_asia,2022-03-24,NOC,1.71,1.51,0.2,1.43,3.36,-1.92,-0.78,-1.29,0.52,10.71,23.51
+2022-03-24,North Korea Hwasong-17 ICBM test,weapons_test,east_asia,2022-03-24,GD,0.55,1.51,-0.96,1.93,3.36,-1.43,1.52,-1.29,2.81,5.32,23.09
+2022-03-24,North Korea Hwasong-17 ICBM test,weapons_test,east_asia,2022-03-24,ITA,1.1,1.51,-0.4,0.82,3.36,-2.54,-1.87,-1.29,-0.57,4.13,15.34
+2022-03-24,North Korea Hwasong-17 ICBM test,weapons_test,east_asia,2022-03-24,RHM.DE,8.89,-0.14,9.04,6.17,1.45,4.72,20.64,0.2,20.44,85.59,122.59
+2022-03-24,North Korea Hwasong-17 ICBM test,weapons_test,east_asia,2022-03-24,BA.L,1.63,-0.14,1.77,-2.44,1.45,-3.89,1.33,0.2,1.13,22.33,44.11
+2022-03-24,North Korea Hwasong-17 ICBM test,weapons_test,east_asia,2022-03-24,HO.PA,1.72,-0.14,1.87,-1.51,1.45,-2.96,7.33,0.2,7.13,37.32,60.64
+2022-03-24,North Korea Hwasong-17 ICBM test,weapons_test,east_asia,2022-03-24,SAAB-B.ST,1.19,-0.14,1.34,-2.83,1.45,-4.28,12.89,0.2,12.69,68.77,57.75
+2022-03-24,North Korea Hwasong-17 ICBM test,weapons_test,east_asia,2022-03-24,LDO.MI,0.28,-0.14,0.42,-1.01,1.45,-2.46,8.67,0.2,8.47,44.87,53.22
+2022-03-24,North Korea Hwasong-17 ICBM test,weapons_test,east_asia,2022-03-24,EUDEF,2.74,-0.14,2.89,-0.32,1.45,-1.77,10.2,0.2,10.0,51.08,66.84
+2022-04-24,Macron re-elected in France,election,europe,2022-04-25,LMT,-0.65,0.58,-1.23,-3.07,-3.3,0.23,-4.85,-8.55,3.69,4.55,16.12
+2022-04-24,Macron re-elected in France,election,europe,2022-04-25,RTX,-0.88,0.58,-1.46,-5.55,-3.3,-2.26,-9.82,-8.55,-1.28,4.23,14.95
+2022-04-24,Macron re-elected in France,election,europe,2022-04-25,NOC,-0.76,0.58,-1.34,-1.79,-3.3,1.51,-0.91,-8.55,7.64,3.85,12.78
+2022-04-24,Macron re-elected in France,election,europe,2022-04-25,GD,0.16,0.58,-0.42,-0.95,-3.3,2.35,-10.59,-8.55,-2.04,5.03,18.53
+2022-04-24,Macron re-elected in France,election,europe,2022-04-25,ITA,-0.62,0.58,-1.2,-5.03,-3.3,-1.74,-11.12,-8.55,-2.57,1.65,9.03
+2022-04-24,Macron re-elected in France,election,europe,2022-04-25,RHM.DE,-0.97,-1.59,0.62,-1.06,-0.29,-0.77,-10.02,-4.0,-6.02,20.44,139.14
+2022-04-24,Macron re-elected in France,election,europe,2022-04-25,BA.L,-2.97,-1.59,-1.39,-1.96,-0.29,-1.67,-1.54,-4.0,2.46,1.13,25.76
+2022-04-24,Macron re-elected in France,election,europe,2022-04-25,HO.PA,-0.84,-1.59,0.75,-2.01,-0.29,-1.72,-7.02,-4.0,-3.02,7.13,52.73
+2022-04-24,Macron re-elected in France,election,europe,2022-04-25,SAAB-B.ST,0.1,-1.59,1.69,7.08,-0.29,7.37,3.25,-4.0,7.25,12.69,78.07
+2022-04-24,Macron re-elected in France,election,europe,2022-04-25,LDO.MI,-0.94,-1.59,0.65,-2.73,-0.29,-2.44,-2.38,-4.0,1.63,8.47,61.85
+2022-04-24,Macron re-elected in France,election,europe,2022-04-25,EUDEF,-1.12,-1.59,0.46,-0.17,-0.29,0.12,-3.48,-4.0,0.52,10.0,69.13
 2022-06-29,NATO invites Finland and Sweden to join,escalation,europe,2022-06-29,LMT,-0.43,-0.08,-0.35,1.23,0.68,0.55,-5.27,5.36,-10.63,1.9,11.26
 2022-06-29,NATO invites Finland and Sweden to join,escalation,europe,2022-06-29,RTX,-0.51,-0.08,-0.43,0.15,0.68,-0.53,-3.74,5.36,-9.1,4.91,10.58
 2022-06-29,NATO invites Finland and Sweden to join,escalation,europe,2022-06-29,NOC,-0.62,-0.08,-0.53,3.7,0.68,3.02,-4.06,5.36,-9.42,6.64,19.64
@@ -648,6 +868,17 @@ date,event,category,region,reaction_day,ticker,return_1d,market_1d,abnormal_1d,r
 2022-09-21,Putin announces mobilization,escalation,europe,2022-09-21,SAAB-B.ST,5.0,0.98,4.02,-0.79,-3.97,3.18,9.64,-0.88,10.51,-4.3,-14.7
 2022-09-21,Putin announces mobilization,escalation,europe,2022-09-21,LDO.MI,5.54,0.98,4.56,0.29,-3.97,4.25,-4.87,-0.88,-3.99,-4.21,-18.98
 2022-09-21,Putin announces mobilization,escalation,europe,2022-09-21,EUDEF,5.64,0.98,4.66,1.08,-3.97,5.05,2.61,-0.88,3.49,-2.66,-14.04
+2022-10-04,North Korea fires missile over Japan again,weapons_test,east_asia,2022-10-04,LMT,1.59,3.1,-1.51,2.56,-1.8,4.36,21.75,5.35,16.4,1.65,1.02
+2022-10-04,North Korea fires missile over Japan again,weapons_test,east_asia,2022-10-04,RTX,2.91,3.1,-0.19,1.26,-1.8,3.06,14.09,5.35,8.74,1.04,-6.83
+2022-10-04,North Korea fires missile over Japan again,weapons_test,east_asia,2022-10-04,NOC,0.94,3.1,-2.16,3.73,-1.8,5.53,13.03,5.35,7.69,7.99,6.74
+2022-10-04,North Korea fires missile over Japan again,weapons_test,east_asia,2022-10-04,GD,2.77,3.1,-0.33,2.78,-1.8,4.58,13.91,5.35,8.56,4.22,5.03
+2022-10-04,North Korea fires missile over Japan again,weapons_test,east_asia,2022-10-04,ITA,3.31,3.1,0.22,2.36,-1.8,4.15,14.26,5.35,8.91,0.24,0.14
+2022-10-04,North Korea fires missile over Japan again,weapons_test,east_asia,2022-10-04,RHM.DE,-4.46,3.24,-7.7,-8.67,0.0,-8.67,1.86,5.62,-3.76,8.6,-9.04
+2022-10-04,North Korea fires missile over Japan again,weapons_test,east_asia,2022-10-04,BA.L,3.32,3.24,0.08,4.82,0.0,4.82,4.39,5.62,-1.23,5.15,0.33
+2022-10-04,North Korea fires missile over Japan again,weapons_test,east_asia,2022-10-04,HO.PA,0.26,3.24,-2.98,-0.44,0.0,-0.44,12.75,5.62,7.14,-1.77,0.25
+2022-10-04,North Korea fires missile over Japan again,weapons_test,east_asia,2022-10-04,SAAB-B.ST,0.38,3.24,-2.87,0.84,0.0,0.84,10.37,5.62,4.76,1.48,-7.52
+2022-10-04,North Korea fires missile over Japan again,weapons_test,east_asia,2022-10-04,LDO.MI,1.57,3.24,-1.67,1.52,0.0,1.52,10.07,5.62,4.45,-0.3,-20.52
+2022-10-04,North Korea fires missile over Japan again,weapons_test,east_asia,2022-10-04,EUDEF,0.21,3.24,-3.03,-0.41,0.0,-0.41,8.05,5.62,2.44,2.71,-7.15
 2022-10-08,Kerch bridge explosion,military_strike,europe,2022-10-10,LMT,1.49,-0.76,2.26,-3.6,-1.42,-2.18,19.24,3.74,15.5,6.24,5.19
 2022-10-08,Kerch bridge explosion,military_strike,europe,2022-10-10,RTX,0.18,-0.76,0.94,-1.69,-1.42,-0.27,13.34,3.74,9.61,5.83,-2.59
 2022-10-08,Kerch bridge explosion,military_strike,europe,2022-10-10,NOC,1.56,-0.76,2.32,-6.43,-1.42,-5.01,5.38,3.74,1.64,11.36,12.07
@@ -670,6 +901,17 @@ date,event,category,region,reaction_day,ticker,return_1d,market_1d,abnormal_1d,r
 2022-10-10,Russia launches mass missile strikes on Ukrainian cities,military_strike,europe,2022-10-10,SAAB-B.ST,1.12,-0.35,1.47,4.14,-0.17,4.3,15.04,6.41,8.63,4.11,-11.99
 2022-10-10,Russia launches mass missile strikes on Ukrainian cities,military_strike,europe,2022-10-10,LDO.MI,0.86,-0.35,1.21,-3.85,-0.17,-3.68,1.75,6.41,-4.66,3.88,-19.77
 2022-10-10,Russia launches mass missile strikes on Ukrainian cities,military_strike,europe,2022-10-10,EUDEF,-0.55,-0.35,-0.2,-2.43,-0.17,-2.26,4.57,6.41,-1.85,6.49,-7.86
+2022-11-02,Ethiopia and Tigray sign peace deal,de_escalation,africa,2022-11-02,LMT,-0.74,-2.51,1.77,1.75,-0.66,2.4,0.53,6.02,-5.49,17.85,21.84
+2022-11-02,Ethiopia and Tigray sign peace deal,de_escalation,africa,2022-11-02,RTX,-1.47,-2.51,1.04,0.75,-0.66,1.41,3.92,6.02,-2.1,9.98,11.89
+2022-11-02,Ethiopia and Tigray sign peace deal,de_escalation,africa,2022-11-02,NOC,-1.04,-2.51,1.47,0.94,-0.66,1.6,-0.15,6.02,-6.18,7.57,20.92
+2022-11-02,Ethiopia and Tigray sign peace deal,de_escalation,africa,2022-11-02,GD,-1.42,-2.51,1.09,1.05,-0.66,1.71,0.99,6.02,-5.03,9.15,17.81
+2022-11-02,Ethiopia and Tigray sign peace deal,de_escalation,africa,2022-11-02,ITA,-1.44,-2.51,1.07,2.07,-0.66,2.72,4.27,6.02,-1.76,9.0,10.38
+2022-11-02,Ethiopia and Tigray sign peace deal,de_escalation,africa,2022-11-02,RHM.DE,-0.3,-0.26,-0.05,-4.98,1.8,-6.78,16.89,5.61,11.28,4.37,4.9
+2022-11-02,Ethiopia and Tigray sign peace deal,de_escalation,africa,2022-11-02,BA.L,0.07,-0.26,0.33,-4.98,1.8,-6.77,-1.56,5.61,-7.17,-1.5,5.11
+2022-11-02,Ethiopia and Tigray sign peace deal,de_escalation,africa,2022-11-02,HO.PA,0.94,-0.26,1.19,-2.62,1.8,-4.41,-4.73,5.61,-10.34,8.91,7.31
+2022-11-02,Ethiopia and Tigray sign peace deal,de_escalation,africa,2022-11-02,SAAB-B.ST,3.16,-0.26,3.42,-0.79,1.8,-2.58,-2.94,5.61,-8.55,9.28,5.57
+2022-11-02,Ethiopia and Tigray sign peace deal,de_escalation,africa,2022-11-02,LDO.MI,1.2,-0.26,1.46,-11.39,1.8,-13.18,-4.48,5.61,-10.09,5.93,-5.03
+2022-11-02,Ethiopia and Tigray sign peace deal,de_escalation,africa,2022-11-02,EUDEF,1.01,-0.26,1.27,-4.95,1.8,-6.74,0.61,5.61,-5.0,5.54,3.93
 2022-11-15,Missile lands in Poland,escalation,europe,2022-11-15,LMT,1.13,0.85,0.27,4.09,-0.13,4.22,4.58,1.73,2.85,8.58,11.71
 2022-11-15,Missile lands in Poland,escalation,europe,2022-11-15,RTX,3.06,0.85,2.2,4.1,-0.13,4.24,8.1,1.73,6.36,2.32,5.53
 2022-11-15,Missile lands in Poland,escalation,europe,2022-11-15,NOC,3.94,0.85,3.09,9.58,-0.13,9.71,9.46,1.73,7.73,-6.32,4.52
@@ -681,6 +923,17 @@ date,event,category,region,reaction_day,ticker,return_1d,market_1d,abnormal_1d,r
 2022-11-15,Missile lands in Poland,escalation,europe,2022-11-15,SAAB-B.ST,1.76,0.34,1.42,3.79,0.23,3.55,11.92,1.25,10.67,-12.77,-6.39
 2022-11-15,Missile lands in Poland,escalation,europe,2022-11-15,LDO.MI,2.44,0.34,2.1,1.31,0.23,1.08,5.1,1.25,3.85,-9.69,-15.32
 2022-11-15,Missile lands in Poland,escalation,europe,2022-11-15,EUDEF,2.17,0.34,1.83,4.95,0.23,4.71,11.01,1.25,9.76,-8.63,-7.21
+2022-12-16,Japan plans to double defense spending,defense_spending,east_asia,2022-12-16,LMT,0.63,-1.18,1.81,0.11,-1.84,1.94,-6.61,2.56,-9.16,4.8,11.41
+2022-12-16,Japan plans to double defense spending,defense_spending,east_asia,2022-12-16,RTX,-0.15,-1.18,1.03,0.02,-1.84,1.86,-0.06,2.56,-2.62,6.47,14.25
+2022-12-16,Japan plans to double defense spending,defense_spending,east_asia,2022-12-16,NOC,0.26,-1.18,1.44,0.54,-1.84,2.38,-13.8,2.56,-16.36,6.44,4.34
+2022-12-16,Japan plans to double defense spending,defense_spending,east_asia,2022-12-16,GD,0.41,-1.18,1.59,0.59,-1.84,2.43,-1.63,2.56,-4.19,1.58,4.78
+2022-12-16,Japan plans to double defense spending,defense_spending,east_asia,2022-12-16,ITA,0.43,-1.18,1.61,0.52,-1.84,2.36,2.08,2.56,-0.48,2.71,9.06
+2022-12-16,Japan plans to double defense spending,defense_spending,east_asia,2022-12-16,RHM.DE,0.95,-1.24,2.19,-4.16,-0.53,-3.63,5.31,5.32,-0.01,13.02,15.38
+2022-12-16,Japan plans to double defense spending,defense_spending,east_asia,2022-12-16,BA.L,-1.09,-1.24,0.15,0.7,-0.53,1.23,-3.82,5.32,-9.14,9.21,-3.1
+2022-12-16,Japan plans to double defense spending,defense_spending,east_asia,2022-12-16,HO.PA,-0.17,-1.24,1.07,0.67,-0.53,1.2,-5.72,5.32,-11.04,2.02,-4.36
+2022-12-16,Japan plans to double defense spending,defense_spending,east_asia,2022-12-16,SAAB-B.ST,-1.04,-1.24,0.2,-0.13,-0.53,0.4,-2.82,5.32,-8.14,8.64,6.52
+2022-12-16,Japan plans to double defense spending,defense_spending,east_asia,2022-12-16,LDO.MI,0.36,-1.24,1.6,2.25,-0.53,2.78,6.28,5.32,0.96,4.07,-13.29
+2022-12-16,Japan plans to double defense spending,defense_spending,east_asia,2022-12-16,EUDEF,-0.19,-1.24,1.04,-0.08,-0.53,0.45,-0.09,5.32,-5.41,7.42,0.46
 2023-01-25,US and Germany agree to send tanks to Ukraine,defense_spending,europe,2023-01-25,LMT,1.1,0.04,1.06,3.12,1.57,1.55,6.74,-0.41,7.16,-11.39,-7.52
 2023-01-25,US and Germany agree to send tanks to Ukraine,defense_spending,europe,2023-01-25,RTX,0.54,0.04,0.51,0.38,1.57,-1.19,1.05,-0.41,1.46,-4.14,5.29
 2023-01-25,US and Germany agree to send tanks to Ukraine,defense_spending,europe,2023-01-25,NOC,0.87,0.04,0.83,-2.45,1.57,-4.02,4.23,-0.41,4.64,-18.68,-18.45
@@ -714,6 +967,17 @@ date,event,category,region,reaction_day,ticker,return_1d,market_1d,abnormal_1d,r
 2023-04-04,Finland joins NATO,escalation,europe,2023-04-04,SAAB-B.ST,2.34,-0.17,2.51,2.55,1.26,1.3,-5.97,1.48,-7.45,1.0,46.43
 2023-04-04,Finland joins NATO,escalation,europe,2023-04-04,LDO.MI,0.87,-0.17,1.03,3.65,1.26,2.39,-5.84,1.48,-7.32,1.6,32.95
 2023-04-04,Finland joins NATO,escalation,europe,2023-04-04,EUDEF,0.86,-0.17,1.03,1.73,1.26,0.47,-3.19,1.48,-4.67,5.25,27.83
+2023-04-13,North Korea first solid-fuel ICBM test,weapons_test,east_asia,2023-04-13,LMT,0.83,1.33,-0.5,1.45,1.49,-0.05,-7.16,1.18,-8.34,-2.64,6.4
+2023-04-13,North Korea first solid-fuel ICBM test,weapons_test,east_asia,2023-04-13,RTX,0.16,1.33,-1.17,2.53,1.49,1.04,-5.14,1.18,-6.32,-1.31,0.66
+2023-04-13,North Korea first solid-fuel ICBM test,weapons_test,east_asia,2023-04-13,NOC,0.29,1.33,-1.03,0.91,1.49,-0.58,-6.29,1.18,-7.47,-0.35,0.04
+2023-04-13,North Korea first solid-fuel ICBM test,weapons_test,east_asia,2023-04-13,GD,0.37,1.33,-0.96,0.39,1.49,-1.11,-7.19,1.18,-8.37,-0.28,-6.88
+2023-04-13,North Korea first solid-fuel ICBM test,weapons_test,east_asia,2023-04-13,ITA,0.48,1.33,-0.85,0.54,1.49,-0.95,-4.15,1.18,-5.33,-2.1,1.02
+2023-04-13,North Korea first solid-fuel ICBM test,weapons_test,east_asia,2023-04-13,RHM.DE,0.87,0.48,0.39,2.7,1.34,1.36,0.19,1.09,-0.9,1.75,19.49
+2023-04-13,North Korea first solid-fuel ICBM test,weapons_test,east_asia,2023-04-13,BA.L,-1.11,0.48,-1.59,-1.15,1.34,-2.5,-3.35,1.09,-4.44,8.74,22.01
+2023-04-13,North Korea first solid-fuel ICBM test,weapons_test,east_asia,2023-04-13,HO.PA,0.11,0.48,-0.37,0.64,1.34,-0.7,-3.37,1.09,-4.46,5.36,19.42
+2023-04-13,North Korea first solid-fuel ICBM test,weapons_test,east_asia,2023-04-13,SAAB-B.ST,-0.08,0.48,-0.56,-3.75,1.34,-5.09,-8.89,1.09,-9.98,2.79,52.03
+2023-04-13,North Korea first solid-fuel ICBM test,weapons_test,east_asia,2023-04-13,LDO.MI,3.22,0.48,2.74,0.62,1.34,-0.72,-6.34,1.09,-7.43,-2.17,35.4
+2023-04-13,North Korea first solid-fuel ICBM test,weapons_test,east_asia,2023-04-13,EUDEF,0.6,0.48,0.12,-0.18,1.34,-1.53,-4.3,1.09,-5.39,3.37,29.77
 2023-04-15,Civil war breaks out in Sudan,war_outbreak,africa,2023-04-17,LMT,0.34,0.36,-0.02,-1.11,-0.06,-1.05,-7.62,-0.21,-7.41,-1.41,5.53
 2023-04-15,Civil war breaks out in Sudan,war_outbreak,africa,2023-04-17,RTX,1.41,0.36,1.05,0.56,-0.06,0.62,-5.6,-0.21,-5.39,-0.85,1.03
 2023-04-15,Civil war breaks out in Sudan,war_outbreak,africa,2023-04-17,NOC,0.47,0.36,0.11,-0.12,-0.06,-0.06,-7.15,-0.21,-6.94,0.46,0.57
@@ -736,6 +1000,17 @@ date,event,category,region,reaction_day,ticker,return_1d,market_1d,abnormal_1d,r
 2023-06-24,Wagner mutiny in Russia,coup,europe,2023-06-26,SAAB-B.ST,-4.33,-0.02,-4.31,-2.25,2.06,-4.31,-0.75,2.96,-3.71,1.32,-12.69
 2023-06-24,Wagner mutiny in Russia,coup,europe,2023-06-26,LDO.MI,-4.68,-0.02,-4.66,-2.62,2.06,-4.68,7.87,2.96,4.91,2.32,-3.98
 2023-06-24,Wagner mutiny in Russia,coup,europe,2023-06-26,EUDEF,-3.51,-0.02,-3.49,-1.27,2.06,-3.33,0.95,2.96,-2.01,2.56,-6.71
+2023-07-11,NATO Vilnius summit makes 2% a floor,defense_spending,europe,2023-07-11,LMT,1.28,0.64,0.65,2.08,2.54,-0.46,-2.3,2.51,-4.82,-3.65,-13.19
+2023-07-11,NATO Vilnius summit makes 2% a floor,defense_spending,europe,2023-07-11,RTX,0.56,0.64,-0.07,-1.19,2.54,-3.73,-12.32,2.51,-14.83,-4.45,-11.54
+2023-07-11,NATO Vilnius summit makes 2% a floor,defense_spending,europe,2023-07-11,NOC,1.8,0.64,1.17,0.36,2.54,-2.18,-3.52,2.51,-6.03,-3.47,-12.0
+2023-07-11,NATO Vilnius summit makes 2% a floor,defense_spending,europe,2023-07-11,GD,1.16,0.64,0.53,0.79,2.54,-1.76,5.83,2.51,3.31,-1.68,-13.37
+2023-07-11,NATO Vilnius summit makes 2% a floor,defense_spending,europe,2023-07-11,ITA,1.22,0.64,0.58,0.04,2.54,-2.5,0.5,2.51,-2.02,-1.71,-7.57
+2023-07-11,NATO Vilnius summit makes 2% a floor,defense_spending,europe,2023-07-11,RHM.DE,0.56,0.66,-0.1,1.64,2.1,-0.45,8.34,2.62,5.72,2.42,-2.52
+2023-07-11,NATO Vilnius summit makes 2% a floor,defense_spending,europe,2023-07-11,BA.L,0.34,0.66,-0.32,1.95,2.1,-0.14,12.88,2.62,10.26,-3.08,-6.16
+2023-07-11,NATO Vilnius summit makes 2% a floor,defense_spending,europe,2023-07-11,HO.PA,1.18,0.66,0.52,4.98,2.1,2.88,3.53,2.62,0.91,2.46,-2.49
+2023-07-11,NATO Vilnius summit makes 2% a floor,defense_spending,europe,2023-07-11,SAAB-B.ST,0.15,0.66,-0.51,1.16,2.1,-0.94,-0.36,2.62,-2.98,-1.16,-8.39
+2023-07-11,NATO Vilnius summit makes 2% a floor,defense_spending,europe,2023-07-11,LDO.MI,2.12,0.66,1.45,6.53,2.1,4.44,22.45,2.62,19.82,7.01,-3.89
+2023-07-11,NATO Vilnius summit makes 2% a floor,defense_spending,europe,2023-07-11,EUDEF,0.87,0.66,0.21,3.25,2.1,1.15,9.22,2.62,6.6,1.55,-4.48
 2023-07-26,Military coup in Niger,coup,africa,2023-07-26,LMT,-0.3,0.02,-0.31,-0.63,0.23,-0.86,-0.27,-3.8,3.53,-5.26,-12.52
 2023-07-26,Military coup in Niger,coup,africa,2023-07-26,RTX,-0.92,0.02,-0.93,1.0,0.23,0.77,-1.35,-3.8,2.45,-15.35,-22.67
 2023-07-26,Military coup in Niger,coup,africa,2023-07-26,NOC,-0.01,0.02,-0.02,-1.98,0.23,-2.21,-4.26,-3.8,-0.46,-3.52,-10.52
@@ -769,6 +1044,17 @@ date,event,category,region,reaction_day,ticker,return_1d,market_1d,abnormal_1d,r
 2023-10-07,Hamas attack on Israel,war_outbreak,middle_east,2023-10-09,SAAB-B.ST,9.26,-0.33,9.59,11.24,0.82,10.42,7.97,-0.03,8.01,-7.13,-5.66
 2023-10-07,Hamas attack on Israel,war_outbreak,middle_east,2023-10-09,LDO.MI,4.79,-0.33,5.12,7.88,0.82,7.06,10.82,-0.03,10.85,-3.73,17.67
 2023-10-07,Hamas attack on Israel,war_outbreak,middle_east,2023-10-09,EUDEF,6.1,-0.33,6.43,11.44,0.82,10.62,9.97,-0.03,10.0,-4.37,2.33
+2024-01-03,Kerman bombings in Iran,terrorism,middle_east,2024-01-03,LMT,0.66,-0.82,1.47,0.04,0.26,-0.22,-5.86,2.16,-8.02,-1.88,3.81
+2024-01-03,Kerman bombings in Iran,terrorism,middle_east,2024-01-03,RTX,0.46,-0.82,1.27,0.68,0.26,0.42,6.92,2.16,4.76,0.15,11.94
+2024-01-03,Kerman bombings in Iran,terrorism,middle_east,2024-01-03,NOC,1.02,-0.82,1.84,0.46,0.26,0.19,-4.96,2.16,-7.13,-5.4,0.56
+2024-01-03,Kerman bombings in Iran,terrorism,middle_east,2024-01-03,GD,-0.8,-0.82,0.02,-2.85,0.26,-3.11,3.01,2.16,0.85,0.2,7.51
+2024-01-03,Kerman bombings in Iran,terrorism,middle_east,2024-01-03,ITA,-1.36,-0.82,-0.55,-3.17,0.26,-3.43,-2.22,2.16,-4.39,0.42,10.22
+2024-01-03,Kerman bombings in Iran,terrorism,middle_east,2024-01-03,RHM.DE,-0.74,-0.93,0.19,1.97,-0.34,2.31,8.59,1.55,7.04,4.61,18.78
+2024-01-03,Kerman bombings in Iran,terrorism,middle_east,2024-01-03,BA.L,1.65,-0.93,2.58,3.64,-0.34,3.98,8.11,1.55,6.55,2.15,4.46
+2024-01-03,Kerman bombings in Iran,terrorism,middle_east,2024-01-03,HO.PA,0.6,-0.93,1.53,2.81,-0.34,3.15,2.59,1.55,1.03,-5.78,-4.08
+2024-01-03,Kerman bombings in Iran,terrorism,middle_east,2024-01-03,SAAB-B.ST,-1.53,-0.93,-0.6,3.87,-0.34,4.21,7.94,1.55,6.39,13.28,10.67
+2024-01-03,Kerman bombings in Iran,terrorism,middle_east,2024-01-03,LDO.MI,1.35,-0.93,2.28,8.01,-0.34,8.34,6.53,1.55,4.97,4.52,7.65
+2024-01-03,Kerman bombings in Iran,terrorism,middle_east,2024-01-03,EUDEF,0.27,-0.93,1.2,4.06,-0.34,4.4,6.81,1.55,5.26,3.67,7.55
 2024-01-11,US and UK strike Houthis in Yemen,military_strike,middle_east,2024-01-12,LMT,2.22,0.07,2.15,1.02,1.28,-0.25,-5.88,5.22,-11.09,-2.72,-6.07
 2024-01-11,US and UK strike Houthis in Yemen,military_strike,middle_east,2024-01-12,RTX,1.18,0.07,1.11,0.25,1.28,-1.03,6.08,5.22,0.87,2.23,6.49
 2024-01-11,US and UK strike Houthis in Yemen,military_strike,middle_east,2024-01-12,NOC,2.94,0.07,2.87,0.67,1.28,-0.6,-2.66,5.22,-7.87,-5.54,-13.75
@@ -802,6 +1088,17 @@ date,event,category,region,reaction_day,ticker,return_1d,market_1d,abnormal_1d,r
 2024-01-28,Drone kills three US soldiers in Jordan,military_strike,middle_east,2024-01-29,SAAB-B.ST,0.86,0.18,0.68,1.93,-0.01,1.94,19.54,2.75,16.79,6.5,10.41
 2024-01-28,Drone kills three US soldiers in Jordan,military_strike,middle_east,2024-01-29,LDO.MI,0.47,0.18,0.29,-0.81,-0.01,-0.8,17.83,2.75,15.08,6.55,1.36
 2024-01-28,Drone kills three US soldiers in Jordan,military_strike,middle_east,2024-01-29,EUDEF,1.44,0.18,1.26,1.1,-0.01,1.11,14.38,2.75,11.63,5.6,-0.25
+2024-03-22,Crocus City Hall attack near Moscow,terrorism,europe,2024-03-22,LMT,0.61,-0.19,0.8,2.64,0.17,2.48,4.67,-5.18,9.85,0.87,-11.0
+2024-03-22,Crocus City Hall attack near Moscow,terrorism,europe,2024-03-22,RTX,1.36,-0.19,1.55,3.47,0.17,3.3,7.74,-5.18,12.92,2.07,3.41
+2024-03-22,Crocus City Hall attack near Moscow,terrorism,europe,2024-03-22,NOC,0.27,-0.19,0.46,2.39,0.17,2.22,-1.05,-5.18,4.13,-0.51,-9.24
+2024-03-22,Crocus City Hall attack near Moscow,terrorism,europe,2024-03-22,GD,-0.06,-0.19,0.13,0.41,0.17,0.24,3.09,-5.18,8.27,0.09,0.72
+2024-03-22,Crocus City Hall attack near Moscow,terrorism,europe,2024-03-22,ITA,0.39,-0.19,0.58,1.81,0.17,1.64,-1.23,-5.18,3.95,-0.14,-7.47
+2024-03-22,Crocus City Hall attack near Moscow,terrorism,europe,2024-03-22,RHM.DE,1.75,0.02,1.73,5.94,0.69,5.24,3.66,-1.04,4.7,19.13,64.44
+2024-03-22,Crocus City Hall attack near Moscow,terrorism,europe,2024-03-22,BA.L,0.47,0.02,0.45,-0.43,0.69,-1.13,-3.37,-1.04,-2.33,6.61,18.34
+2024-03-22,Crocus City Hall attack near Moscow,terrorism,europe,2024-03-22,HO.PA,1.39,0.02,1.37,1.93,0.69,1.24,1.64,-1.04,2.68,12.19,8.47
+2024-03-22,Crocus City Hall attack near Moscow,terrorism,europe,2024-03-22,SAAB-B.ST,2.28,0.02,2.26,2.93,0.69,2.24,-4.11,-1.04,-3.07,13.34,40.74
+2024-03-22,Crocus City Hall attack near Moscow,terrorism,europe,2024-03-22,LDO.MI,1.59,0.02,1.57,5.77,0.69,5.08,-1.18,-1.04,-0.14,12.06,40.99
+2024-03-22,Crocus City Hall attack near Moscow,terrorism,europe,2024-03-22,EUDEF,1.5,0.02,1.48,3.22,0.69,2.53,-0.63,-1.04,0.41,12.86,33.92
 2024-04-01,Israel strikes Iranian consulate in Damascus,military_strike,middle_east,2024-04-01,LMT,-0.46,-0.17,-0.28,0.11,-0.89,1.0,1.41,-2.83,4.24,2.95,-10.55
 2024-04-01,Israel strikes Iranian consulate in Damascus,military_strike,middle_east,2024-04-01,RTX,0.24,-0.17,0.41,4.27,-0.89,5.15,3.98,-2.83,6.81,5.5,4.19
 2024-04-01,Israel strikes Iranian consulate in Damascus,military_strike,middle_east,2024-04-01,NOC,-1.53,-0.17,-1.35,-5.05,-0.89,-4.16,0.37,-2.83,3.21,0.56,-8.77
@@ -846,6 +1143,17 @@ date,event,category,region,reaction_day,ticker,return_1d,market_1d,abnormal_1d,r
 2024-04-20,US House passes 95bn aid for Ukraine Israel and Taiwan,defense_spending,americas,2024-04-22,SAAB-B.ST,0.02,0.82,-0.79,1.64,2.08,-0.44,8.33,6.28,2.05,-3.08,23.38
 2024-04-20,US House passes 95bn aid for Ukraine Israel and Taiwan,defense_spending,americas,2024-04-22,LDO.MI,0.32,0.82,-0.49,0.37,2.08,-1.71,8.86,6.28,2.58,-1.59,27.28
 2024-04-20,US House passes 95bn aid for Ukraine Israel and Taiwan,defense_spending,americas,2024-04-22,EUDEF,0.78,0.82,-0.03,2.31,2.08,0.23,7.84,6.28,1.56,0.37,22.28
+2024-06-04,Modi's BJP loses majority in India election,election,south_asia,2024-06-04,LMT,0.28,0.11,0.16,-0.03,1.49,-1.52,-0.41,4.35,-4.76,-1.31,6.64
+2024-06-04,Modi's BJP loses majority in India election,election,south_asia,2024-06-04,RTX,0.49,0.11,0.38,-0.26,1.49,-1.75,-6.48,4.35,-10.84,3.3,16.45
+2024-06-04,Modi's BJP loses majority in India election,election,south_asia,2024-06-04,NOC,-0.21,0.11,-0.32,-3.02,1.49,-4.51,-2.66,4.35,-7.02,-7.02,-3.95
+2024-06-04,Modi's BJP loses majority in India election,election,south_asia,2024-06-04,GD,-0.32,0.11,-0.43,-1.2,1.49,-2.69,-4.17,4.35,-8.53,0.28,6.94
+2024-06-04,Modi's BJP loses majority in India election,election,south_asia,2024-06-04,ITA,0.15,0.11,0.03,-0.29,1.49,-1.78,-2.74,4.35,-7.1,-0.21,2.53
+2024-06-04,Modi's BJP loses majority in India election,election,south_asia,2024-06-04,RHM.DE,-3.36,-0.52,-2.85,-0.67,0.5,-1.17,-9.64,-1.31,-8.34,-3.88,18.81
+2024-06-04,Modi's BJP loses majority in India election,election,south_asia,2024-06-04,BA.L,-0.76,-0.52,-0.24,0.89,0.5,0.39,-8.55,-1.31,-7.24,0.38,3.44
+2024-06-04,Modi's BJP loses majority in India election,election,south_asia,2024-06-04,HO.PA,-0.36,-0.52,0.16,1.25,0.5,0.76,-9.25,-1.31,-7.95,1.4,9.41
+2024-06-04,Modi's BJP loses majority in India election,election,south_asia,2024-06-04,SAAB-B.ST,-1.82,-0.52,-1.3,2.96,0.5,2.47,0.77,-1.31,2.07,13.29,18.32
+2024-06-04,Modi's BJP loses majority in India election,election,south_asia,2024-06-04,LDO.MI,-1.86,-0.52,-1.35,1.08,0.5,0.58,-8.47,-1.31,-7.16,4.61,9.29
+2024-06-04,Modi's BJP loses majority in India election,election,south_asia,2024-06-04,EUDEF,-1.63,-0.52,-1.12,1.18,0.5,0.68,-6.94,-1.31,-5.64,3.15,12.13
 2024-07-04,Labour wins UK general election,election,europe,2024-07-05,LMT,-0.83,0.58,-1.41,-1.21,0.91,-2.12,17.77,-1.53,19.31,-5.31,-2.94
 2024-07-04,Labour wins UK general election,election,europe,2024-07-05,RTX,-0.37,0.58,-0.94,0.97,0.91,0.06,15.88,-1.53,17.41,-11.34,-7.18
 2024-07-04,Labour wins UK general election,election,europe,2024-07-05,NOC,-0.54,0.58,-1.12,-1.16,0.91,-2.07,12.87,-1.53,14.41,-7.22,-10.45
@@ -912,6 +1220,17 @@ date,event,category,region,reaction_day,ticker,return_1d,market_1d,abnormal_1d,r
 2024-11-05,Trump wins US election,election,americas,2024-11-06,SAAB-B.ST,-2.36,-0.46,-1.9,7.37,-1.41,8.78,9.4,1.39,8.01,-0.51,-10.02
 2024-11-05,Trump wins US election,election,americas,2024-11-06,LDO.MI,3.46,-0.46,3.91,13.78,-1.41,15.19,15.95,1.39,14.56,9.33,1.66
 2024-11-05,Trump wins US election,election,americas,2024-11-06,EUDEF,2.45,-0.46,2.91,11.43,-1.41,12.84,10.04,1.39,8.65,1.55,-5.02
+2024-12-03,South Korea president declares martial law,coup,east_asia,2024-12-03,LMT,-0.64,0.05,-0.69,-1.99,0.17,-2.16,-6.61,-2.58,-4.03,-9.69,-19.64
+2024-12-03,South Korea president declares martial law,coup,east_asia,2024-12-03,RTX,-0.49,0.05,-0.54,-1.77,0.17,-1.94,-2.49,-2.58,0.09,-5.23,-11.32
+2024-12-03,South Korea president declares martial law,coup,east_asia,2024-12-03,NOC,0.09,0.05,0.05,-1.15,0.17,-1.33,-3.19,-2.58,-0.61,-9.68,-17.53
+2024-12-03,South Korea president declares martial law,coup,east_asia,2024-12-03,GD,0.35,0.05,0.31,-2.49,0.17,-2.66,-4.68,-2.58,-2.1,-11.36,-17.18
+2024-12-03,South Korea president declares martial law,coup,east_asia,2024-12-03,ITA,0.03,0.05,-0.02,-2.65,0.17,-2.83,-4.95,-2.58,-2.37,0.4,-2.31
+2024-12-03,South Korea president declares martial law,coup,east_asia,2024-12-03,RHM.DE,1.05,0.37,0.68,-2.42,1.49,-3.91,-3.47,0.27,-3.74,33.09,23.16
+2024-12-03,South Korea president declares martial law,coup,east_asia,2024-12-03,BA.L,0.44,0.37,0.07,-4.29,1.49,-5.78,-8.62,0.27,-8.89,0.92,-2.27
+2024-12-03,South Korea president declares martial law,coup,east_asia,2024-12-03,HO.PA,1.42,0.37,1.05,-0.85,1.49,-2.34,-2.3,0.27,-2.58,-4.23,-2.99
+2024-12-03,South Korea president declares martial law,coup,east_asia,2024-12-03,SAAB-B.ST,2.13,0.37,1.75,-4.78,1.49,-6.27,-3.42,0.27,-3.69,10.32,6.08
+2024-12-03,South Korea president declares martial law,coup,east_asia,2024-12-03,LDO.MI,1.24,0.37,0.86,-2.71,1.49,-4.2,0.58,0.27,0.31,17.74,26.03
+2024-12-03,South Korea president declares martial law,coup,east_asia,2024-12-03,EUDEF,1.25,0.37,0.88,-2.98,1.49,-4.48,-3.41,0.27,-3.69,10.99,9.8
 2024-12-08,Assad government falls in Syria,coup,middle_east,2024-12-09,LMT,-0.59,-0.51,-0.07,-3.58,-0.59,-2.99,-9.56,-2.83,-6.74,-8.5,-18.2
 2024-12-08,Assad government falls in Syria,coup,middle_east,2024-12-09,RTX,-1.19,-0.51,-0.68,-0.2,-0.59,0.39,-2.7,-2.83,0.13,-3.27,-10.28
 2024-12-08,Assad government falls in Syria,coup,middle_east,2024-12-09,NOC,1.17,-0.51,1.68,1.34,-0.59,1.93,-4.49,-2.83,-1.66,-10.68,-17.32
@@ -934,6 +1253,17 @@ date,event,category,region,reaction_day,ticker,return_1d,market_1d,abnormal_1d,r
 2025-01-19,Gaza ceasefire takes effect,de_escalation,middle_east,2025-01-20,SAAB-B.ST,-0.53,0.02,-0.54,4.81,1.28,3.54,11.89,5.74,6.15,-4.67,1.15
 2025-01-19,Gaza ceasefire takes effect,de_escalation,middle_east,2025-01-20,LDO.MI,0.42,0.02,0.4,2.79,1.28,1.52,10.61,5.74,4.88,9.69,30.2
 2025-01-19,Gaza ceasefire takes effect,de_escalation,middle_east,2025-01-20,EUDEF,0.04,0.02,0.02,3.33,1.28,2.05,10.7,5.74,4.96,4.08,11.12
+2025-01-27,M23 rebels seize Goma in Congo,escalation,africa,2025-01-27,LMT,1.35,-1.41,2.77,-6.84,-1.01,-5.83,-11.41,-1.77,-9.64,-0.08,-16.41
+2025-01-27,M23 rebels seize Goma in Congo,escalation,africa,2025-01-27,RTX,-0.21,-1.41,1.21,2.9,-1.01,3.92,0.6,-1.77,2.37,5.21,-4.7
+2025-01-27,M23 rebels seize Goma in Congo,escalation,africa,2025-01-27,NOC,1.25,-1.41,2.66,-1.96,-1.01,-0.95,-9.47,-1.77,-7.7,4.15,-9.24
+2025-01-27,M23 rebels seize Goma in Congo,escalation,africa,2025-01-27,GD,1.28,-1.41,2.69,-3.55,-1.01,-2.54,-7.57,-1.77,-5.8,-1.23,-16.81
+2025-01-27,M23 rebels seize Goma in Congo,escalation,africa,2025-01-27,ITA,-1.08,-1.41,0.33,-0.09,-1.01,0.92,-4.55,-1.77,-2.78,4.74,-0.3
+2025-01-27,M23 rebels seize Goma in Congo,escalation,africa,2025-01-27,RHM.DE,-1.15,0.02,-1.17,3.25,1.89,1.36,22.23,4.75,17.48,14.19,48.11
+2025-01-27,M23 rebels seize Goma in Congo,escalation,africa,2025-01-27,BA.L,0.8,0.02,0.78,-0.39,1.89,-2.28,3.18,4.75,-1.57,-0.1,-7.67
+2025-01-27,M23 rebels seize Goma in Congo,escalation,africa,2025-01-27,HO.PA,0.07,0.02,0.05,2.5,1.89,0.61,19.67,4.75,14.92,5.37,-1.72
+2025-01-27,M23 rebels seize Goma in Congo,escalation,africa,2025-01-27,SAAB-B.ST,-0.56,0.02,-0.58,2.59,1.89,0.7,30.36,4.75,25.61,-2.38,-1.3
+2025-01-27,M23 rebels seize Goma in Congo,escalation,africa,2025-01-27,LDO.MI,-0.82,0.02,-0.83,2.79,1.89,0.9,19.4,4.75,14.65,9.79,32.62
+2025-01-27,M23 rebels seize Goma in Congo,escalation,africa,2025-01-27,EUDEF,-0.33,0.02,-0.35,2.17,1.89,0.28,18.93,4.75,14.18,5.31,12.38
 2025-02-23,Merz's CDU wins German election,election,europe,2025-02-24,LMT,-0.1,-0.46,0.35,2.19,-0.96,3.15,0.51,-5.71,6.22,-9.77,-19.57
 2025-02-23,Merz's CDU wins German election,election,europe,2025-02-24,RTX,1.74,-0.46,2.19,7.87,-0.96,8.83,7.36,-5.71,13.08,-0.27,1.41
 2025-02-23,Merz's CDU wins German election,election,europe,2025-02-24,NOC,0.44,-0.46,0.9,3.08,-0.96,4.04,10.04,-5.71,15.75,-8.76,-10.78
@@ -945,6 +1275,17 @@ date,event,category,region,reaction_day,ticker,return_1d,market_1d,abnormal_1d,r
 2025-02-23,Merz's CDU wins German election,election,europe,2025-02-24,SAAB-B.ST,1.25,-0.09,1.34,7.48,0.66,6.82,29.86,-0.68,30.54,25.61,16.64
 2025-02-23,Merz's CDU wins German election,election,europe,2025-02-24,LDO.MI,1.99,-0.09,2.08,9.7,0.66,9.05,30.55,-0.68,31.23,14.65,28.46
 2025-02-23,Merz's CDU wins German election,election,europe,2025-02-24,EUDEF,3.11,-0.09,3.2,9.49,0.66,8.84,32.95,-0.68,33.63,14.18,15.24
+2025-02-25,UK raises defense spending to 2.5% of GDP,defense_spending,europe,2025-02-25,LMT,1.86,-0.5,2.36,3.41,-2.25,5.66,-0.47,-3.58,3.11,-9.64,-18.92
+2025-02-25,UK raises defense spending to 2.5% of GDP,defense_spending,europe,2025-02-25,RTX,1.52,-0.5,2.02,6.7,-2.25,8.95,7.38,-3.58,10.97,2.37,3.76
+2025-02-25,UK raises defense spending to 2.5% of GDP,defense_spending,europe,2025-02-25,NOC,2.46,-0.5,2.96,5.69,-2.25,7.94,10.53,-3.58,14.11,-7.7,-9.69
+2025-02-25,UK raises defense spending to 2.5% of GDP,defense_spending,europe,2025-02-25,GD,1.48,-0.5,1.98,3.16,-2.25,5.41,7.96,-3.58,11.55,-5.8,-12.77
+2025-02-25,UK raises defense spending to 2.5% of GDP,defense_spending,europe,2025-02-25,ITA,0.58,-0.5,1.07,2.31,-2.25,4.56,5.88,-3.58,9.46,-2.78,-3.52
+2025-02-25,UK raises defense spending to 2.5% of GDP,defense_spending,europe,2025-02-25,RHM.DE,0.15,0.09,0.06,20.3,1.84,18.46,38.69,-0.64,39.33,26.92,46.97
+2025-02-25,UK raises defense spending to 2.5% of GDP,defense_spending,europe,2025-02-25,BA.L,4.54,0.09,4.45,23.76,1.84,21.91,19.88,-0.64,20.52,1.86,-8.17
+2025-02-25,UK raises defense spending to 2.5% of GDP,defense_spending,europe,2025-02-25,HO.PA,1.97,0.09,1.87,19.76,1.84,17.92,31.77,-0.64,32.41,17.22,22.45
+2025-02-25,UK raises defense spending to 2.5% of GDP,defense_spending,europe,2025-02-25,SAAB-B.ST,3.19,0.09,3.09,18.43,1.84,16.59,34.57,-0.64,35.21,28.1,21.42
+2025-02-25,UK raises defense spending to 2.5% of GDP,defense_spending,europe,2025-02-25,LDO.MI,2.48,0.09,2.39,24.91,1.84,23.07,24.99,-0.64,25.63,18.14,34.14
+2025-02-25,UK raises defense spending to 2.5% of GDP,defense_spending,europe,2025-02-25,EUDEF,2.46,0.09,2.37,21.45,1.84,19.61,30.17,-0.64,30.81,18.41,22.62
 2025-02-28,Trump-Zelensky Oval Office clash,escalation,europe,2025-02-28,LMT,0.88,1.56,-0.68,4.13,-2.11,6.24,-0.21,-2.78,2.57,1.05,-12.58
 2025-02-28,Trump-Zelensky Oval Office clash,escalation,europe,2025-02-28,RTX,1.89,1.56,0.33,-1.72,-2.11,0.39,2.23,-2.78,5.01,7.62,10.98
 2025-02-28,Trump-Zelensky Oval Office clash,escalation,europe,2025-02-28,NOC,0.38,1.56,-1.18,3.77,-2.11,5.88,12.21,-2.78,14.99,-1.69,-3.58
