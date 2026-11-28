@@ -52,6 +52,18 @@ def test_backtest_runs_for_both_markets(events, reactions, ticker):
         assert s["events"] > 50 and 0 <= s["hit_rate"] <= 100
 
 
+def test_backtest_at_a_shorter_horizon_scores_that_horizon(events, reactions):
+    """horizon="5d" must judge calls against the 5-day move, not the 20-day one."""
+    bt = Backtester(events, reactions, "ITA", horizon="5d")
+    results = bt.run("leave_one_out")
+    assert "actual_5d" in results and "actual_20d" not in results
+    truth = reactions[reactions["ticker"] == "ITA"].set_index(["date", "event"])["abnormal_5d"]
+    first = results.iloc[0]
+    assert first["actual_5d"] == pytest.approx(truth[(pd.Timestamp(first["date"]), first["event"])])
+    s = score(results, horizon="5d")
+    assert s["calls"] > 50 and 0 <= s["hit_rate"] <= 100
+
+
 def test_known_earnings_confound(prices, events, earnings):
     """LMT and NOC reported on 22 Jul 2025, inside the Israel-Iran ceasefire window."""
     ceasefire = events[events["event"] == "Israel-Iran ceasefire takes hold"].iloc[0]

@@ -5,7 +5,7 @@ import {
   Bar, BarChart, CartesianGrid, Cell, ErrorBar, Legend, Line, LineChart, ReferenceLine,
   ResponsiveContainer, Tooltip, XAxis, YAxis, useXAxisScale,
 } from 'recharts'
-import { getCategories } from '../api'
+import { getCategories, getCategoryTest } from '../api'
 import { categoryColor, label, pct, signClass, useChartTheme, useNarrow } from '../theme'
 
 const MAX_LINES = 4 // more lines than this gets too hard to read
@@ -109,6 +109,35 @@ function MarketComparison({ options }) {
   )
 }
 
+// With nine event types, some average looks big by luck alone. This asks the server how often
+// shuffling the event types at random spreads the averages out as much as the real ones do.
+function EventTypeTest({ ticker }) {
+  const [test, setTest] = useState(null)
+
+  useEffect(() => {
+    getCategoryTest(ticker).then(setTest).catch(() => setTest(null))
+  }, [ticker])
+
+  if (!test || test.ticker !== ticker) return null
+  const share = (p) => `${(p * 100).toFixed(p < 0.1 ? 1 : 0)}%`
+  const verdict = test.p_20d < 0.05
+    ? 'Over 20 days, event type does seem to matter for this stock.'
+    : test.p_20d < 0.1
+      ? 'Over 20 days that is borderline: event type may matter, but luck is a fair explanation.'
+      : 'Over 20 days, the differences between event types are within what luck produces. Treat the ranking below with care.'
+  return (
+    <div className="card">
+      <h2>Does event type matter at all?</h2>
+      <p className="muted small">
+        If the event types were shuffled at random across {test.ticker}'s {test.events} events, how often would their
+        averages spread out as much as the real ones? Day 1: <strong>{share(test.p_1d)}</strong> · 5 days:{' '}
+        <strong>{share(test.p_5d)}</strong> · 20 days: <strong>{share(test.p_20d)}</strong> (a permutation test).
+        Under 5% means the type of event really goes with how the stock moved. {verdict}
+      </p>
+    </div>
+  )
+}
+
 export default function CategoryView({ ticker, options }) {
   const theme = useChartTheme()
   const narrow = useNarrow()
@@ -148,6 +177,7 @@ export default function CategoryView({ ticker, options }) {
   return (
     <section>
       <MarketComparison options={options} />
+      <EventTypeTest ticker={ticker} />
       <div className="card">
         <h2>Average 20-day result by event type</h2>
         <p className="muted small">

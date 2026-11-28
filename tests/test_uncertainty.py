@@ -4,7 +4,7 @@
 import numpy as np
 import pytest
 
-from uncertainty import bootstrap_ci, paired_gap_ci, share_ci
+from uncertainty import bootstrap_ci, groups_differ_p, paired_gap_ci, share_ci
 
 
 def test_interval_contains_the_average():
@@ -51,3 +51,32 @@ def test_paired_gap_is_tighter_than_separate_intervals():
     gap_low, gap_high = paired_gap_ci(engine, baseline)
     rate_low, rate_high = share_ci(engine)
     assert gap_high - gap_low < (rate_high - rate_low) / 2
+
+
+def test_clearly_different_groups_have_a_small_p_value():
+    rng = np.random.default_rng(3)
+    values = np.concatenate([rng.normal(-5, 1, 15), rng.normal(0, 1, 15), rng.normal(5, 1, 15)])
+    labels = ["a"] * 15 + ["b"] * 15 + ["c"] * 15
+    assert groups_differ_p(values, labels, shuffles=999) < 0.01
+
+
+def test_groups_from_the_same_distribution_usually_look_alike():
+    """With no real differences, p-values are spread evenly: most runs are far from tiny."""
+    rng = np.random.default_rng(4)
+    p_values = [groups_differ_p(rng.normal(0, 1, 40), ["a", "b", "c", "d"] * 10, shuffles=199, seed=s)
+                for s in range(30)]
+    assert np.mean(np.array(p_values) < 0.05) < 0.2
+    assert 0.3 < np.median(p_values) < 0.7
+
+
+def test_fast_spread_matches_the_plain_formula():
+    from uncertainty import _spreads, spread_between_groups
+    values = np.array([1.0, 2.0, 6.0, 7.0, 3.0])
+    labels = np.array(["x", "x", "y", "y", "z"])
+    groups = np.eye(3)[np.unique(labels, return_inverse=True)[1]]
+    assert _spreads(values[None, :], groups)[0] == pytest.approx(spread_between_groups(values, labels))
+
+
+def test_one_group_or_missing_values():
+    assert groups_differ_p([1.0, 2.0, 3.0], ["a", "a", "a"]) is None
+    assert groups_differ_p([1.0, float("nan"), 3.0, 4.0], ["a", "a", "b", "b"], shuffles=99) is not None

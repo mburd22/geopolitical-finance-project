@@ -37,7 +37,7 @@ from check_events import ALLOWED
 from confounds import find_confounds, load_earnings
 from find_analogs import STRONG_MATCH, find_analogs, load_reactions, summarize, write_thesis
 from make_charts import abnormal_path
-from uncertainty import LEVEL, bootstrap_ci, share_ci
+from uncertainty import LEVEL, bootstrap_ci, groups_differ_p, share_ci
 
 # The news pipeline runs in the background while the server is up.
 # Set AUTO_PIPELINE=0 in .env to turn that off, or PIPELINE_EVERY_MINUTES to change how often.
@@ -99,6 +99,7 @@ def load_data():
     if "track_record" in globals():
         track_record.cache_clear()
         runup_analysis.cache_clear()
+        category_test.cache_clear()
 
 
 
@@ -237,6 +238,23 @@ def categories(ticker: Ticker = "ITA"):
             "path": [{"day": int(day), "value": to_number(value)} for day, value in average.items()],
         })
     return sorted(results, key=lambda item: item["avg_abnormal_20d"] or 0, reverse=True)
+
+
+@lru_cache(maxsize=None)
+def category_test(ticker):
+    rows = REACTIONS[REACTIONS["ticker"] == ticker]
+    return {
+        "ticker": ticker, "events": int(len(rows)), "categories": int(rows["category"].nunique()),
+        **{f"p_{w}": round(groups_differ_p(rows[f"abnormal_{w}"], rows["category"]), 3) for w in ("1d", "5d", "20d")},
+    }
+
+
+@app.get("/api/category-test")
+def category_test_results(ticker: Ticker = "ITA"):
+    """Does event type explain the reaction at all? A permutation test (see uncertainty.py):
+    the share of random relabellings whose category averages spread out at least as much as
+    the real ones. Small (under 0.05) means event type matters; large means it could be luck."""
+    return category_test(ticker)
 
 
 # A Pydantic model describes the shape of data we expect to RECEIVE.

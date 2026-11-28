@@ -26,6 +26,15 @@ From 143 measured events (2015 to November 2026; the newest is still inside its 
 - **European defense stocks react two to five times as strongly.** After spending decisions, the European basket beat its market by +10.8% (+5.2% to +17.5%), vs +2.2% for ITA. After war outbreaks it was +6.4% (vs +1.3%). Five of its nine event types have ranges entirely above zero, against one for ITA. Seven trading days after Russia invaded Ukraine, Rheinmetall was up 69% vs the European market.
 - **Individual stocks swing far more than the sector.** After the invasion of Ukraine, NOC and LMT were up about 25% and 21% vs the market within 7 trading days, while the ETF moved about 6%.
 
+### Does event type matter at all?
+
+With nine event types, some average will look large by luck alone. A permutation test checks this: shuffle the event types at random thousands of times, and count how often the shuffled averages spread out as much as the real ones. A small share (under 5%) means event type really goes with how the stock moved.
+
+- **For the first few days, yes.** Event type goes with the day-1 move for 7 of the 11 stocks, and the 5-day move for 6 (share under 5%). That's far more than the 1 in 20 you'd expect by chance. The European basket comes in at 0.4% on day 1.
+- **Over 20 days, mostly not.** For every US stock the 20-day share is 26% to 59% (ITA: 59%), so the ranking of event types above could be noise. Only Saab is under 5%, with the European basket borderline at 5%.
+
+The dashboard shows this test for each stock on the By event type tab.
+
 ![Defense stocks vs the market around the Russian invasion of Ukraine](docs/event_2022-02-24.png)
 
 ## Does the analog engine work?
@@ -45,6 +54,18 @@ How we got here, honestly:
 - **Where it fails:** war outbreaks (4 of 9 calls right for ITA), coups and de-escalation. In those categories, what happened last time is a poor guide to what happens next.
 - **Confidence labels didn't work either.** A high/medium/low label was tested and removed: "high" calls were right *less* often. The dashboard shows the real backtested hit rate next to the baseline instead.
 - **Confounding is everywhere.** 115 of 144 events had earnings, another event, or a 3%+ market day inside their 20-day window. The dashboard flags these on every event.
+
+### Would it do better over a shorter horizon?
+
+Event type matters most in the first days, so `horizons.py` reruns the backtest with the same weights to predict the 1-day and 5-day moves instead. Averaged over all 11 stocks:
+
+| Horizon | Engine (leave one out) | Engine (only earlier events) | Always up |
+|---|---|---|---|
+| 1 day | 50% | 56% | 58–60% |
+| 5 days | 52% | 55% | 54% |
+| 20 days | 55% | 55% | 55–56% |
+
+**No.** At day 1 the engine does clearly *worse* than assuming defense goes up (by 4 to 8 points). Event type goes with how *big* the first move is, but taking the majority of eight past analogs can't call its *direction* better than that simple rule.
 
 ### Does a run-up predict the reaction?
 
@@ -132,13 +153,14 @@ Then open http://localhost:5173.
 .\.venv\Scripts\python.exe -m pytest
 ```
 
-139 tests, about 20 seconds. They never touch the internet or the live news database (`data/news.db`). They cover:
+145 tests, about 25 seconds. They never touch the internet or the live news database (`data/news.db`). They cover:
 
 - **The event-study maths**, on synthetic prices with known answers: reaction day, after-close news, weekends, benchmark subtraction and run-ups. Also the beta model: it recovers a known alpha and beta, ignores the days just before the news, and doesn't count a high-beta stock's normal move in a rising market as abnormal.
 - **The event database checker.**
 - **The analog engine:** related categories only, measured events only, and the thesis.
 - **The backtest,** including that the past-only mode never peeks at the future.
-- **Bootstrap confidence intervals:** they contain the average, narrow with more events, and the paired engine-vs-baseline gap is tighter than the separate ranges.
+- **Bootstrap confidence intervals:** they contain the average, narrow with more events, and the paired engine-vs-baseline gap is tighter than the separate ranges. The permutation test finds real group differences and doesn't invent them from pure noise.
+- **The backtest at other horizons** judges each call against the right move.
 - **Confound flags,** on known real cases.
 - **Feed parsing,** including rejecting `javascript:` links and malicious XML.
 - **The keyword classifier,** including 33 hand-labelled stories: real events it must catch and false alarms it must drop.
@@ -165,7 +187,8 @@ GitHub runs the tests and the dashboard build on every push (`.github/workflows/
 | `find_analogs.py` | The analog engine and template thesis (also a command-line tool) |
 | `backtest.py` | Scores the engine; `--tune` searches for better weights across all stocks |
 | `runup.py` | Tests whether pre-event run-ups predict the reaction |
-| `uncertainty.py` | Bootstrap confidence intervals for averages and hit rates |
+| `horizons.py` | Backtests the engine at 1, 5 and 20 days |
+| `uncertainty.py` | Bootstrap confidence intervals, and a permutation test of whether event type matters |
 | `compare_models.py` | Reruns the main results with market-adjusted and beta-adjusted returns; `--tune` re-tunes weights for each (slow) |
 | `make_charts.py` | Static PNG charts |
 | `api.py` | FastAPI back end for the dashboard |
@@ -179,7 +202,7 @@ GitHub runs the tests and the dashboard build on every push (`.github/workflows/
 - **Tags are judgment calls,** especially severity and surprise.
 - **Live detection without Claude is noisy.** In Nov 2026 the first 24 stories the keyword rules flagged were hand-labelled: only 8 were real, market-relevant events. The rest were company weapons tests, court cases, foiled plots, tributes and pleas for peace. The tightened rules keep those 8 and drop the other 16, and the labelled cases are now tests. But that's one week of news, so expect new kinds of false alarm. Events detected before the change stay in the database; dismiss them in the dashboard.
 - **The live pipeline only runs while the API server is running** on your computer.
-- **Event timing is US-based.** The `after_close` flag refers to the 4pm New York close. European markets close at 11:30 New York time, so for news that broke during US hours, Europe may really react a day later than measured.
+- **Event timing is US-based.** The `after_close` flag refers to the 4pm New York close. European markets close at 11:30 New York time, so for news that broke during US hours, Europe may really react a day later than measured. A check suggests this rarely matters: starting every European window one day later captures *less* of the move, not more (the basket's day-1 reaction to war outbreaks drops from +2.5% to 0.0%), and the 20-day results barely change (correlation 0.94; 13 of 143 signs flip).
 - **European defense stocks have trended up hard since 2022,** so "beat the market" is partly that trend, not the event.
 - **BAE and Thales have no earnings dates** in the Yahoo data, so earnings confounds are missed for those two.
 - **Market-adjusted by default.** Beta adjustment is available but doesn't change the conclusions (see above). Neither model adjusts for other factors, like defense stocks moving with oil or with interest rates.

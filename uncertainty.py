@@ -45,3 +45,45 @@ def paired_gap_ci(a, b, **kwargs):
     gaps = np.asarray(a, dtype=float) - np.asarray(b, dtype=float)
     ci = bootstrap_ci(gaps, **kwargs)
     return None if ci is None else (ci[0] * 100, ci[1] * 100)
+
+
+def spread_between_groups(values, labels):
+    """How far apart the group averages are: each group's squared distance from the overall
+    average, weighted by its size (the "between-group sum of squares" from an ANOVA)."""
+    overall = values.mean()
+    return sum((labels == g).sum() * (values[labels == g].mean() - overall) ** 2 for g in np.unique(labels))
+
+
+def _spreads(value_rows, groups):
+    """spread_between_groups for many shuffles at once. value_rows: one shuffled copy of the
+    values per row; groups: a 0/1 table saying which group each position belongs to.
+    Uses: sum over groups of n * (group mean - overall)^2 = sum(group total^2 / n) - N * overall^2."""
+    totals = value_rows @ groups                       # each row: the total of each group
+    sizes = groups.sum(axis=0)
+    overall = value_rows.mean(axis=1)
+    return (totals ** 2 / sizes).sum(axis=1) - len(groups) * overall ** 2
+
+
+def groups_differ_p(values, labels, shuffles=5000, seed=0):
+    """Do the groups really differ, or could the spread between their averages be luck?
+
+    With nine event types, some average will look big just by chance. This shuffles the
+    labels at random (so any real link between type and outcome is destroyed) and counts how
+    often the shuffled groups spread out at least as much as the real ones. A small answer
+    (say under 0.05) means event type matters; a large one means the differences are within
+    what chance produces. Returns that share, a p-value between 0 and 1.
+    """
+    values = np.asarray(values, dtype=float)
+    labels = np.asarray(labels)
+    keep = ~np.isnan(values)
+    values, labels = values[keep], labels[keep]
+    if len(np.unique(labels)) < 2:
+        return None
+    names, codes = np.unique(labels, return_inverse=True)
+    groups = np.eye(len(names))[codes]                 # row i has a 1 in the column of event i's group
+    observed = _spreads(values[None, :], groups)[0]
+    rng = np.random.default_rng(seed)
+    # Shuffling the values against fixed labels is the same as shuffling the labels.
+    shuffled = rng.permuted(np.tile(values, (shuffles, 1)), axis=1)
+    at_least = int((_spreads(shuffled, groups) >= observed - 1e-9).sum())
+    return (at_least + 1) / (shuffles + 1)  # +1s: the real labelling counts as one of the shuffles

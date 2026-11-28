@@ -57,6 +57,12 @@ def test_backtest_and_runup_endpoints(client):
     assert client.get("/api/runup?window=5d").status_code == 422
 
 
+def test_category_test(client):
+    t = client.get("/api/category-test?ticker=EUDEF").json()
+    assert t["events"] > 100 and t["categories"] == 9
+    assert all(0 < t[f"p_{w}"] <= 1 for w in ("1d", "5d", "20d"))
+
+
 def test_categories(client):
     cats = client.get("/api/categories?ticker=EUDEF").json()
     assert {c["category"] for c in cats} >= {"war_outbreak", "de_escalation"}

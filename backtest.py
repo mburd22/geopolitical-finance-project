@@ -35,8 +35,11 @@ class Backtester:
     below checks the two give identical analogs.
     """
 
-    def __init__(self, events, reactions, ticker="ITA"):
-        rows = reactions[reactions["ticker"] == ticker][["date", "event", "abnormal_20d"]]
+    def __init__(self, events, reactions, ticker="ITA", horizon="20d"):
+        """horizon: which move to predict, "1d", "5d" or "20d" after the event (the engine's
+        normal job is 20 days; horizons.py checks the shorter ones)."""
+        self.horizon = horizon
+        rows = reactions[reactions["ticker"] == ticker][["date", "event", f"abnormal_{horizon}"]]
         self.events = events.merge(rows, on=["date", "event"], how="left").reset_index(drop=True)
         e = self.events
         cat = e["category"].to_numpy()
@@ -55,7 +58,7 @@ class Backtester:
             "severity": 1 - np.abs(sev[:, None] - sev[None, :]) / 2,
             "surprise": equal("surprise"),
         }
-        self.actual = e["abnormal_20d"].to_numpy()
+        self.actual = e[f"abnormal_{horizon}"].to_numpy()
         self.dates = e["date"].to_numpy()
         self.n = len(e)
 
@@ -116,7 +119,7 @@ class Backtester:
                 "date": event["date"].date(),
                 "event": event["event"],
                 "category": event["category"],
-                "actual_20d": float(self.actual[i]),
+                f"actual_{self.horizon}": float(self.actual[i]),
                 **prediction,
             })
         return pd.DataFrame(rows)
@@ -133,7 +136,7 @@ def rounded(ci):
     return None if ci is None else [round(ci[0], 1), round(ci[1], 1)]
 
 
-def score(results, intervals=False):
+def score(results, intervals=False, horizon="20d"):
     """Summary numbers for one backtest run.
 
     intervals=True adds 90% bootstrap confidence intervals (see uncertainty.py) for the hit
@@ -143,11 +146,12 @@ def score(results, intervals=False):
     if results.empty:
         return {"events": 0}
     r = results.copy()
-    r["hit"] = [hit(d, a) for d, a in zip(r["direction"], r["actual_20d"])]
-    r["always_up_hit"] = (r["actual_20d"] > 0).astype(float)
+    actual = f"actual_{horizon}"
+    r["hit"] = [hit(d, a) for d, a in zip(r["direction"], r[actual])]
+    r["always_up_hit"] = (r[actual] > 0).astype(float)
     has_cat = r["category_median"].notna()
     r["category_hit"] = np.where(
-        has_cat, ((r["category_median"] > 0) == (r["actual_20d"] > 0)).astype(float), np.nan)
+        has_cat, ((r["category_median"] > 0) == (r[actual] > 0)).astype(float), np.nan)
     calls = r["hit"].notna()
 
     def pct(series):
@@ -167,8 +171,8 @@ def score(results, intervals=False):
         # Baselines judged on the SAME events the engine made a call on.
         "always_up_hit_rate": pct(r.loc[calls, "always_up_hit"]),
         "category_hit_rate": pct(r.loc[calls, "category_hit"]),
-        "mae": round(float((r["predicted_median"] - r["actual_20d"]).abs().mean()), 2),
-        "category_mae": round(float((r.loc[has_cat, "category_median"] - r.loc[has_cat, "actual_20d"]).abs().mean()), 2),
+        "mae": round(float((r["predicted_median"] - r[actual]).abs().mean()), 2),
+        "category_mae": round(float((r.loc[has_cat, "category_median"] - r.loc[has_cat, actual]).abs().mean()), 2),
         "by_confidence": by_confidence,
     }
     if intervals:

@@ -28,6 +28,8 @@ export const getEventDetail = (date, ticker) => request(`/api/events/${date}?tic
 
 export const getCategories = (ticker) => request(`/api/categories?ticker=${ticker}`)
 
+export const getCategoryTest = (ticker) => request(`/api/category-test?ticker=${ticker}`)
+
 export const getBacktest = (ticker) => request(`/api/backtest?ticker=${ticker}`)
 
 export const getRunup = (ticker, window) => request(`/api/runup?ticker=${ticker}&window=${window}`)
