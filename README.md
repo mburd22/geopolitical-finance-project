@@ -33,7 +33,7 @@ With nine event types, some average will look large by luck alone. A permutation
 - **For the first few days, yes.** Event type goes with the day-1 move for 7 of the 11 stocks, and the 5-day move for 6 (share under 5%). That's far more than the 1 in 20 you'd expect by chance. The European basket comes in at 0.4% on day 1.
 - **Over 20 days, mostly not.** For every US stock the 20-day share is 26% to 59% (ITA: 59%), so the ranking of event types above could be noise. Only Saab is under 5%, with the European basket borderline at 5%.
 
-The dashboard shows this test for each stock on the By event type tab.
+The dashboard shows this test for each stock on the By event type tab, and its bar chart opens on the horizon (day 1, 5 days or 20 days) where event type matters most for that stock, labelling each horizon "type matters" or "could be luck".
 
 ![Defense stocks vs the market around the Russian invasion of Ukraine](docs/event_2022-02-24.png)
 

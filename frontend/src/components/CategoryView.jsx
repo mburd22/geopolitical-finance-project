@@ -111,15 +111,16 @@ function MarketComparison({ options }) {
 
 // With nine event types, some average looks big by luck alone. This asks the server how often
 // shuffling the event types at random spreads the averages out as much as the real ones do.
-function EventTypeTest({ ticker }) {
-  const [test, setTest] = useState(null)
+const share = (p) => `${(p * 100).toFixed(p < 0.1 ? 1 : 0)}%`
 
-  useEffect(() => {
-    getCategoryTest(ticker).then(setTest).catch(() => setTest(null))
-  }, [ticker])
+// The three horizons the bar chart can show, and which one has the strongest evidence that
+// event type matters (the smallest permutation-test share). The chart opens on that one.
+const HORIZONS = { '1d': 'day-1', '5d': '5-day', '20d': '20-day' }
+const bestHorizon = (test) =>
+  test ? Object.keys(HORIZONS).reduce((best, w) => (test[`p_${w}`] < test[`p_${best}`] ? w : best), '20d') : '20d'
 
-  if (!test || test.ticker !== ticker) return null
-  const share = (p) => `${(p * 100).toFixed(p < 0.1 ? 1 : 0)}%`
+function EventTypeTest({ test }) {
+  if (!test) return null
   const verdict = test.p_20d < 0.05
     ? 'Over 20 days, event type does seem to matter for this stock.'
     : test.p_20d < 0.1
@@ -144,9 +145,12 @@ export default function CategoryView({ ticker, options }) {
   const [rows, setRows] = useState([])
   const [error, setError] = useState(null)
   const [picked, setPicked] = useState(['election', 'war_outbreak', 'de_escalation'])
+  const [test, setTest] = useState(null) // permutation test for this ticker
+  const [chosen, setChosen] = useState(null) // horizon the user picked; null = the best-supported one
 
   useEffect(() => {
     getCategories(ticker).then(setRows).catch((err) => setError(err.message))
+    getCategoryTest(ticker).then(setTest).catch(() => setTest(null))
   }, [ticker])
 
   const toggle = (category) => {
@@ -167,7 +171,14 @@ export default function CategoryView({ ticker, options }) {
   // Reshape the paths into one object per day: [{day: -5, election: 0.7, war_outbreak: 0.6}, ...]
   const pickedRows = rows.filter((r) => picked.includes(r.category))
   const counts = Object.fromEntries(rows.map((r) => [r.category, r.events]))
-  const barData = rows.map((r) => ({ ...r, err20: errorSpan(r.avg_abnormal_20d, r.ci_20d) }))
+  const currentTest = test?.ticker === ticker ? test : null
+  const horizon = chosen ?? bestHorizon(currentTest)
+  const valueKey = `avg_abnormal_${horizon}`
+  const ciKey = `ci_${horizon}`
+  const barData = rows
+    .map((r) => ({ ...r, err: errorSpan(r[valueKey], r[ciKey]) }))
+    .sort((a, b) => (b[valueKey] ?? 0) - (a[valueKey] ?? 0))
+  const pShown = currentTest?.[`p_${horizon}`]
   const days = rows[0].path.map((p) => p.day)
   const lineData = days.map((day, i) => ({
     day,
@@ -177,11 +188,28 @@ export default function CategoryView({ ticker, options }) {
   return (
     <section>
       <MarketComparison options={options} />
-      <EventTypeTest ticker={ticker} />
+      <EventTypeTest test={currentTest} />
       <div className="card">
-        <h2>Average 20-day result by event type</h2>
+        <h2>Average {HORIZONS[horizon]} result by event type</h2>
+        <div className="chips" role="group" aria-label="Horizon">
+          {Object.entries(HORIZONS).map(([w, name]) => {
+            const p = currentTest?.[`p_${w}`]
+            return (
+              <button key={w} type="button" className={`chip ${w === horizon ? 'on' : ''}`}
+                onClick={() => setChosen(w)} aria-pressed={w === horizon}>
+                {name}
+                {p != null && <span className="small muted"> · {p < 0.05 ? 'type matters' : 'could be luck'}</span>}
+              </button>
+            )
+          })}
+        </div>
         <p className="muted small">
-          {ticker} return minus the market, averaged over every event in each category. {RANGE_NOTE}
+          {ticker} return minus the market, averaged over every event in each category.{' '}
+          {chosen === null && currentTest && 'Showing the horizon where event type matters most for this stock. '}
+          {pShown != null && (pShown < 0.05
+            ? `Here event type really goes with the move (permutation test ${share(pShown)}).`
+            : `Here the gaps between event types are within what luck produces (permutation test ${share(pShown)}), so read the ranking with care.`)}{' '}
+          {RANGE_NOTE}
         </p>
         <div className="chart">
           <ResponsiveContainer width="100%" height={360}>
@@ -199,17 +227,19 @@ export default function CategoryView({ ticker, options }) {
                 itemStyle={tooltipItem}
                 labelFormatter={withCount(counts)}
                 formatter={(value, _name, item) => [
-                  `${pct(value)}, 90% range ${rangeText(item.payload.ci_20d)}. Beat the market in ` +
-                  `${item.payload.beat_market_20d_pct.toFixed(0)}% of ${item.payload.events} events.`,
-                  '20-day avg',
+                  `${pct(value)}, 90% range ${rangeText(item.payload[ciKey])}.` +
+                  (horizon === '20d'
+                    ? ` Beat the market in ${item.payload.beat_market_20d_pct.toFixed(0)}% of ${item.payload.events} events.`
+                    : ''),
+                  `${HORIZONS[horizon]} avg`,
                 ]}
               />
-              <Bar dataKey="avg_abnormal_20d" radius={4} isAnimationActive={false} minPointSize={2}
-                label={(props) => <BarValue {...props} color={theme.text} high={barData[props.index]?.ci_20d?.[1]} />}>
-                {rows.map((r) => (
-                  <Cell key={r.category} fill={r.avg_abnormal_20d >= 0 ? theme.positive : theme.negative} />
+              <Bar dataKey={valueKey} radius={4} isAnimationActive={false} minPointSize={2}
+                label={(props) => <BarValue {...props} color={theme.text} high={barData[props.index]?.[ciKey]?.[1]} />}>
+                {barData.map((r) => (
+                  <Cell key={r.category} fill={r[valueKey] >= 0 ? theme.positive : theme.negative} />
                 ))}
-                <ErrorBar dataKey="err20" direction="x" isAnimationActive={false} width={5} stroke={theme.text} strokeWidth={1.2} />
+                <ErrorBar dataKey="err" direction="x" isAnimationActive={false} width={5} stroke={theme.text} strokeWidth={1.2} />
               </Bar>
             </BarChart>
           </ResponsiveContainer>

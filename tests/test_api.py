@@ -67,9 +67,10 @@ def test_categories(client):
     cats = client.get("/api/categories?ticker=EUDEF").json()
     assert {c["category"] for c in cats} >= {"war_outbreak", "de_escalation"}
     assert all(len(c["path"]) == 25 for c in cats if c["path"])
-    for c in cats:  # every average comes with a 90% range around it
-        low, high = c["ci_20d"]
-        assert low <= c["avg_abnormal_20d"] <= high
+    for c in cats:  # every average comes with a 90% range around it, at every horizon
+        for w in ("1d", "5d", "20d"):
+            low, high = c[f"ci_{w}"]
+            assert low <= c[f"avg_abnormal_{w}"] <= high
         assert 0 <= c["beat_market_ci"][0] <= c["beat_market_20d_pct"] <= c["beat_market_ci"][1] <= 100
 
 
