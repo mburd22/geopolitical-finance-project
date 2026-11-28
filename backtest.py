@@ -21,6 +21,7 @@ import pandas as pd
 
 from calculate_reactions import load_events
 from find_analogs import MIN_SIMILARITY, STRONG_MATCH, WEIGHTS, load_reactions, same_family
+from uncertainty import paired_gap_ci, share_ci
 
 TOP_N = 8
 MIN_HISTORY = 15  # past_only mode skips events with fewer earlier events than this
@@ -128,8 +129,17 @@ def hit(direction, actual):
     return float((actual > 0) == (direction == "up"))
 
 
-def score(results):
-    """Summary numbers for one backtest run."""
+def rounded(ci):
+    return None if ci is None else [round(ci[0], 1), round(ci[1], 1)]
+
+
+def score(results, intervals=False):
+    """Summary numbers for one backtest run.
+
+    intervals=True adds 90% bootstrap confidence intervals (see uncertainty.py) for the hit
+    rates and for the engine's edge over the always-up baseline. Off by default because
+    tune() scores thousands of runs and doesn't need them.
+    """
     if results.empty:
         return {"events": 0}
     r = results.copy()
@@ -149,7 +159,7 @@ def score(results):
         subset = r[(r["confidence"] == level) & calls]
         by_confidence[level] = {"calls": int(len(subset)), "hit_rate": pct(subset["hit"])}
 
-    return {
+    summary = {
         "events": int(len(r)),
         "calls": int(calls.sum()),
         "coverage": round(float(calls.mean()) * 100, 1),
@@ -161,6 +171,13 @@ def score(results):
         "category_mae": round(float((r.loc[has_cat, "category_median"] - r.loc[has_cat, "actual_20d"]).abs().mean()), 2),
         "by_confidence": by_confidence,
     }
+    if intervals:
+        made = r[calls]
+        summary["hit_rate_ci"] = rounded(share_ci(made["hit"]))
+        summary["always_up_ci"] = rounded(share_ci(made["always_up_hit"]))
+        # The gap is resampled event by event, so engine and baseline are judged on the same draws.
+        summary["edge_ci"] = rounded(paired_gap_ci(made["hit"], made["always_up_hit"]))
+    return summary
 
 
 def track_record(events, reactions, ticker="ITA", weights=WEIGHTS):
@@ -169,7 +186,7 @@ def track_record(events, reactions, ticker="ITA", weights=WEIGHTS):
     record = {}
     for mode in MODES:
         results = bt.run(mode, weights)
-        record[mode] = score(results)
+        record[mode] = score(results, intervals=True)
         record[f"{mode}_rows"] = results
     return record
 
@@ -240,7 +257,7 @@ if __name__ == "__main__":
         results = bt.run(mode)
         results.to_csv(f"data/backtest_{mode}_{args.ticker}.csv", index=False)
         print(f"\n=== {mode} ({args.ticker}) ===")
-        for key, value in score(results).items():
+        for key, value in score(results, intervals=True).items():
             print(f"  {key}: {value}")
 
     if args.tune:

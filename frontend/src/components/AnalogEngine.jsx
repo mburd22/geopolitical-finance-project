@@ -175,8 +175,10 @@ export default function AnalogEngine({ options, ticker }) {
           </div>
 
           <div className="tiles">
-            <StatTile title="Median day 1" value={stats['1d'].median} note="vs the market" />
-            <StatTile title="Median 5 days" value={stats['5d'].median} note="vs the market" />
+            <StatTile title="Median day 1" value={stats['1d'].median}
+              note={`vs the market, ${result.analogs.length} past events`} />
+            <StatTile title="Median 5 days" value={stats['5d'].median}
+              note={`vs the market, ${result.analogs.length} past events`} />
             <StatTile title="Median 20 days" value={stats['20d'].median}
               note={`range ${pct(stats['20d'].low)} to ${pct(stats['20d'].high)}`} />
             <StatTile title="Beat the market" value={`${stats['20d'].beat_market} of ${result.analogs.length}`}

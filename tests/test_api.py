@@ -49,6 +49,9 @@ def test_analogs_and_validation(client):
 def test_backtest_and_runup_endpoints(client):
     b = client.get("/api/backtest?ticker=ITA").json()
     assert b["summary"]["leave_one_out"]["events"] > 100 and b["predictions"]
+    loo = b["summary"]["leave_one_out"]
+    assert loo["hit_rate_ci"][0] <= loo["hit_rate"] <= loo["hit_rate_ci"][1]
+    assert loo["edge_ci"][0] <= loo["hit_rate"] - loo["always_up_hit_rate"] <= loo["edge_ci"][1]
     r = client.get("/api/runup?ticker=ITA&window=20d").json()
     assert len(r["thirds"]) == 3 and r["points"]
     assert client.get("/api/runup?window=5d").status_code == 422
@@ -58,6 +61,10 @@ def test_categories(client):
     cats = client.get("/api/categories?ticker=EUDEF").json()
     assert {c["category"] for c in cats} >= {"war_outbreak", "de_escalation"}
     assert all(len(c["path"]) == 25 for c in cats if c["path"])
+    for c in cats:  # every average comes with a 90% range around it
+        low, high = c["ci_20d"]
+        assert low <= c["avg_abnormal_20d"] <= high
+        assert 0 <= c["beat_market_ci"][0] <= c["beat_market_20d_pct"] <= c["beat_market_ci"][1] <= 100
 
 
 def test_claude_features_fail_politely_without_a_key(client, no_claude):

@@ -15,13 +15,13 @@ It comes with a React dashboard backed by a Python API.
 
 ## What it found
 
-From 113 events (2015 to November 2026), measured over 20 trading days against each stock's own market:
+From 113 events (2015 to November 2026), measured over 20 trading days against each stock's own market. Ranges in brackets are 90% bootstrap confidence intervals: with 6 to 25 events per category, the true average could plausibly sit anywhere inside them.
 
-- **Elections and defense-spending decisions move defense stocks the most.** ITA beat the market by an average of +4.2% after elections (9 events) and +2.3% after spending decisions (8).
-- **De-escalation hurts.** Ceasefires, deals and summits were the clearest negative: ITA −1.2% on average, beating the market only 38% of the time.
-- **War outbreaks are not reliably good for defense stocks.** ITA averaged +1.3%, but beat the market only half the time. When the US and Israel went to war with Iran on 28 Feb 2026, ITA *lagged* the market by 4% and Rheinmetall by 8%. Defense stocks had already rallied hard before it: LMT was up 22–26% vs the market after China's December Taiwan drills and the January Maduro raid.
+- **Elections and defense-spending decisions move defense stocks the most.** ITA beat the market by an average of +4.2% after elections (9 events; +1.4% to +7.2%) and +2.3% after spending decisions (8; +0.7% to +3.9%). They're the only two US categories whose range stays above zero.
+- **De-escalation leans negative, but not clearly.** Ceasefires, deals and summits are the only category where ITA did worse than the market on average: −1.2%, beating it only 38% of the time. The range (−3.3% to +0.6%) still includes zero.
+- **War outbreaks are not reliably good for defense stocks.** ITA averaged +1.3% (−1.2% to +3.8%), and beat the market only half the time. When the US and Israel went to war with Iran on 28 Feb 2026, ITA *lagged* the market by 4% and Rheinmetall by 8%. Defense stocks had already rallied hard before it: LMT was up 22–26% vs the market after China's December Taiwan drills and the January Maduro raid.
 - **"Sell the news" can be brutal.** After the April 2026 US–Iran ceasefire, LMT fell 28.7% and ITA 13.3% vs the market.
-- **European defense stocks react two to four times as strongly.** After spending decisions, the European basket beat its market by +11.9% (vs +2.3% for ITA). After war outbreaks it was +6.4% (vs +1.3%). Seven trading days after Russia invaded Ukraine, Rheinmetall was up 69% vs the European market.
+- **European defense stocks react two to four times as strongly.** After spending decisions, the European basket beat its market by +11.9% (+5.8% to +20.3%), vs +2.3% for ITA. After war outbreaks it was +6.4% (vs +1.3%). Seven trading days after Russia invaded Ukraine, Rheinmetall was up 69% vs the European market.
 - **Individual stocks swing far more than the sector.** After the invasion of Ukraine, NOC and LMT were up about 25% and 21% vs the market within 7 trading days, while the ETF moved about 6%.
 
 ![Defense stocks vs the market around the Russian invasion of Ukraine](docs/event_2022-02-24.png)
@@ -39,6 +39,7 @@ From 113 events (2015 to November 2026), measured over 20 trading days against e
 How we got here, honestly:
 - **The first weights were a coin flip.** With 71 events, a severity-heavy set tuned on ITA looked good: 67% vs a 62% baseline.
 - **That was overfitting.** After adding 42 events and scoring across all 11 stocks, those weights fell 4.7 points *below* the baseline. No weight combination we tried beats the baseline on average. The most robust choice is the simplest, matching on event type and region only, and that's what the engine uses now. `backtest.py --tune` now always scores across all stocks, to make this kind of luck harder to mistake for skill.
+- **Per stock, the gaps are mostly noise.** The dashboard shows a 90% range for "engine minus baseline", resampled event by event. It crosses zero for 7 of the 11 stocks (leave one out) and 10 of 11 (only earlier events). Where it doesn't, it points both ways: the engine beat the baseline for Lockheed (+13 points) but trailed it for General Dynamics, Thales and the European basket. With 22 comparisons, a few clear-looking results are expected by luck alone.
 - **Where it fails:** war outbreaks (0 of 5 calls right for ITA), coups and de-escalation. In those categories, what happened last time is a poor guide to what happens next.
 - **Confidence labels didn't work either.** A high/medium/low label was tested and removed: "high" calls were right *less* often. The dashboard shows the real backtested hit rate next to the baseline instead.
 - **Confounding is everywhere.** 84 of 113 events had earnings, another event, or a 3%+ market day inside their 20-day window. The dashboard flags these on every event.
@@ -117,12 +118,13 @@ Then open http://localhost:5173.
 .\.venv\Scripts\python.exe -m pytest
 ```
 
-122 tests, about 20 seconds. They never touch the internet or the live news database (`data/news.db`). They cover:
+129 tests, about 20 seconds. They never touch the internet or the live news database (`data/news.db`). They cover:
 
 - **The event-study maths**, on synthetic prices with known answers: reaction day, after-close news, weekends, benchmark subtraction and run-ups.
 - **The event database checker.**
 - **The analog engine:** related categories only, measured events only, and the thesis.
 - **The backtest,** including that the past-only mode never peeks at the future.
+- **Bootstrap confidence intervals:** they contain the average, narrow with more events, and the paired engine-vs-baseline gap is tighter than the separate ranges.
 - **Confound flags,** on known real cases.
 - **Feed parsing,** including rejecting `javascript:` links and malicious XML.
 - **The keyword classifier,** including 33 hand-labelled stories: real events it must catch and false alarms it must drop.
@@ -149,6 +151,7 @@ GitHub runs the tests and the dashboard build on every push (`.github/workflows/
 | `find_analogs.py` | The analog engine and template thesis (also a command-line tool) |
 | `backtest.py` | Scores the engine; `--tune` searches for better weights across all stocks |
 | `runup.py` | Tests whether pre-event run-ups predict the reaction |
+| `uncertainty.py` | Bootstrap confidence intervals for averages and hit rates |
 | `make_charts.py` | Static PNG charts |
 | `api.py` | FastAPI back end for the dashboard |
 | `ai.py` | Optional Claude features |

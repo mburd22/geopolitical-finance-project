@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import {
-  Bar, BarChart, CartesianGrid, Cell, Legend, ReferenceLine, ResponsiveContainer,
+  Bar, BarChart, CartesianGrid, Cell, ErrorBar, Legend, ReferenceLine, ResponsiveContainer,
   Scatter, ScatterChart, Tooltip, XAxis, YAxis, ZAxis,
 } from 'recharts'
 import { getBacktest } from '../api'
@@ -18,6 +18,13 @@ function Tile({ title, value, note, emphasis }) {
     </div>
   )
 }
+
+// "45–62%": a 90% bootstrap range for a hit rate.
+const range = (ci) => (ci ? `${ci[0].toFixed(0)}–${ci[1].toFixed(0)}%` : 'n/a')
+// Recharts draws an error bar from distances below and above the value: [down, up].
+const errorSpan = (value, ci) => (ci && value != null ? [value - ci[0], ci[1] - value] : null)
+// "+2" / "−15": a signed number of percentage points.
+const points = (v) => `${v > 0 ? '+' : v < 0 ? '−' : ''}${Math.abs(v).toFixed(0)}`
 
 export default function TrackRecord({ ticker }) {
   const theme = useChartTheme()
@@ -38,11 +45,16 @@ export default function TrackRecord({ ticker }) {
   const edge = loo.hit_rate - loo.always_up_hit_rate
   const verdict = edge >= 5 ? 'beats' : edge > -2 ? 'roughly matches' : 'trails'
 
+  // The edge's range is worked out event by event (engine and baseline on the same events),
+  // so it's narrower than the two separate ranges would suggest.
+  const [edgeLow, edgeHigh] = loo.edge_ci ?? [edge, edge]
+  const edgeSure = edgeLow > 0 || edgeHigh < 0
+
   const bars = [
-    { name: 'Analog engine', value: loo.hit_rate, engine: true },
-    { name: 'Engine, past only', value: past.hit_rate, engine: true },
-    { name: 'Always beats market', value: loo.always_up_hit_rate },
-    { name: 'Same-category average', value: loo.category_hit_rate },
+    { name: 'Analog engine', value: loo.hit_rate, err: errorSpan(loo.hit_rate, loo.hit_rate_ci), engine: true },
+    { name: 'Engine, past only', value: past.hit_rate, err: errorSpan(past.hit_rate, past.hit_rate_ci), engine: true },
+    { name: 'Always beats market', value: loo.always_up_hit_rate, err: errorSpan(loo.always_up_hit_rate, loo.always_up_ci) },
+    { name: 'Same-category average', value: loo.category_hit_rate, err: null },
   ]
 
   const hits = data.predictions.filter((p) => p.hit === true)
@@ -61,24 +73,31 @@ export default function TrackRecord({ ticker }) {
         <p className="muted">
           Each past event was hidden in turn and predicted from the others. For {ticker}, the engine {verdict} the
           simplest possible guess, that defense stocks beat the market after any event.
-          Small sample ({data.predictions.length} events): treat differences of a few points as noise.
+          Small sample ({data.predictions.length} events): the engine minus the baseline is{' '}
+          <strong>{points(edge)} points</strong>, with a 90% range of {points(edgeLow)} to {points(edgeHigh)}.{' '}
+          {edgeSure
+            ? 'That range does not cross zero, so the gap is probably real for this stock.'
+            : 'That range crosses zero, so the gap could easily be luck.'}
         </p>
       </div>
 
       <div className="tiles">
         <Tile title="Engine hit rate" value={`${loo.hit_rate.toFixed(0)}%`} emphasis
-          note={`direction right on ${loo.calls} calls`} />
+          note={`${loo.calls} calls · 90% range ${range(loo.hit_rate_ci)}`} />
         <Tile title="Past-only hit rate" value={`${past.hit_rate.toFixed(0)}%`}
-          note="only using earlier events (the honest test)" />
+          note={`only earlier events (the honest test) · ${past.calls} calls · ${range(past.hit_rate_ci)}`} />
         <Tile title="Baseline: always up" value={`${loo.always_up_hit_rate.toFixed(0)}%`}
-          note="same events, no engine" />
+          note={`same ${loo.calls} events, no engine · ${range(loo.always_up_ci)}`} />
         <Tile title="Typical miss" value={`${loo.mae.toFixed(1)} pts`}
           note={`vs ${loo.category_mae.toFixed(1)} for the category average`} />
       </div>
 
       <div className="card">
         <h2>Engine vs simple baselines</h2>
-        <p className="muted small">Share of directional calls that were right. 50% is a coin flip.</p>
+        <p className="muted small">
+          Share of directional calls that were right ({loo.calls} calls). 50% is a coin flip. Thin lines show 90%
+          ranges (bootstrap): overlapping ranges mean the difference may be luck.
+        </p>
         <div className="chart">
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={bars} layout="vertical" margin={{ top: 22, right: 48, bottom: 8, left: 0 }}>
@@ -89,10 +108,15 @@ export default function TrackRecord({ ticker }) {
               <ReferenceLine x={50} stroke={theme.muted} strokeDasharray="4 4"
                 label={{ value: 'coin flip', position: 'top', fill: theme.muted, fontSize: 11 }} />
               <Tooltip cursor={{ fill: theme.grid, opacity: 0.4 }} contentStyle={tooltipStyle}
-                itemStyle={{ color: theme.text }} formatter={(v) => [`${v}%`, 'Right']} />
+                itemStyle={{ color: theme.text }}
+                formatter={(v, _name, item) => [
+                  item.payload.err ? `${v}% (90% range ${(v - item.payload.err[0]).toFixed(0)}–${(v + item.payload.err[1]).toFixed(0)}%)` : `${v}%`,
+                  'Right',
+                ]} />
               <Bar dataKey="value" radius={4} isAnimationActive={false}
-                label={{ position: 'right', formatter: (v) => `${v}%`, fill: theme.text, fontSize: 12 }}>
+                label={{ position: 'insideLeft', formatter: (v) => `${v}%`, fill: '#fff', fontSize: 12 }}>
                 {bars.map((b) => <Cell key={b.name} fill={b.engine ? theme.series[0] : theme.muted} />)}
+                <ErrorBar dataKey="err" direction="x" isAnimationActive={false} width={6} stroke={theme.text} strokeWidth={1.2} />
               </Bar>
             </BarChart>
           </ResponsiveContainer>

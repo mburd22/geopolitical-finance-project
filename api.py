@@ -37,6 +37,7 @@ from check_events import ALLOWED
 from confounds import find_confounds, load_earnings
 from find_analogs import STRONG_MATCH, find_analogs, load_reactions, summarize, write_thesis
 from make_charts import abnormal_path
+from uncertainty import LEVEL, bootstrap_ci, share_ci
 
 # The news pipeline runs in the background while the server is up.
 # Set AUTO_PIPELINE=0 in .env to turn that off, or PIPELINE_EVERY_MINUTES to change how often.
@@ -207,6 +208,11 @@ def event_detail(date: str, ticker: Ticker = "ITA"):
             "benchmark": market["benchmark"], "benchmark_name": market["benchmark_name"]}
 
 
+def interval(ci):
+    """A (low, high) confidence interval as a JSON-friendly [low, high] list, or None."""
+    return None if ci is None else [round(ci[0], 2), round(ci[1], 2)]
+
+
 @app.get("/api/categories")
 def categories(ticker: Ticker = "ITA"):
     """Average reaction by event category: summary numbers plus an average day-by-day path."""
@@ -224,6 +230,10 @@ def categories(ticker: Ticker = "ITA"):
             "avg_abnormal_5d": to_number(rows["abnormal_5d"].mean()),
             "avg_abnormal_20d": to_number(rows["abnormal_20d"].mean()),
             "beat_market_20d_pct": to_number((rows["abnormal_20d"] > 0).mean() * 100),
+            # 90% bootstrap ranges: where the true average plausibly sits, given so few events.
+            "ci_20d": interval(bootstrap_ci(rows["abnormal_20d"])),
+            "beat_market_ci": interval(share_ci((rows["abnormal_20d"] > 0).astype(float))),
+            "ci_level": LEVEL,
             "path": [{"day": int(day), "value": to_number(value)} for day, value in average.items()],
         })
     return sorted(results, key=lambda item: item["avg_abnormal_20d"] or 0, reverse=True)

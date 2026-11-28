@@ -5,6 +5,7 @@
       "name": "api",
       "runtimeExecutable": ".venv\\Scripts\\python.exe",
       "runtimeArgs": ["-m", "uvicorn", "api:app", "--reload", "--port", "8000"],
+      "env": { "AUTO_PIPELINE": "0" },
       "port": 8000
     },
     {
