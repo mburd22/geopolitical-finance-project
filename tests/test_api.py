@@ -92,6 +92,8 @@ def test_live_endpoints_on_a_temporary_database(client, news_db):
     assert status["events"] == 1 and status["classifier"] == "rules" and status["auto"] is False
 
     events = client.get("/api/live/events?ticker=ITA").json()
+    assert "past" in events[0]["history"]["text"] or "no past" in events[0]["history"]["text"]
+    assert {"hit_rate", "always_up_hit_rate", "proven_edge"} <= set(events[0]["engine_record"])
     assert events[0]["name"] == "Test event" and "runup_60d" in events[0]
     event_id = events[0]["id"]
     assert client.post(f"/api/live/events/{event_id}/dismiss").json()["status"] == "dismissed"

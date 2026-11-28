@@ -112,6 +112,7 @@ news feeds ─► store new articles ─► group by story ─► classify ─�
 - **Sources:** BBC World, Al Jazeera, Guardian World, NPR World, Defense News, 8 targeted Google News searches, and GDELT.
 - **What counts as an event:** a story covered by at least 3 articles from 3 different outlets. Coverage of the same story over the next 5 days is merged into it rather than counted again.
 - **Classification:** with an `ANTHROPIC_API_KEY`, Claude tags each story and decides whether it's genuinely new and market-relevant. Without one, keyword rules do it. They're free, but cruder. They count a headline only when its main clause says what happened ("X *as tensions rise*" is about X), and they rule out known false alarms: foiled plots, court cases, tributes, threats emailed to the police, pleas or deadlines for a ceasefire, and companies testing their own products. A story also needs over a third of its headlines to agree on the category. Expect some false positives still, which you can dismiss in the dashboard.
+- **What the dashboard shows first:** for each live event, *what history says*: how the stock did after past events of the same type, how it did after any event, and whether event type has been a reliable guide for that stock (the permutation test). The engine's call comes second, labelled with its backtested hit rate next to the always-up rule, because it hasn't beaten it.
 - **Timing:** each event's reaction day comes from the earliest article's time in New York, so news that breaks after the 4pm close counts from the next trading day.
 - **Running it:** the API server runs the pipeline every hour in the background (`AUTO_PIPELINE`, `PIPELINE_EVERY_MINUTES` in `.env`). To run it without the dashboard: `python pipeline.py` (once) or `python pipeline.py --loop 60`. Market data refreshes at most every 12 hours. `python refresh.py` refreshes it on demand.
 - **When a source is busy:** a "too many requests" (429) or server error (5xx) is retried twice, waiting 5 then 10 seconds, or as long as the server asks (up to a minute). GDELT does this often. Connection errors aren't retried, so a run with no network still finishes quickly.
@@ -153,7 +154,7 @@ Then open http://localhost:5173.
 .\.venv\Scripts\python.exe -m pytest
 ```
 
-145 tests, about 25 seconds. They never touch the internet or the live news database (`data/news.db`). They cover:
+150 tests, about 25 seconds. They never touch the internet or the live news database (`data/news.db`). They cover:
 
 - **The event-study maths**, on synthetic prices with known answers: reaction day, after-close news, weekends, benchmark subtraction and run-ups. Also the beta model: it recovers a known alpha and beta, ignores the days just before the news, and doesn't count a high-beta stock's normal move in a rising market as abnormal.
 - **The event database checker.**
@@ -164,6 +165,7 @@ Then open http://localhost:5173.
 - **Confound flags,** on known real cases.
 - **Feed parsing,** including rejecting `javascript:` links and malicious XML.
 - **The keyword classifier,** including 33 hand-labelled stories: real events it must catch and false alarms it must drop.
+- **The base-rate summary** for live events.
 - **The live pipeline end to end:** clustering, merging follow-up coverage, locked predictions and scoring.
 - **Pipeline robustness:** retrying busy servers (with a fake server), the run log and its rollover, and the read-only live report.
 - **Every API endpoint,** including the polite failure when there's no Claude key.
@@ -182,6 +184,7 @@ GitHub runs the tests and the dashboard build on every push (`.github/workflows/
 | `news.py` | Fetch RSS feeds and GDELT into `data/news.db` |
 | `detect.py`, `classify.py` | Group headlines into stories and tag them as events |
 | `predict.py` | Locked-in live predictions and later scoring |
+| `history.py` | The base-rate summary shown first for each live event |
 | `calculate_reactions.py` | The event study: abnormal returns per event and stock |
 | `confounds.py` | Earnings, overlapping-event and market-turmoil checks |
 | `find_analogs.py` | The analog engine and template thesis (also a command-line tool) |

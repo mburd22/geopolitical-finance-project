@@ -131,14 +131,28 @@ function EventCard({ event, ticker, onStatus }) {
         </button>
       </div>
 
+      {/* The base rate comes first: in the backtest the engine's call hasn't beaten it. */}
+      {event.history && (
+        <div className="live-line history-line">
+          <span className="live-key">History</span>
+          <span>{event.history.text}</span>
+        </div>
+      )}
       {pred && (
         <div className="live-line">
-          <span className="live-key">Prediction</span>
+          <span className="live-key">Engine call</span>
           <strong>{ticker}: {CALL_TEXT[pred.direction]}</strong>
           {pred.n_analogs > 0
             ? <span className="muted"> · median {pct(pred.predicted_median)} over 20 days in {pred.n_analogs} similar past events
                 ({Math.round(pred.beat_share * pred.n_analogs)} beat the market)</span>
             : <span className="muted"> · no comparable past events</span>}
+          {event.engine_record && (
+            <span className="muted small">
+              {' '}· in the backtest it was right {event.engine_record.hit_rate.toFixed(0)}% of the time vs{' '}
+              {event.engine_record.always_up_hit_rate.toFixed(0)}% for &quot;always beats the market&quot;
+              {event.engine_record.proven_edge ? '' : ', so no proven edge'}
+            </span>
+          )}
         </div>
       )}
       <Progress event={event} />

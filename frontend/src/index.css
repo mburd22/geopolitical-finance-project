@@ -197,6 +197,15 @@ tbody tr.selected { background: var(--accent-wash); box-shadow: inset 3px 0 0 va
   letter-spacing: 0.03em; color: var(--muted);
 }
 .result-tag { margin-left: 8px; }
+/* The base rate gets a tinted box: it's the answer to read first. A flex row keeps the long
+   text aligned to the right of its label instead of wrapping under it. */
+.history-line {
+  display: flex; gap: 0; background: var(--accent-wash); border-radius: 8px; padding: 8px 10px; line-height: 1.45;
+}
+.history-line .live-key { flex: none; padding-top: 2px; }
+@media (max-width: 520px) {
+  .history-line { flex-direction: column; gap: 2px; }
+}
 .progress-track { height: 4px; background: var(--grid); border-radius: 2px; margin: 6px 0 0 82px; max-width: 320px; }
 .progress-track > div { height: 100%; background: var(--accent); border-radius: 2px; }
 .link-button {

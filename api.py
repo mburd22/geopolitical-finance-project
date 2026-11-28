@@ -24,6 +24,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
 import ai
+import history
 import backtest
 import detect
 import news
@@ -462,9 +463,25 @@ def live_events(ticker: Ticker = "ITA", include_dismissed: bool = False, limit: 
             "reasoning": row["reasoning"], "status": row["status"], "headlines": headlines,
             "prediction": prediction, "progress": predict.progress(PRICES, row, ticker),
             "runup_60d": predict.runup_before(PRICES, row, ticker),
+            "history": live_history(ticker, row["category"]),
+            "engine_record": engine_record(ticker),
         })
     db.close()
     return results
+
+
+def live_history(ticker, category):
+    """The base rate for a live event: shown first, because the engine has no proven edge."""
+    rates = history.base_rates(REACTIONS, ticker, category, type_test_p=category_test(ticker)["p_20d"])
+    return None if rates is None else {**rates, "text": history.summary_text(rates)}
+
+
+def engine_record(ticker):
+    """The engine's backtested hit rate next to the always-up rule, and whether its edge is real."""
+    loo = track_summary(ticker)["leave_one_out"]
+    low, high = loo["edge_ci"]
+    return {"hit_rate": loo["hit_rate"], "always_up_hit_rate": loo["always_up_hit_rate"],
+            "edge_ci": loo["edge_ci"], "proven_edge": low > 0}
 
 
 @app.get("/api/live/scorecard")
