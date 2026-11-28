@@ -45,8 +45,16 @@ function StatusBar({ status, onRun }) {
         </p>
       )}
       {status.last_error && <p className="error small">Last run failed: {status.last_error}</p>}
+      {/* One short line, with the full list on demand: when the network is down all 14 fail,
+          and the list would fill a phone screen. */}
       {last?.feed_errors?.length > 0 && (
-        <p className="small muted">Some sources failed last time: {last.feed_errors.join(', ')}</p>
+        <details className="small muted feed-errors">
+          <summary>
+            {last.feed_errors.length >= 14 ? 'Every source failed last time (no network?)'
+              : `${last.feed_errors.length} source${last.feed_errors.length === 1 ? '' : 's'} failed last time`}
+          </summary>
+          {last.feed_errors.join(', ')}
+        </details>
       )}
     </div>
   )

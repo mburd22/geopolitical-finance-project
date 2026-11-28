@@ -79,6 +79,15 @@ p { margin: 0 0 8px; }
 }
 .tab:hover { color: var(--text); }
 .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+/* On phones the five tabs don't fit on one line: scroll them sideways instead of wrapping
+   onto a second row (which made the underline of the open tab look misplaced). */
+@media (max-width: 520px) {
+  .tabs { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; gap: 0; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab { padding: 10px 11px; }
+}
+.feed-errors { margin: 8px 0 0; }
+.feed-errors summary { cursor: pointer; }
 
 /* Cards: the white panels everything sits in */
 .card {
