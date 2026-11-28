@@ -1,9 +1,11 @@
 # Step 4: measure how each defense stock reacted to each event, compared with the market.
 #
-# Key idea: ABNORMAL RETURN = stock's return - market's return over the same days.
-# If LMT rose 5% while SPY (the whole market) rose 2%, the abnormal return is +3%.
+# Key idea: ABNORMAL RETURN = stock's return - what we'd have EXPECTED it to return without the event.
+# If LMT rose 5% while we expected 2% (because the whole market rose 2%), the abnormal return is +3%.
 # That +3% is the part of the move we can plausibly link to the event.
+# How the "expected" part is worked out is the model: see ABNORMAL_MODEL below.
 
+import numpy as np
 import pandas as pd
 
 # Each market has its own trading calendar, price file and benchmark ("the market").
@@ -34,6 +36,19 @@ def benchmark_for(ticker):
 # How many trading days after the event to measure. Day 0 is the first day markets
 # could react, so a 5-day window covers day 0 through day 4.
 WINDOWS = {"1d": 1, "5d": 5, "20d": 20}
+
+# Which model decides what a stock "should" have returned without the event. Every abnormal
+# return in the project (reactions, charts, live progress, run-ups) goes through this setting.
+#   "market"  market-adjusted: expected return = the market's return. Simple, and the default.
+#   "beta"    the classic event-study market model: expected daily return = alpha + beta x the
+#             market's daily return, with alpha and beta fitted by least squares on the
+#             ESTIMATION_DAYS of daily returns ending ESTIMATION_GAP trading days before the
+#             reaction day (the gap keeps any early leak of the news out of the fit).
+# compare_models.py measures both. In Nov 2026 the beta model did not hold up better (see README).
+ABNORMAL_MODEL = "market"
+MODELS = ["market", "beta"]
+ESTIMATION_DAYS = 120
+ESTIMATION_GAP = 10
 
 
 def load_prices(path):
@@ -68,12 +83,62 @@ def first_reaction_day(trading_days, event_date, after_close):
     return trading_days.searchsorted(event_date, side=side)
 
 
-def measure_event(prices, event):
+def fit_market_model(table, ticker, benchmark, day0):
+    """Fit stock return = alpha + beta x market return on daily returns before reaction day day0.
+
+    Uses the ESTIMATION_DAYS daily returns ending ESTIMATION_GAP trading days before day0.
+    Returns (alpha, beta), or None if there isn't that much price history.
+    """
+    end = day0 - ESTIMATION_GAP          # first position NOT used
+    start = end - ESTIMATION_DAYS
+    if start < 1:                         # position 0 has no previous day, so no return
+        return None
+    window = table[[ticker, benchmark]].iloc[start - 1:end].pct_change().dropna()
+    if len(window) < ESTIMATION_DAYS // 2 or window[benchmark].var() == 0:
+        return None  # too few days, or a market that never moved (so beta can't be measured)
+    stock, market = window[ticker].to_numpy(), window[benchmark].to_numpy()
+    # Ordinary least squares with one input: beta = covariance / variance of the market.
+    beta = np.cov(stock, market, ddof=0)[0, 1] / market.var()
+    alpha = stock.mean() - beta * market.mean()
+    return float(alpha), float(beta)
+
+
+def expected_prices(table, ticker, benchmark, day0, model=None):
+    """A price series showing what the stock would have done if only the model drove it.
+
+    Abnormal return between two positions a and b is then simply
+        (stock[b] / stock[a] - 1) - (expected[b] / expected[a] - 1).
+    With the "market" model the expected series is just the benchmark itself (beta 1, alpha 0),
+    which gives the plain "stock minus market" formula. With "beta", each day the expected
+    price grows by alpha + beta x that day's market return. If there's too little history to
+    fit alpha and beta, it falls back to the market-adjusted model.
+    """
+    model = model or ABNORMAL_MODEL
+    if model not in MODELS:
+        raise ValueError(f"Unknown abnormal-return model {model!r}, expected one of {MODELS}")
+    fit = fit_market_model(table, ticker, benchmark, day0) if model == "beta" else None
+    if fit is None:
+        return table[benchmark]
+    alpha, beta = fit
+    growth = 1 + alpha + beta * table[benchmark].pct_change().fillna(0)
+    return growth.cumprod()
+
+
+def abnormal(table, ticker, expected, start, end):
+    """Abnormal return (as a fraction) from position start to position end."""
+    stock = table[ticker].iloc[end] / table[ticker].iloc[start] - 1
+    model = expected.iloc[end] / expected.iloc[start] - 1
+    return stock - model
+
+
+def measure_event(prices, event, model=None):
     """Return a list of result rows (one per defense ticker) for a single event.
 
     prices: {"US": table, "EU": table} from load_all_prices(). Each market's reaction day
     comes from its own calendar. (after_close is about the US close; European markets close
     earlier, so for news that broke during US hours Europe may really react a day later.)
+    model: "market" or "beta" (default: ABNORMAL_MODEL). market_* columns are always the
+    benchmark's own return; abnormal_* columns use the model.
     """
     rows = []
     for name, market in MARKETS.items():
@@ -89,6 +154,7 @@ def measure_event(prices, event):
 
         bench = table[market["benchmark"]]
         for ticker in market["tickers"]:
+            expected = expected_prices(table, ticker, market["benchmark"], day0, model)
             row = {
                 "date": event["date"].date(),
                 "event": event["event"],
@@ -105,9 +171,9 @@ def measure_event(prices, event):
                 # Multiply by 100 to store percentages, round to keep the file readable.
                 row[f"return_{window}"] = round(stock_return * 100, 2)
                 row[f"market_{window}"] = round(market_return * 100, 2)
-                row[f"abnormal_{window}"] = round((stock_return - market_return) * 100, 2)
+                row[f"abnormal_{window}"] = round(abnormal(table, ticker, expected, baseline, end) * 100, 2)
             for window, days in RUNUP_WINDOWS.items():
-                row[f"runup_{window}"] = runup(table, ticker, market["benchmark"], baseline, days)
+                row[f"runup_{window}"] = runup(table, ticker, market["benchmark"], baseline, days, expected=expected)
             rows.append(row)
     return rows
 
@@ -118,15 +184,34 @@ def measure_event(prices, event):
 RUNUP_WINDOWS = {"20d": 20, "60d": 60}
 
 
-def runup(table, ticker, benchmark, baseline, days):
+def runup(table, ticker, benchmark, baseline, days, expected=None, model=None):
     """Abnormal return (in %) over the `days` trading days ending at position `baseline`.
-    None if there isn't that much history."""
+    None if there isn't that much history.
+
+    expected: the expected-price series from expected_prices(), if already worked out.
+    Note that with the beta model the fit window overlaps the run-up, so a stock that was
+    already rallying gets a higher alpha and therefore a smaller measured run-up.
+    """
     start = baseline - days
     if start < 0:
         return None
-    stock = table[ticker].iloc[baseline] / table[ticker].iloc[start] - 1
-    market = table[benchmark].iloc[baseline] / table[benchmark].iloc[start] - 1
-    return round((stock - market) * 100, 2)
+    if expected is None:
+        expected = expected_prices(table, ticker, benchmark, baseline + 1, model)
+    return round(abnormal(table, ticker, expected, start, baseline) * 100, 2)
+
+
+def measure_all(prices, events, model=None):
+    """Measure every event. Returns (table of result rows, names of events skipped for lack of data)."""
+    all_rows = []
+    skipped = []
+    # .iterrows() loops over a table one row at a time.
+    for _, event in events.iterrows():
+        rows = measure_event(prices, event, model)
+        if rows:
+            all_rows.extend(rows)  # extend adds every item from one list onto another
+        else:
+            skipped.append(event["event"])
+    return pd.DataFrame(all_rows), skipped
 
 
 # Everything below only runs when you run THIS file directly
@@ -137,17 +222,7 @@ if __name__ == "__main__":
     prices = load_all_prices()
     events = load_events("data/events.csv")
 
-    all_rows = []
-    skipped = []
-    # .iterrows() loops over a table one row at a time.
-    for _, event in events.iterrows():
-        rows = measure_event(prices, event)
-        if rows:
-            all_rows.extend(rows)  # extend adds every item from one list onto another
-        else:
-            skipped.append(event["event"])
-
-    reactions = pd.DataFrame(all_rows)
+    reactions, skipped = measure_all(prices, events)
     reactions.to_csv("data/event_reactions.csv", index=False)
 
     # Count events by date AND name together: two different events can share a name

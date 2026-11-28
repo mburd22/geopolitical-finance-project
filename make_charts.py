@@ -10,7 +10,7 @@ import pandas as pd
 # Reuse the functions we already wrote, instead of copying them here.
 # This works because of the `if __name__ == "__main__":` line in calculate_reactions.py.
 from calculate_reactions import (
-    MARKETS, benchmark_for, first_reaction_day, load_all_prices, load_events, prices_for,
+    MARKETS, benchmark_for, expected_prices, first_reaction_day, load_all_prices, load_events, prices_for,
 )
 
 DAYS_BEFORE = 5   # how many trading days to show before the event
@@ -38,8 +38,11 @@ def abnormal_path(prices, event, ticker):
     if first < 0 or last >= len(table):
         return None
 
+    # "market" here is what the abnormal-return model expected (with the default model,
+    # simply the benchmark's own move; see ABNORMAL_MODEL in calculate_reactions.py).
+    expected = expected_prices(table, ticker, bench, day0)
     stock = table[ticker].iloc[first:last + 1] / table[ticker].iloc[baseline] - 1
-    market = table[bench].iloc[first:last + 1] / table[bench].iloc[baseline] - 1
+    market = expected.iloc[first:last + 1] / expected.iloc[baseline] - 1
     path = (stock - market) * 100
     path.index = range(-DAYS_BEFORE, DAYS_AFTER)  # relabel rows as relative days
     return path

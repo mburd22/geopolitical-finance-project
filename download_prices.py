@@ -11,7 +11,9 @@ import yfinance as yf
 
 from calculate_reactions import BASKETS, MARKETS
 
-START = "2015-01-01"
+# Prices start half a year before the first event (Jan 2015), so even the earliest events have
+# the 120+ trading days of history that the beta model (ABNORMAL_MODEL = "beta") fits on.
+START = "2014-06-01"
 
 # European stocks trade in different currencies. To compare them with a euro-denominated
 # benchmark, convert each to euros with the daily exchange rate.

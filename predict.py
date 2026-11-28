@@ -9,7 +9,8 @@ import pandas as pd
 
 from backtest import track_record
 from calculate_reactions import (
-    DEFENSE_TICKERS, benchmark_for, first_reaction_day, measure_event, prices_for, runup,
+    DEFENSE_TICKERS, abnormal, benchmark_for, expected_prices, first_reaction_day, measure_event, prices_for,
+    runup,
 )
 from find_analogs import STRONG_MATCH, find_analogs, summarize, write_thesis
 
@@ -86,10 +87,9 @@ def progress(prices, row, ticker):
     if day0 >= len(table) or day0 < 1:
         return None
     last = min(day0 + WINDOW_DAYS - 1, len(table) - 1)
-    base = day0 - 1
-    stock = table[ticker].iloc[last] / table[ticker].iloc[base] - 1
-    market = table[bench].iloc[last] / table[bench].iloc[base] - 1
-    return {"days": int(last - day0 + 1), "abnormal": round(float(stock - market) * 100, 2),
+    expected = expected_prices(table, ticker, bench, day0)
+    so_far = abnormal(table, ticker, expected, day0 - 1, last)
+    return {"days": int(last - day0 + 1), "abnormal": round(float(so_far) * 100, 2),
             "reaction_day": str(table.index[day0].date())}
 
 

@@ -14,7 +14,9 @@
 import numpy as np
 import pandas as pd
 
-from calculate_reactions import BASKETS, DEFENSE_TICKERS, benchmark_for, load_all_prices, prices_for
+from calculate_reactions import (
+    BASKETS, DEFENSE_TICKERS, abnormal, benchmark_for, expected_prices, load_all_prices, prices_for,
+)
 from find_analogs import load_reactions
 
 AFTER_DAYS = 20
@@ -52,25 +54,27 @@ def event_sample(reactions, ticker, runup_col):
     return rows[["date", "event", "category", runup_col, "abnormal_20d"]]
 
 
-def ordinary_days(prices, ticker, runup_days, step=AFTER_DAYS):
+def ordinary_days(prices, ticker, runup_days, step=AFTER_DAYS, model=None):
     """The same before/after measurement on ordinary days, every `step` trading days so windows
     don't overlap. Returns a DataFrame with columns runup and after."""
     table = prices_for(prices, ticker)
-    bench = table[benchmark_for(ticker)]
-    stock = table[ticker]
+    bench = benchmark_for(ticker)
     rows = []
     for base in range(runup_days, len(table) - AFTER_DAYS, step):
-        before = (stock.iloc[base] / stock.iloc[base - runup_days] - 1) - (bench.iloc[base] / bench.iloc[base - runup_days] - 1)
-        after = (stock.iloc[base + AFTER_DAYS] / stock.iloc[base] - 1) - (bench.iloc[base + AFTER_DAYS] / bench.iloc[base] - 1)
+        # Treat the day after `base` as a pretend reaction day, exactly as for a real event.
+        expected = expected_prices(table, ticker, bench, base + 1, model)
+        before = abnormal(table, ticker, expected, base - runup_days, base)
+        after = abnormal(table, ticker, expected, base, base + AFTER_DAYS)
         rows.append({"runup": before * 100, "after": after * 100})
     return pd.DataFrame(rows)
 
 
-def analyze(reactions, prices, ticker, window="60d"):
-    """Everything the dashboard and the report need for one ticker."""
+def analyze(reactions, prices, ticker, window="60d", model=None):
+    """Everything the dashboard and the report need for one ticker.
+    model: the abnormal-return model the reactions were measured with (default ABNORMAL_MODEL)."""
     col = f"runup_{window}"
     events = event_sample(reactions, ticker, col)
-    control = ordinary_days(prices, ticker, int(window[:-1]))
+    control = ordinary_days(prices, ticker, int(window[:-1]), model=model)
     return {
         "ticker": ticker,
         "window": window,

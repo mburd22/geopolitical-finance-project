@@ -48,19 +48,31 @@ How we got here, honestly:
 
 The 2026 Iran war suggested "buy the rumor, sell the news": ITA had beaten the market by 21% over the 60 trading days before the war started, then lagged by 4%. `runup.py` tests whether that's a general pattern across all events, using ordinary days as a control:
 
-- **US stocks: no reliable link.** Bigger 60-day run-ups went with slightly weaker moves afterwards (rank correlation −0.08 for ITA, p ≈ 0.19). That's no stronger than on ordinary days (−0.05), so it's general mean reversion, not something events cause.
+- **US stocks: no reliable link.** Bigger 60-day run-ups went with slightly weaker moves afterwards (rank correlation −0.08 for ITA, p ≈ 0.21). That's no stronger than on ordinary days (−0.15), so it's general mean reversion, not something events cause.
 - **Europe: momentum, if anything.** Stocks that had already run up tended to keep going. The European basket's top third by run-up beat its market by +7.2% afterwards. Much of this is the 2022 rearmament wave, when events came in clusters.
 - **Adding run-up to the engine didn't help.** Averaged over all 11 stocks it scored 56% (leave one out) and 55% (only earlier events), against 58% for the always-up baseline.
 
 So the 2026 sell-off was the exception, not the rule. The dashboard shows each event's run-up as context only.
 
+### Does adjusting for beta change anything?
+
+The numbers above are *market-adjusted*: a stock's return minus its market's. That treats every stock as moving one-for-one with the market. The textbook event-study alternative is the *market model*: fit each stock's alpha (its own drift) and beta (how strongly it follows the market) on the 120 trading days ending 10 days before each event, and count only the move beyond alpha + beta × the market's move. Defense stocks are low-beta (Lockheed and Northrop about 0.4, ITA 0.9), so this matters. `compare_models.py` reruns everything both ways:
+
+- **The ranking of event types holds.** Elections and spending decisions stay on top for ITA (+4.1% and +2.0%) and de-escalation at the bottom, now more clearly: −2.4%, beating the market only 23% of the time (and −2.4% for the European basket too). Most averages shrink, because alpha soaks up some of the sector's drift. The European basket's spending reaction falls from +11.9% to +8.4%.
+- **Individual events often flip.** The two models agree closely overall (correlation 0.92), but 204 of 1,232 stock-event results change sign.
+- **The engine still has no real edge.** With the beta model, it's right 52% (leave one out) and 53% (only earlier events) of the time, averaged over the 11 stocks. That's 2–4 points above the always-up baseline, but only because the baseline drops to a coin flip (49–50%). Re-tuning the weights for the beta model gains a further 0.4 points, which is noise.
+- **Events do matter, a little.** Under both models, every one of the 11 stocks beat its market more often in the 20 days after an event than over ordinary 20-day spells: 58.6% vs 51.6% on average (market-adjusted), 50.8% vs 46.2% (beta). For each stock alone the gap is within noise, but it points the same way for all 11.
+- **Run-ups still don't predict anything.** The weak US mean reversion disappears (ITA +0.05, ordinary days −0.09), and Europe keeps its mild momentum.
+
+So the project keeps the simpler market-adjusted model as its default. Switching is one line: `ABNORMAL_MODEL` in `calculate_reactions.py`.
+
 So treat this as a research tool. Its value is in the measured history, the confound flags and the analogs as context, **not in its calls.** Nothing here is investment advice.
 
 ## How it works
 
-1. **Prices:** daily closes since 2015 from Yahoo Finance (`yfinance`). Each market is kept on its own trading calendar, with its own benchmark: SPY for the US, the iShares STOXX Europe 600 fund (EXSA.DE) for Europe. BAE and Saab are converted to euros with daily exchange rates.
+1. **Prices:** daily closes since June 2014 from Yahoo Finance (`yfinance`). Each market is kept on its own trading calendar, with its own benchmark: SPY for the US, the iShares STOXX Europe 600 fund (EXSA.DE) for Europe. BAE and Saab are converted to euros with daily exchange rates.
 2. **Events:** a hand-built database (`data/events.csv`) tagged by category, region, US involvement, severity, surprise, and whether the news broke after the US market close.
-3. **Event study:** for each event, find the first trading day markets could react. Measure each stock's return minus SPY's (the *abnormal return*) over 1, 5 and 20 trading days.
+3. **Event study:** for each event, find the first trading day markets could react. Measure each stock's return minus its market's (the *abnormal return*) over 1, 5 and 20 trading days. A beta-adjusted market model is built in too (`ABNORMAL_MODEL`), and `compare_models.py` reruns the main results with both.
 4. **Confound checks:** flag events whose window contains company earnings, another event, or market turmoil.
 5. **Analog engine:** score every past event's similarity to a new one, take the closest 8, and summarize how the stocks reacted.
 6. **Backtest:** leave-one-out and past-only predictions, scored against simple baselines.
@@ -118,9 +130,9 @@ Then open http://localhost:5173.
 .\.venv\Scripts\python.exe -m pytest
 ```
 
-129 tests, about 20 seconds. They never touch the internet or the live news database (`data/news.db`). They cover:
+139 tests, about 20 seconds. They never touch the internet or the live news database (`data/news.db`). They cover:
 
-- **The event-study maths**, on synthetic prices with known answers: reaction day, after-close news, weekends, benchmark subtraction and run-ups.
+- **The event-study maths**, on synthetic prices with known answers: reaction day, after-close news, weekends, benchmark subtraction and run-ups. Also the beta model: it recovers a known alpha and beta, ignores the days just before the news, and doesn't count a high-beta stock's normal move in a rising market as abnormal.
 - **The event database checker.**
 - **The analog engine:** related categories only, measured events only, and the thesis.
 - **The backtest,** including that the past-only mode never peeks at the future.
@@ -152,6 +164,7 @@ GitHub runs the tests and the dashboard build on every push (`.github/workflows/
 | `backtest.py` | Scores the engine; `--tune` searches for better weights across all stocks |
 | `runup.py` | Tests whether pre-event run-ups predict the reaction |
 | `uncertainty.py` | Bootstrap confidence intervals for averages and hit rates |
+| `compare_models.py` | Reruns the main results with market-adjusted and beta-adjusted returns; `--tune` re-tunes weights for each (slow) |
 | `make_charts.py` | Static PNG charts |
 | `api.py` | FastAPI back end for the dashboard |
 | `ai.py` | Optional Claude features |
@@ -167,4 +180,4 @@ GitHub runs the tests and the dashboard build on every push (`.github/workflows/
 - **Event timing is US-based.** The `after_close` flag refers to the 4pm New York close. European markets close at 11:30 New York time, so for news that broke during US hours, Europe may really react a day later than measured.
 - **European defense stocks have trended up hard since 2022,** so "beat the market" is partly that trend, not the event.
 - **BAE and Thales have no earnings dates** in the Yahoo data, so earnings confounds are missed for those two.
-- **Market-adjusted returns only:** stock return minus SPY. A fuller model would adjust for each stock's sensitivity to the market (beta).
+- **Market-adjusted by default.** Beta adjustment is available but doesn't change the conclusions (see above). Neither model adjusts for other factors, like defense stocks moving with oil or with interest rates.
