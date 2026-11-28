@@ -154,7 +154,7 @@ Then open http://localhost:5173.
 .\.venv\Scripts\python.exe -m pytest
 ```
 
-155 tests, about 25 seconds. They never touch the internet or the live news database (`data/news.db`). They cover:
+157 tests, about 25 seconds. They never touch the internet or the live news database (`data/news.db`). They cover:
 
 - **The event-study maths**, on synthetic prices with known answers: reaction day, after-close news, weekends, benchmark subtraction and run-ups. Also the beta model: it recovers a known alpha and beta, ignores the days just before the news, and doesn't count a high-beta stock's normal move in a rising market as abnormal.
 - **The event database checker.**
@@ -209,5 +209,5 @@ GitHub runs the tests and the dashboard build on every push (`.github/workflows/
 - **The live pipeline only runs while the API server is running** on your computer.
 - **Event timing is US-based.** The `after_close` flag refers to the 4pm New York close. European markets close at 11:30 New York time, so for news that broke during US hours, Europe may really react a day later than measured. A check suggests this rarely matters: starting every European window one day later captures *less* of the move, not more (the basket's day-1 reaction to war outbreaks drops from +2.5% to 0.0%), and the 20-day results barely change (correlation 0.94; 13 of 143 signs flip).
 - **European defense stocks have trended up hard since 2022,** so "beat the market" is partly that trend. `regimes.py` checks how much: split at the invasion of Ukraine, the European basket did better after events than on ordinary days in both halves. Before: +1.6% on average after events (90% range +0.2% to +3.3%) vs +0.3% on ordinary 20-day spells. From 2022: +4.8% vs +2.6%. So the trend explains part of the post-2022 numbers, but not the gap between events and ordinary days. ITA shows no such gap in either half.
-- **BAE and Thales have no earnings dates** in the Yahoo data, so earnings confounds are missed for those two.
+- **BAE and Thales earnings dates are entered by hand** (`data/earnings_manual.csv`, each with its source URL), because Yahoo has none. That adds an earnings confound to 18 BAE and 20 Thales events. Three Thales dates (full-year 2015 results, and half-year 2015 and 2016) couldn't be verified and are missing.
 - **Market-adjusted by default.** Beta adjustment is available but doesn't change the conclusions (see above). Neither model adjusts for other factors, like defense stocks moving with oil or with interest rates.

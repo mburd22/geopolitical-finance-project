@@ -6,6 +6,8 @@
 #   3. market turmoil: the whole market (SPY) moved 3%+ in a single day, a sign that
 #      something big and unrelated (a crash, a pandemic headline) was going on
 
+from pathlib import Path
+
 import pandas as pd
 
 from calculate_reactions import BASKETS, MARKETS, WINDOWS, benchmark_for, first_reaction_day, prices_for
@@ -14,10 +16,20 @@ TURMOIL_MOVE = 3.0  # a one-day SPY move (%) big enough to count as market turmo
 WINDOW_DAYS = max(WINDOWS.values())
 
 
-def load_earnings(path):
+# Yahoo has no past results dates for BAE Systems or Thales, so these are entered by hand,
+# each with the web page it was checked against (the "source" column). download_earnings.py
+# rewrites data/earnings.csv but never touches this file.
+MANUAL_EARNINGS = Path(__file__).parent / "data" / "earnings_manual.csv"
+
+
+def load_earnings(path, manual=MANUAL_EARNINGS):
+    """Earnings dates from Yahoo (path) plus the hand-entered ones, without duplicates."""
     earnings = pd.read_csv(path)
+    if manual and Path(manual).exists():
+        extra = pd.read_csv(manual)[["ticker", "date"]]
+        earnings = pd.concat([earnings, extra], ignore_index=True)
     earnings["date"] = pd.to_datetime(earnings["date"])
-    return earnings
+    return earnings.drop_duplicates(["ticker", "date"]).sort_values(["ticker", "date"]).reset_index(drop=True)
 
 
 def window_dates(table, event):

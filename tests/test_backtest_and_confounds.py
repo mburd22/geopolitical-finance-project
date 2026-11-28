@@ -107,3 +107,19 @@ def test_regime_split_covers_every_event(reactions, prices):
     n_events = (reactions["ticker"] == "EUDEF").sum()
     assert parts["before"]["events"]["n"] + parts["from"]["events"]["n"] == n_events
     assert parts["before"]["ordinary"]["n"] > 50 and parts["from"]["ordinary"]["n"] > 30
+
+
+def test_hand_entered_bae_results_are_flagged(prices, events, earnings):
+    """BAE reported full-year results on the day Russia invaded Ukraine (24 Feb 2022)."""
+    invasion = events[events["event"] == "Russia invades Ukraine"].iloc[0]
+    flags = find_confounds(prices, events, earnings, invasion, ticker="BA.L")
+    assert any("Earnings" in f and "BA.L" in f for f in flags)
+
+
+def test_manual_earnings_file_is_sourced_and_clean():
+    from confounds import MANUAL_EARNINGS
+    manual = pd.read_csv(MANUAL_EARNINGS)
+    assert set(manual["ticker"]) == {"BA.L", "HO.PA"}
+    assert manual["source"].str.startswith(("http://", "https://")).all()
+    assert not manual.duplicated(["ticker", "date"]).any()
+    assert pd.to_datetime(manual["date"], format="%Y-%m-%d").notna().all()
