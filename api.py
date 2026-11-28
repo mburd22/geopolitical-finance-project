@@ -233,8 +233,9 @@ def categories(ticker: Ticker = "ITA"):
             "avg_abnormal_20d": to_number(rows["abnormal_20d"].mean()),
             "beat_market_20d_pct": to_number((rows["abnormal_20d"] > 0).mean() * 100),
             # 90% bootstrap ranges: where the true average plausibly sits, given so few events.
-            "ci_20d": interval(bootstrap_ci(rows["abnormal_20d"])),
-            "beat_market_ci": interval(share_ci((rows["abnormal_20d"] > 0).astype(float))),
+            # Resampled by cluster: events with overlapping windows move together (uncertainty.py).
+            "ci_20d": interval(bootstrap_ci(rows["abnormal_20d"], clusters=rows["cluster"])),
+            "beat_market_ci": interval(share_ci((rows["abnormal_20d"] > 0).astype(float), clusters=rows["cluster"])),
             "ci_level": LEVEL,
             "path": [{"day": int(day), "value": to_number(value)} for day, value in average.items()],
         })

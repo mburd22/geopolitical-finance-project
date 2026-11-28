@@ -21,11 +21,13 @@ def base_rates(reactions, ticker, category, window="20d", type_test_p=None):
     if rows.empty:
         return None
     col = f"abnormal_{window}"
-    same = rows.loc[rows["category"] == category, col].dropna()
+    same_rows = rows[(rows["category"] == category) & rows[col].notna()]
+    same = same_rows[col]
     every = rows[col].dropna()
     if type_test_p is None:
         type_test_p = groups_differ_p(rows[col], rows["category"])
-    ci = bootstrap_ci(same)
+    # Resample whole clusters of overlapping events when the table has them (uncertainty.py).
+    ci = bootstrap_ci(same, clusters=same_rows["cluster"] if "cluster" in same_rows else None)
     return {
         "ticker": ticker, "category": category, "window": window,
         "events": int(len(same)),

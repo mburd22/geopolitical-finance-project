@@ -12,22 +12,64 @@ RESAMPLES = 4000
 LEVEL = 0.90  # a 90% interval: 5% chance the truth is below it, 5% above
 
 
-def bootstrap_ci(values, statistic=np.mean, resamples=RESAMPLES, level=LEVEL, seed=0):
+# Events close together in time aren't independent: their 20-day windows overlap, so they
+# share the same market moves (Russia's invasion and Germany's defense fund three days later,
+# say). Counting them as separate draws makes the ranges too narrow. So events whose
+# reaction days are within CLUSTER_GAP trading days of the previous event are chained into
+# one cluster, and the bootstrap resamples whole clusters instead of single events.
+CLUSTER_GAP = 20
+
+
+def window_clusters(positions, gap=CLUSTER_GAP):
+    """Cluster number for each event, from its reaction day's position in the trading calendar.
+
+    Sorted by time, a new cluster starts whenever an event's window starts more than `gap`
+    trading days after the previous event's. Returns ids in the same order as `positions`.
+    """
+    positions = np.asarray(positions)
+    order = np.argsort(positions, kind="stable")
+    starts = np.r_[True, np.diff(positions[order]) > gap]
+    ids = np.empty(len(positions), dtype=int)
+    ids[order] = np.cumsum(starts) - 1
+    return ids
+
+
+def bootstrap_ci(values, statistic=np.mean, resamples=RESAMPLES, level=LEVEL, seed=0, clusters=None):
     """(low, high) confidence interval for `statistic` of `values`, or None with fewer than 2 values.
 
     A fixed seed means the same data always gives the same interval (no flicker between page loads).
     `statistic` must accept axis=1, like np.mean and np.median do.
+    clusters: optional cluster id per value (see window_clusters). Then whole clusters are
+    resampled, which is only supported for the average (the statistic is ignored).
     """
-    values = np.asarray([v for v in values if v is not None and not np.isnan(v)], dtype=float)
+    values = np.asarray(values, dtype=float)
+    keep = ~np.isnan(values)
+    values = values[keep]
     if len(values) < 2:
         return None
     rng = np.random.default_rng(seed)
-    # Each row of `picks` is one made-up sample: len(values) random positions, repeats allowed.
-    picks = rng.integers(0, len(values), size=(resamples, len(values)))
-    stats = statistic(values[picks], axis=1)
+    if clusters is not None:
+        stats = _cluster_means(values, np.asarray(clusters)[keep], rng, resamples)
+        if stats is None:
+            return None
+    else:
+        # Each row of `picks` is one made-up sample: len(values) random positions, repeats allowed.
+        picks = rng.integers(0, len(values), size=(resamples, len(values)))
+        stats = statistic(values[picks], axis=1)
     tail = (1 - level) / 2 * 100
     low, high = np.percentile(stats, [tail, 100 - tail])
     return float(low), float(high)
+
+
+def _cluster_means(values, clusters, rng, resamples):
+    """Averages of made-up samples built from whole clusters drawn with replacement."""
+    names, codes = np.unique(clusters, return_inverse=True)
+    if len(names) < 2:
+        return None  # one cluster: no way to tell how much the average could vary
+    totals = np.bincount(codes, weights=values)
+    sizes = np.bincount(codes)
+    picks = rng.integers(0, len(names), size=(resamples, len(names)))
+    return totals[picks].sum(axis=1) / sizes[picks].sum(axis=1)
 
 
 def share_ci(hits, **kwargs):

@@ -98,3 +98,12 @@ def test_real_reactions_file_is_consistent(reactions, events):
     assert (measured == len({t for m in MARKETS.values() for t in m["tickers"]})).all()
     known = set(zip(events["date"], events["event"]))
     assert set(measured.index) <= known
+
+
+def test_every_event_has_one_cluster(reactions):
+    """All of an event's rows share one cluster, and clusters run in time order."""
+    per_event = reactions.groupby(["date", "event"])["cluster"].nunique()
+    assert (per_event == 1).all()
+    first = reactions.drop_duplicates(["date", "event"]).sort_values("date")
+    assert first["cluster"].is_monotonic_increasing
+    assert 30 < first["cluster"].nunique() < len(first)  # many events overlap, but not all

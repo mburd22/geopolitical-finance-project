@@ -39,7 +39,8 @@ class Backtester:
         """horizon: which move to predict, "1d", "5d" or "20d" after the event (the engine's
         normal job is 20 days; horizons.py checks the shorter ones)."""
         self.horizon = horizon
-        rows = reactions[reactions["ticker"] == ticker][["date", "event", f"abnormal_{horizon}"]]
+        columns = ["date", "event", f"abnormal_{horizon}"] + (["cluster"] if "cluster" in reactions else [])
+        rows = reactions[reactions["ticker"] == ticker][columns]
         self.events = events.merge(rows, on=["date", "event"], how="left").reset_index(drop=True)
         e = self.events
         cat = e["category"].to_numpy()
@@ -119,6 +120,7 @@ class Backtester:
                 "date": event["date"].date(),
                 "event": event["event"],
                 "category": event["category"],
+                "cluster": event.get("cluster"),
                 f"actual_{self.horizon}": float(self.actual[i]),
                 **prediction,
             })
@@ -177,10 +179,13 @@ def score(results, intervals=False, horizon="20d"):
     }
     if intervals:
         made = r[calls]
-        summary["hit_rate_ci"] = rounded(share_ci(made["hit"]))
-        summary["always_up_ci"] = rounded(share_ci(made["always_up_hit"]))
-        # The gap is resampled event by event, so engine and baseline are judged on the same draws.
-        summary["edge_ci"] = rounded(paired_gap_ci(made["hit"], made["always_up_hit"]))
+        # Resample whole clusters of overlapping events when we know them (see uncertainty.py).
+        clusters = made["cluster"].to_numpy() if "cluster" in made and made["cluster"].notna().all() else None
+        summary["hit_rate_ci"] = rounded(share_ci(made["hit"], clusters=clusters))
+        summary["always_up_ci"] = rounded(share_ci(made["always_up_hit"], clusters=clusters))
+        # The gap is resampled event by event (or cluster by cluster), so engine and baseline
+        # are judged on the same draws.
+        summary["edge_ci"] = rounded(paired_gap_ci(made["hit"], made["always_up_hit"], clusters=clusters))
     return summary
 
 

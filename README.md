@@ -15,7 +15,7 @@ It comes with a React dashboard backed by a Python API.
 
 ## What it found
 
-From 143 measured events (2015 to November 2026; the newest is still inside its 20-day window), measured over 20 trading days against each stock's own market. Ranges in brackets are 90% bootstrap confidence intervals: with 10 to 25 events per category, the true average could plausibly sit anywhere inside them.
+From 143 measured events (2015 to November 2026; the newest is still inside its 20-day window), measured over 20 trading days against each stock's own market. Ranges in brackets are 90% bootstrap confidence intervals: with 10 to 25 events per category, the true average could plausibly sit anywhere inside them. Events whose 20-day windows overlap share the same market moves, so they're resampled together as one cluster (the 143 events form 60 clusters).
 
 - **Defense-spending decisions are the one reliable positive in the US.** ITA beat the market by +2.2% on average after them (12 events; +0.7% to +3.9%), the only US category whose range stays above zero.
 - **Elections looked like the strongest signal, until there were more of them.** With 9 elections, ITA averaged +4.2% (+1.4% to +7.2%). Adding 7 more, from India, the UK, France, Germany, Taiwan and the 2018 US midterms, brought it down to +1.1% (−1.0% to +3.5%). The big moves were a handful of US and European results: Biden in 2020 (+14.1%, the same week as the first vaccine results), Merz in 2025, Labour in 2024 and Trump in 2016.
@@ -50,7 +50,7 @@ The dashboard shows this test for each stock on the By event type tab.
 How we got here, honestly:
 - **The first weights were a coin flip.** With 71 events, a severity-heavy set tuned on ITA looked good: 67% vs a 62% baseline.
 - **That was overfitting.** After adding 42 events and scoring across all 11 stocks, those weights fell 4.7 points *below* the baseline. No weight combination we tried beats the baseline on average. The most robust choice is the simplest, matching on event type and region only, and that's what the engine uses now. Re-tuned after adding 31 more events (144 in all): still no set beats the baseline, and the best one beat the current weights by only 0.1 and 0.6 points, so they were left alone. `backtest.py --tune` now always scores across all stocks, to make this kind of luck harder to mistake for skill.
-- **Per stock, the gaps are mostly noise.** The dashboard shows a 90% range for "engine minus baseline", resampled event by event. With only earlier events, it crosses zero for 10 of the 11 stocks. With leave one out it's clearer, but points both ways: the engine beat the baseline for Lockheed (+15 points) and Northrop (+20), and trailed it for General Dynamics, Thales, Saab and Leonardo (−7 to −11). With 22 comparisons, a few clear-looking results are expected by luck alone.
+- **Per stock, the gaps are mostly noise.** The dashboard shows a 90% range for "engine minus baseline", resampled event by event. With only earlier events, it crosses zero for 9 of the 11 stocks (Northrop clearly better, ITA clearly worse). With leave one out it's clearer, but points both ways: the engine beat the baseline for Lockheed (+15 points) and Northrop (+20), and trailed it for Thales, Saab and Leonardo (−7 to −11). With 22 comparisons, a few clear-looking results are expected by luck alone.
 - **Where it fails:** war outbreaks (4 of 9 calls right for ITA), coups and de-escalation. In those categories, what happened last time is a poor guide to what happens next.
 - **Confidence labels didn't work either.** A high/medium/low label was tested and removed: "high" calls were right *less* often. The dashboard shows the real backtested hit rate next to the baseline instead.
 - **Confounding is everywhere.** 115 of 144 events had earnings, another event, or a 3%+ market day inside their 20-day window. The dashboard flags these on every event.
@@ -154,7 +154,7 @@ Then open http://localhost:5173.
 .\.venv\Scripts\python.exe -m pytest
 ```
 
-150 tests, about 25 seconds. They never touch the internet or the live news database (`data/news.db`). They cover:
+154 tests, about 25 seconds. They never touch the internet or the live news database (`data/news.db`). They cover:
 
 - **The event-study maths**, on synthetic prices with known answers: reaction day, after-close news, weekends, benchmark subtraction and run-ups. Also the beta model: it recovers a known alpha and beta, ignores the days just before the news, and doesn't count a high-beta stock's normal move in a rising market as abnormal.
 - **The event database checker.**
@@ -203,6 +203,7 @@ GitHub runs the tests and the dashboard build on every push (`.github/workflows/
 
 - **Small sample:** 144 events, 10 to 25 per category. South Asia has 12 events, Africa 14 and the Americas 15, so analogs there are thin, and only one event (Christchurch) is outside the six regions.
 - **Tags are judgment calls,** especially severity and surprise.
+- **Events cluster in time.** 125 pairs of events have overlapping 20-day windows, and the 143 measured events form only 60 separate clusters (Feb–Mar 2022 and Feb–Apr 2026 are each one). The 90% ranges resample whole clusters to allow for this. Within a single event type few events overlap, so the category ranges barely change, but the engine's per-stock ranges shift a little. The permutation test still treats events as independent.
 - **Live detection without Claude is noisy.** In Nov 2026 the first 24 stories the keyword rules flagged were hand-labelled: only 8 were real, market-relevant events. The rest were company weapons tests, court cases, foiled plots, tributes and pleas for peace. The tightened rules keep those 8 and drop the other 16, and the labelled cases are now tests. But that's one week of news, so expect new kinds of false alarm. Events detected before the change stay in the database; dismiss them in the dashboard.
 - **The live pipeline only runs while the API server is running** on your computer.
 - **Event timing is US-based.** The `after_close` flag refers to the 4pm New York close. European markets close at 11:30 New York time, so for news that broke during US hours, Europe may really react a day later than measured. A check suggests this rarely matters: starting every European window one day later captures *less* of the move, not more (the basket's day-1 reaction to war outbreaks drops from +2.5% to 0.0%), and the 20-day results barely change (correlation 0.94; 13 of 143 signs flip).

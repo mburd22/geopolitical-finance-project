@@ -80,3 +80,30 @@ def test_fast_spread_matches_the_plain_formula():
 def test_one_group_or_missing_values():
     assert groups_differ_p([1.0, 2.0, 3.0], ["a", "a", "a"]) is None
     assert groups_differ_p([1.0, float("nan"), 3.0, 4.0], ["a", "a", "b", "b"], shuffles=99) is not None
+
+
+def test_window_clusters_chain_events_that_overlap():
+    from uncertainty import window_clusters
+    # positions in trading days; unsorted on purpose
+    ids = window_clusters([100, 5, 10, 60, 28, 200], gap=20)
+    assert ids[1] == ids[2] == ids[4]          # 5, 10, 28: each within 20 days of the previous
+    assert len({ids[0], ids[3], ids[5], ids[1]}) == 4
+    assert sorted(set(ids)) == [0, 1, 2, 3]
+
+
+def test_cluster_bootstrap_is_wider_when_events_are_copies():
+    """Ten events that are really two clusters of near-copies carry little information."""
+    values = np.array([5.0] * 5 + [-5.0] * 5) + np.linspace(0, 0.1, 10)
+    clusters = [0] * 5 + [1] * 5
+    plain = bootstrap_ci(values)
+    clustered = bootstrap_ci(values, clusters=clusters)
+    assert clustered[1] - clustered[0] > 1.5 * (plain[1] - plain[0])
+    assert bootstrap_ci([1.0, 2.0, 3.0], clusters=[0, 0, 0]) is None  # one cluster: no range
+
+
+def test_cluster_bootstrap_matches_plain_when_every_event_is_its_own_cluster():
+    rng = np.random.default_rng(5)
+    values = rng.normal(0, 2, 60)
+    a = bootstrap_ci(values)
+    b = bootstrap_ci(values, clusters=np.arange(60))
+    assert abs((a[1] - a[0]) - (b[1] - b[0])) < 0.2

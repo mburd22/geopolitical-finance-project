@@ -211,7 +211,27 @@ def measure_all(prices, events, model=None):
             all_rows.extend(rows)  # extend adds every item from one list onto another
         else:
             skipped.append(event["event"])
-    return pd.DataFrame(all_rows), skipped
+    reactions = pd.DataFrame(all_rows)
+    if not reactions.empty:
+        reactions["cluster"] = event_clusters(prices, reactions)
+    return reactions, skipped
+
+
+def event_clusters(prices, reactions):
+    """Which cluster of overlapping events each row belongs to (see uncertainty.window_clusters).
+
+    Clusters are worked out once per event on the US trading calendar, so an event's rows for
+    every stock share one cluster number.
+    """
+    from uncertainty import window_clusters  # imported here: uncertainty doesn't need this module
+
+    days = prices["US"].index
+    unique = reactions[["date", "event"]].drop_duplicates()
+    # Position of each event's date in the calendar (within a day of its reaction day, which
+    # is plenty for deciding whether two 20-day windows overlap).
+    positions = days.searchsorted(pd.to_datetime(unique["date"]))
+    ids = dict(zip(zip(unique["date"], unique["event"]), window_clusters(positions)))
+    return [ids[(d, e)] for d, e in zip(reactions["date"], reactions["event"])]
 
 
 # Everything below only runs when you run THIS file directly
