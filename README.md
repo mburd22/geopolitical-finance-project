@@ -75,7 +75,7 @@ news feeds ─► store new articles ─► group by story ─► classify ─�
 
 - **Sources:** BBC World, Al Jazeera, Guardian World, NPR World, Defense News, 8 targeted Google News searches, and GDELT.
 - **What counts as an event:** a story covered by at least 3 articles from 3 different outlets. Coverage of the same story over the next 5 days is merged into it rather than counted again.
-- **Classification:** with an `ANTHROPIC_API_KEY`, Claude tags each story and decides whether it's genuinely new and market-relevant. Without one, keyword rules do it. They're free, but noisier: expect some false positives, which you can dismiss in the dashboard.
+- **Classification:** with an `ANTHROPIC_API_KEY`, Claude tags each story and decides whether it's genuinely new and market-relevant. Without one, keyword rules do it. They're free, but cruder. They count a headline only when its main clause says what happened ("X *as tensions rise*" is about X), and they rule out known false alarms: foiled plots, court cases, tributes, threats emailed to the police, pleas or deadlines for a ceasefire, and companies testing their own products. A story also needs over a third of its headlines to agree on the category. Expect some false positives still, which you can dismiss in the dashboard.
 - **Timing:** each event's reaction day comes from the earliest article's time in New York, so news that breaks after the 4pm close counts from the next trading day.
 - **Running it:** the API server runs the pipeline every hour in the background (`AUTO_PIPELINE`, `PIPELINE_EVERY_MINUTES` in `.env`). To run it without the dashboard: `python pipeline.py` (once) or `python pipeline.py --loop 60`. Market data refreshes at most every 12 hours. `python refresh.py` refreshes it on demand.
 - **When a source is busy:** a "too many requests" (429) or server error (5xx) is retried twice, waiting 5 then 10 seconds, or as long as the server asks (up to a minute). GDELT does this often. Connection errors aren't retried, so a run with no network still finishes quickly.
@@ -117,7 +117,7 @@ Then open http://localhost:5173.
 .\.venv\Scripts\python.exe -m pytest
 ```
 
-82 tests, about 15 seconds. They never touch the internet or the live news database (`data/news.db`). They cover:
+122 tests, about 20 seconds. They never touch the internet or the live news database (`data/news.db`). They cover:
 
 - **The event-study maths**, on synthetic prices with known answers: reaction day, after-close news, weekends, benchmark subtraction and run-ups.
 - **The event database checker.**
@@ -125,7 +125,7 @@ Then open http://localhost:5173.
 - **The backtest,** including that the past-only mode never peeks at the future.
 - **Confound flags,** on known real cases.
 - **Feed parsing,** including rejecting `javascript:` links and malicious XML.
-- **The keyword classifier.**
+- **The keyword classifier,** including 33 hand-labelled stories: real events it must catch and false alarms it must drop.
 - **The live pipeline end to end:** clustering, merging follow-up coverage, locked predictions and scoring.
 - **Pipeline robustness:** retrying busy servers (with a fake server), the run log and its rollover, and the read-only live report.
 - **Every API endpoint,** including the polite failure when there's no Claude key.
@@ -159,7 +159,7 @@ GitHub runs the tests and the dashboard build on every push (`.github/workflows/
 
 - **Small sample:** 113 events, some categories with only 6. Africa has 9 and the Americas 12, so analogs there are thin.
 - **Tags are judgment calls,** especially severity and surprise.
-- **Live detection without Claude is noisy.** The keyword rules catch the big stories, but also let through things like company weapons tests or human-interest pieces that mention a war.
+- **Live detection without Claude is noisy.** In Nov 2026 the first 24 stories the keyword rules flagged were hand-labelled: only 8 were real, market-relevant events. The rest were company weapons tests, court cases, foiled plots, tributes and pleas for peace. The tightened rules keep those 8 and drop the other 16, and the labelled cases are now tests. But that's one week of news, so expect new kinds of false alarm. Events detected before the change stay in the database; dismiss them in the dashboard.
 - **The live pipeline only runs while the API server is running** on your computer.
 - **Event timing is US-based.** The `after_close` flag refers to the 4pm New York close. European markets close at 11:30 New York time, so for news that broke during US hours, Europe may really react a day later than measured.
 - **European defense stocks have trended up hard since 2022,** so "beat the market" is partly that trend, not the event.
