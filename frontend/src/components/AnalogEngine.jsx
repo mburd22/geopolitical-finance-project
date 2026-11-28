@@ -86,9 +86,8 @@ function StatTile({ title, value, note }) {
 export default function AnalogEngine({ options, ticker }) {
   const [form, setForm] = useState(DEFAULT_EVENT)
   const [submitted, setSubmitted] = useState(null) // the event we last searched for
-  const [result, setResult] = useState(null)
-  const [error, setError] = useState(null)
-  const [loading, setLoading] = useState(false)
+  // The latest answer from the server, and which search it answers: {key, data} or {key, error}.
+  const [answer, setAnswer] = useState(null)
   const [selectedDate, setSelectedDate] = useState(null)
   const [aiThesis, setAiThesis] = useState(null) // {kind: 'busy' | 'done' | 'error', text}
 
@@ -102,20 +101,30 @@ export default function AnalogEngine({ options, ticker }) {
       .catch((err) => setAiThesis({ kind: 'error', text: err.message }))
   }
 
+  // One text "key" per search (event + ticker), so we can tell whether the answer we hold
+  // is for the search on screen. Loading and errors are worked out from that, instead of
+  // being set at the start of the effect (which would make React render twice).
+  const searchKey = submitted ? JSON.stringify({ ...submitted, ticker }) : null
+  const loading = searchKey !== null && answer?.key !== searchKey
+  const error = answer?.key === searchKey ? answer.error : null
+  const result = answer?.data ?? null // keep showing the last results while new ones load
+
   // Run the search whenever a new event is submitted or the ticker changes.
   useEffect(() => {
-    if (!submitted) return
-    setLoading(true)
-    setError(null)
-    findAnalogs({ ...submitted, ticker })
+    if (!searchKey) return
+    // Aborted once a newer search replaces this one, so a slow old answer is ignored.
+    const controller = new AbortController()
+    const stale = () => controller.signal.aborted
+    findAnalogs(JSON.parse(searchKey))
       .then((data) => {
-        setResult(data)
+        if (stale()) return
+        setAnswer({ key: searchKey, data })
         setSelectedDate(data.analogs[0]?.date ?? null) // show the closest analog's chart first
         setAiThesis(null) // an old Claude thesis no longer matches the new results
       })
-      .catch((err) => setError(err.message))
-      .finally(() => setLoading(false))
-  }, [submitted, ticker])
+      .catch((err) => stale() || setAnswer((old) => ({ key: searchKey, error: err.message, data: old?.data })))
+    return () => controller.abort()
+  }, [searchKey])
 
   const handleSubmit = (e) => {
     e.preventDefault() // stop the browser from reloading the page, its default for forms

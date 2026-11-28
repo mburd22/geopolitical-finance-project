@@ -155,7 +155,7 @@ GitHub runs the tests and the dashboard build on every push (`.github/workflows/
 | `make_charts.py` | Static PNG charts |
 | `api.py` | FastAPI back end for the dashboard |
 | `ai.py` | Optional Claude features |
-| `frontend/` | React + Recharts dashboard |
+| `frontend/` | React + Recharts dashboard. Tabs other than Live load on demand, so the charting library only downloads when a chart is shown |
 | `tests/` | The pytest suite |
 
 ## Limitations

@@ -1,12 +1,16 @@
 // The top-level component: header, ticker picker, tabs, and whichever page is open.
 
-import { useEffect, useState } from 'react'
+import { Suspense, lazy, useEffect, useState } from 'react'
 import { getOptions } from './api'
-import AnalogEngine from './components/AnalogEngine'
-import CategoryView from './components/CategoryView'
-import EventExplorer from './components/EventExplorer'
 import LiveFeed from './components/LiveFeed'
-import TrackRecord from './components/TrackRecord'
+
+// The other tabs load only when first opened. lazy() fetches a tab's code (and the charting
+// library, Recharts, which most of them need) on demand, so the first screen appears faster.
+// Vite splits each import() into its own file when it builds the site.
+const AnalogEngine = lazy(() => import('./components/AnalogEngine'))
+const CategoryView = lazy(() => import('./components/CategoryView'))
+const EventExplorer = lazy(() => import('./components/EventExplorer'))
+const TrackRecord = lazy(() => import('./components/TrackRecord'))
 
 const TABS = [
   { id: 'live', name: 'Live' },
@@ -63,12 +67,15 @@ export default function App() {
       {error && <p className="error">{error}</p>}
       {!options && !error && <p className="muted">Connecting to the back end…</p>}
 
-      {/* && means "only show the right side if the left side is true" */}
-      {options && tab === 'live' && <LiveFeed ticker={ticker} />}
-      {options && tab === 'analogs' && <AnalogEngine options={options} ticker={ticker} />}
-      {options && tab === 'events' && <EventExplorer options={options} ticker={ticker} />}
-      {options && tab === 'categories' && <CategoryView ticker={ticker} options={options} />}
-      {options && tab === 'track' && <TrackRecord ticker={ticker} />}
+      {/* && means "only show the right side if the left side is true".
+          Suspense shows the fallback while a lazily loaded tab's code is still downloading. */}
+      <Suspense fallback={<p className="muted">Loading…</p>}>
+        {options && tab === 'live' && <LiveFeed ticker={ticker} />}
+        {options && tab === 'analogs' && <AnalogEngine options={options} ticker={ticker} />}
+        {options && tab === 'events' && <EventExplorer options={options} ticker={ticker} />}
+        {options && tab === 'categories' && <CategoryView ticker={ticker} options={options} />}
+        {options && tab === 'track' && <TrackRecord ticker={ticker} />}
+      </Suspense>
 
       <footer className="muted small">
         Historical base rates from a small set of events, for learning and research. Not investment advice.
