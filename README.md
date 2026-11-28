@@ -154,7 +154,7 @@ Then open http://localhost:5173.
 .\.venv\Scripts\python.exe -m pytest
 ```
 
-154 tests, about 25 seconds. They never touch the internet or the live news database (`data/news.db`). They cover:
+155 tests, about 25 seconds. They never touch the internet or the live news database (`data/news.db`). They cover:
 
 - **The event-study maths**, on synthetic prices with known answers: reaction day, after-close news, weekends, benchmark subtraction and run-ups. Also the beta model: it recovers a known alpha and beta, ignores the days just before the news, and doesn't count a high-beta stock's normal move in a rising market as abnormal.
 - **The event database checker.**
@@ -191,6 +191,7 @@ GitHub runs the tests and the dashboard build on every push (`.github/workflows/
 | `backtest.py` | Scores the engine; `--tune` searches for better weights across all stocks |
 | `runup.py` | Tests whether pre-event run-ups predict the reaction |
 | `horizons.py` | Backtests the engine at 1, 5 and 20 days |
+| `regimes.py` | Splits results before and after the invasion of Ukraine |
 | `uncertainty.py` | Bootstrap confidence intervals, and a permutation test of whether event type matters |
 | `compare_models.py` | Reruns the main results with market-adjusted and beta-adjusted returns; `--tune` re-tunes weights for each (slow) |
 | `make_charts.py` | Static PNG charts |
@@ -207,6 +208,6 @@ GitHub runs the tests and the dashboard build on every push (`.github/workflows/
 - **Live detection without Claude is noisy.** In Nov 2026 the first 24 stories the keyword rules flagged were hand-labelled: only 8 were real, market-relevant events. The rest were company weapons tests, court cases, foiled plots, tributes and pleas for peace. The tightened rules keep those 8 and drop the other 16, and the labelled cases are now tests. But that's one week of news, so expect new kinds of false alarm. Events detected before the change stay in the database; dismiss them in the dashboard.
 - **The live pipeline only runs while the API server is running** on your computer.
 - **Event timing is US-based.** The `after_close` flag refers to the 4pm New York close. European markets close at 11:30 New York time, so for news that broke during US hours, Europe may really react a day later than measured. A check suggests this rarely matters: starting every European window one day later captures *less* of the move, not more (the basket's day-1 reaction to war outbreaks drops from +2.5% to 0.0%), and the 20-day results barely change (correlation 0.94; 13 of 143 signs flip).
-- **European defense stocks have trended up hard since 2022,** so "beat the market" is partly that trend, not the event.
+- **European defense stocks have trended up hard since 2022,** so "beat the market" is partly that trend. `regimes.py` checks how much: split at the invasion of Ukraine, the European basket did better after events than on ordinary days in both halves. Before: +1.6% on average after events (90% range +0.2% to +3.3%) vs +0.3% on ordinary 20-day spells. From 2022: +4.8% vs +2.6%. So the trend explains part of the post-2022 numbers, but not the gap between events and ordinary days. ITA shows no such gap in either half.
 - **BAE and Thales have no earnings dates** in the Yahoo data, so earnings confounds are missed for those two.
 - **Market-adjusted by default.** Beta adjustment is available but doesn't change the conclusions (see above). Neither model adjusts for other factors, like defense stocks moving with oil or with interest rates.

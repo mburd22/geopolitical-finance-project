@@ -99,3 +99,11 @@ def test_runup_analysis_shape(reactions, prices):
     a = analyze(reactions, prices, "ITA", "60d")
     assert a["events"] > 100 and len(a["thirds"]) == 3
     assert -1 <= a["event_corr"] <= 1 and 0 < a["event_p"] <= 1
+
+
+def test_regime_split_covers_every_event(reactions, prices):
+    from regimes import split_summary
+    parts = split_summary(reactions, prices, "EUDEF")
+    n_events = (reactions["ticker"] == "EUDEF").sum()
+    assert parts["before"]["events"]["n"] + parts["from"]["events"]["n"] == n_events
+    assert parts["before"]["ordinary"]["n"] > 50 and parts["from"]["ordinary"]["n"] > 30
